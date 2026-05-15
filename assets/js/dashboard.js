@@ -34,15 +34,22 @@ function loadInterns() {
         list.innerHTML = "";
         data.interns.forEach((intern) => {
           // Skip self
-          if (intern.id === userId) return;
+          if (parseInt(intern.id) === userId) return;
 
           const div = document.createElement("div");
-          div.className = "flex flex-col items-center gap-2";
+          div.className = "flex flex-col items-center gap-2 bg-white p-3 rounded-lg border border-gray-100 shadow-sm";
+          const hoursBadge = intern.total_hours !== null 
+            ? `<div class="mt-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full">${parseFloat(intern.total_hours).toFixed(1)}h</div>` 
+            : '';
+            
           div.innerHTML = `
-                        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold text-sm" title="${intern.email}">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold text-lg" title="${intern.email}">
                             ${intern.name.charAt(0)}
                         </div>
-                        <span class="text-xs text-gray-600 truncate w-full text-center">${intern.name.split(" ")[0]}</span>
+                        <div class="text-center">
+                            <span class="text-xs font-semibold text-gray-800 truncate block w-20">${intern.name.split(" ")[0]}</span>
+                            ${hoursBadge}
+                        </div>
                     `;
           list.appendChild(div);
         });

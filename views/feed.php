@@ -2,16 +2,18 @@
 require_once __DIR__ . '/../config.php';
 session_start();
 
-// If user is already logged in, redirect to their dashboard
+// If user is already logged in, redirect to their dashboard (unless they are trying to access a specific page)
 if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
-    $role = $_SESSION['user_role'];
-    
-    if ($role === 'Admin') {
-        header("Location: pages/supervisor/dashboard.php");
-    } else {
-        header("Location: pages/intern/dashboard.php");
+    $requested_page = $_GET['page'] ?? '';
+    if (empty($requested_page) || $requested_page === 'login') {
+        $role = $_SESSION['user_role'];
+        if ($role === 'Admin') {
+            header("Location: pages/supervisor/dashboard.php");
+        } else {
+            header("Location: pages/intern/dashboard.php");
+        }
+        exit;
     }
-    exit;
 }
 
 $page = $_GET['page'] ?? 'login';
@@ -34,6 +36,9 @@ require_once __DIR__ . '/components/header.php';
     switch ($page) {
         case 'register':
             require_once __DIR__ . '/pages/auth/registry.php';
+            break;
+        case 'profile':
+            require_once __DIR__ . '/pages/intern/profile.php';
             break;
         case 'login':
         default:
