@@ -5,7 +5,6 @@
 (function() {
     // Check if we are on the landing page (index.php or /)
     const isLandingPage = window.location.pathname.endsWith('index.php') || 
-                         window.location.pathname.endsWith('index.html') || 
                          window.location.pathname.endsWith('/') || 
                          window.location.pathname === '';
 
