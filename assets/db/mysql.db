@@ -109,3 +109,13 @@ CREATE TABLE IF NOT EXISTS accomplishment (
   CONSTRAINT fk_accomplishment_user
     FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE logins (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  login_time DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
+
+  CONSTRAINT fk_logins_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB;

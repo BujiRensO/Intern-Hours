@@ -86,6 +86,10 @@ if ($user) {
     $stmt = $pdo->prepare("UPDATE users SET google_access_token = ?, google_refresh_token = ? WHERE id = ?");
     $stmt->execute([$token_data['access_token'], $token_data['refresh_token'] ?? '', $user['id']]);
     
+    // Log login to login_logs table
+    $log_stmt = $pdo->prepare("INSERT INTO login_logs (user_id) VALUES (?)");
+    $log_stmt->execute([$user['id']]);
+
     // Redirect based on role
     // Redirect to routed dashboard
     header("Location: ../views/feed.php?page=dashboard");
@@ -106,6 +110,10 @@ if ($user) {
         $_SESSION['user_email'] = $existing_user['email'];
         $_SESSION['user_role'] = $existing_user['role'];
         
+        // Log login to login_logs table
+        $log_stmt = $pdo->prepare("INSERT INTO login_logs (user_id) VALUES (?)");
+        $log_stmt->execute([$existing_user['id']]);
+
         header("Location: ../views/feed.php?page=dashboard");
         exit;
     } else {
@@ -120,6 +128,10 @@ if ($user) {
         $_SESSION['user_email'] = $email;
         $_SESSION['user_role'] = 'Intern';
         
+        // Log login to login_logs table
+        $log_stmt = $pdo->prepare("INSERT INTO login_logs (user_id) VALUES (?)");
+        $log_stmt->execute([$user_id]);
+
         header("Location: ../views/feed.php?page=dashboard");
         exit;
     }

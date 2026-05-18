@@ -62,6 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['failed_attempts']);
                 unset($_SESSION['login_blocked_until']);
 
+                // Log login to login_logs table
+                $log_stmt = $pdo->prepare("INSERT INTO login_logs (user_id) VALUES (?)");
+                $log_stmt->execute([$user['id']]);
+
                 // Return success response with redirect URL
                 $redirectUrl = '../views/feed.php?page=dashboard';
                 echo json_encode(['success' => true, 'redirect' => $redirectUrl]);
