@@ -943,7 +943,41 @@ function downloadPDF() {
     url += "&userId=" + userId;
   }
 
-  // Open in a new tab to trigger download
-  window.open(url, "_blank");
+  // Visual feedback: show loading state on the button
+  const btn = document.getElementById("btn-download-pdf");
+  if (!btn) return;
+  
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "<span>⏳</span> Generating PDF...";
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => {
+          throw new Error(err.error || "Server error");
+        });
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = downloadUrl;
+      a.download = `DTR_${fromDate}_to_${toDate}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+    })
+    .catch(error => {
+      console.error("Error downloading DTR:", error);
+      alert("Failed to download DTR: " + error.message);
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    });
 }
 
