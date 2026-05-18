@@ -4,9 +4,9 @@
  * Generates Daily Time Record (DTR) PDF using context/dtrtemplate.xlsx and Dompdf
  */
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -203,9 +203,16 @@ try {
     $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $internName);
     $filename = "DTR_{$safeName}_{$fromDate}_to_{$toDate}.pdf";
 
+    // Clear output buffer to avoid any leading whitespace/notices polluting the binary stream
+    if (ob_get_length()) {
+        ob_clean();
+    }
+    flush();
+
     header('Content-Type: application/pdf');
     header("Content-Disposition: attachment; filename=\"$filename\"");
     header('Cache-Control: max-age=0');
+    header('Pragma: public');
 
     $writer = new PdfWriter($spreadsheet);
     $writer->save('php://output');
