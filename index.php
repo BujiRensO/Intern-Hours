@@ -41,7 +41,6 @@ if (isset($_SESSION['user_id'])) {
 
           <!-- Desktop Navigation Links -->
           <nav class="hidden md:flex space-x-10">
-            <a href="#features" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">Features</a>
             <a href="#how-it-works" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">How It Works</a>
             <a href="#faqs" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">FAQs</a>
           </nav>
@@ -68,7 +67,6 @@ if (isset($_SESSION['user_id'])) {
 
       <!-- Mobile Dropdown Menu -->
       <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 pt-2 bg-gray-950/95 backdrop-blur-xl border-b border-white/5 space-y-4">
-        <a href="#features" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">Features</a>
         <a href="#how-it-works" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">How It Works</a>
         <a href="#faqs" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">FAQs</a>
         <div class="pt-4 flex flex-col gap-3">
@@ -83,11 +81,6 @@ if (isset($_SESSION['user_id'])) {
       
       <!-- Hero Section -->
       <section class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-24 text-center relative">
-        <!-- Notification Capsule -->
-        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-panel border border-white/10 text-xs font-semibold text-zinc-300 mb-8 animate-float shadow-inner">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-ring-green"></span>
-          <span>Live Internship Tracking Suite</span>
-        </div>
 
         <!-- Headline & Subheading -->
         <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
@@ -103,298 +96,260 @@ if (isset($_SESSION['user_id'])) {
           <a href="views/feed.php?page=register" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_40px_rgba(99,102,241,0.5)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 text-center">
             Start Tracking Free
           </a>
-          <a href="#features" class="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-center">
+          <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-center">
             Learn More
           </a>
         </div>
 
         <!-- Interactive Live Dashboard Mockup -->
-        <div class="max-w-5xl mx-auto relative rounded-2xl glass-panel p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden group">
+                <div class="max-w-5xl mx-auto relative rounded-2xl glass-panel p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden group">
           <!-- Ambient card reflection -->
           <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl pointer-events-none group-hover:bg-purple-500/15 transition-all"></div>
           
-          <div class="rounded-xl overflow-hidden bg-zinc-950/80 border border-white/5 flex flex-col md:flex-row text-left font-sans text-xs">
-            <!-- Sidebar Panel -->
-            <div class="w-full md:w-48 bg-zinc-900/60 p-4 border-r border-white/5 flex flex-col justify-between">
+          <div class="rounded-xl overflow-hidden bg-zinc-950/80 border border-white/5 p-6 text-left font-sans text-xs">
+            <!-- Welcome Card -->
+            <div class="p-5 rounded-xl bg-zinc-900/60 border border-white/5 mb-6 flex justify-between items-center">
               <div>
-                <div class="flex items-center gap-2 mb-8">
-                  <div class="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center text-white">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+                <h3 class="text-lg font-bold text-white font-heading">Welcome, John Doe</h3>
+                <p class="text-xs text-zinc-500 font-medium">Software Department | Ast4rt3 Tech</p>
+              </div>
+              <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-bold border border-indigo-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-ring-green animate-pulse"></span> Intern Session Active
+              </div>
+            </div>
+
+            <!-- Workspace Layout (Calendar Grid & Stats Sidebar) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Calendar Column (Col-span-2) -->
+              <div class="lg:col-span-2 p-5 rounded-xl bg-zinc-900/40 border border-white/5 flex flex-col space-y-4">
+                <div class="flex justify-between items-center pb-3 border-b border-white/5">
+                  <h4 class="text-sm font-bold text-white font-heading">December 2024</h4>
+                  <div class="flex gap-2">
+                    <button class="px-2.5 py-1 bg-white/5 hover:bg-white/10 rounded text-[10px] text-zinc-300 font-semibold border border-white/5 transition" disabled>← Prev</button>
+                    <button class="px-2.5 py-1 bg-white/5 hover:bg-white/10 rounded text-[10px] text-zinc-300 font-semibold border border-white/5 transition" disabled>Next →</button>
                   </div>
-                  <span class="font-bold text-white text-sm">Dashboard</span>
                 </div>
-                <div class="space-y-1">
-                  <div class="px-3 py-2 bg-indigo-500/10 text-indigo-400 rounded-lg font-semibold flex items-center gap-2.5 border border-indigo-500/10">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                    Overview
+                
+                <!-- Mock calendar grid -->
+                <div class="grid grid-cols-7 gap-2 text-center text-[10px] font-medium">
+                  <!-- Header Days -->
+                  <div class="text-zinc-500 font-bold py-1">Sun</div>
+                  <div class="text-zinc-500 font-bold py-1">Mon</div>
+                  <div class="text-zinc-500 font-bold py-1">Tue</div>
+                  <div class="text-zinc-500 font-bold py-1">Wed</div>
+                  <div class="text-zinc-500 font-bold py-1">Thu</div>
+                  <div class="text-zinc-500 font-bold py-1">Fri</div>
+                  <div class="text-zinc-500 font-bold py-1">Sat</div>
+                  
+                  <!-- Month Days starting on Sunday December 1 -->
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">1</div>
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">2</div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative group/day min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>3</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.0h</span>
                   </div>
-                  <div class="px-3 py-2 text-zinc-400 hover:text-white rounded-lg flex items-center gap-2.5 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>4</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-400 min-h-[40px] flex flex-col justify-between items-start transition hover:bg-white/5">
+                    <span>5</span>
+                    <span class="text-[8px] text-zinc-600">0.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-rose-500/10 border border-rose-500/20 text-rose-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-rose-500/15">
+                    <span>6</span>
+                    <span class="text-[7px] font-bold text-rose-400 bg-rose-500/20 px-1 rounded-sm">Absent</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">7</div>
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">8</div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>9</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">7.5h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>10</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>11</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-400 min-h-[40px] flex flex-col justify-between items-start transition hover:bg-white/5">
+                    <span>12</span>
+                    <span class="text-[8px] text-zinc-600">0.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-400 min-h-[40px] flex flex-col justify-between items-start transition hover:bg-white/5">
+                    <span>13</span>
+                    <span class="text-[8px] text-zinc-600">0.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">14</div>
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">15</div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>16</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.5h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 relative min-h-[40px] flex flex-col justify-between items-start transition hover:bg-indigo-500/15">
+                    <span>17</span>
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-500/20 px-1 rounded-sm">8.0h</span>
+                  </div>
+                  
+                  <!-- Today's date showing live tracking -->
+                  <div class="p-2 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 relative min-h-[40px] flex flex-col justify-between items-start shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                    <span class="font-bold flex items-center gap-1">18 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-ring-green inline-block"></span></span>
+                    <span id="mockup-timer" class="text-[8px] font-extrabold text-emerald-400 bg-emerald-500/20 px-1 rounded-sm select-none">04:19:10</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-400 min-h-[40px] flex flex-col justify-between items-start transition hover:bg-white/5">
+                    <span>19</span>
+                    <span class="text-[8px] text-zinc-600">0.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-400 min-h-[40px] flex flex-col justify-between items-start transition hover:bg-white/5">
+                    <span>20</span>
+                    <span class="text-[8px] text-zinc-600">0.0h</span>
+                  </div>
+                  
+                  <div class="p-2 rounded bg-zinc-950/40 border border-white/5 text-zinc-600">21</div>
+                </div>
+                
+                <div class="text-center text-[10px] text-zinc-500 italic pt-2">
+                  Click a day to log or edit hours
+                </div>
+              </div>
+
+              <!-- Sidebar Stats Column (Col-span-1) -->
+              <div class="space-y-4">
+                <!-- Stat Card 1 -->
+                <div class="p-4 rounded-xl bg-zinc-900/50 border border-white/5 flex justify-between items-center transition hover:border-white/10">
+                  <div>
+                    <span class="text-[10px] text-zinc-500 uppercase font-semibold">Total Hours</span>
+                    <h4 class="text-2xl font-extrabold text-white mt-1 font-heading">120.0 <span class="text-zinc-600 text-xs font-normal">hrs</span></h4>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.1)]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Log Session
-                  </div>
-                  <div class="px-3 py-2 text-zinc-400 hover:text-white rounded-lg flex items-center gap-2.5 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                    </svg>
-                    File Records
                   </div>
                 </div>
-              </div>
-              <div class="mt-8 pt-4 border-t border-white/5 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-white text-xs">JD</div>
-                <div>
-                  <p class="font-semibold text-white">John Doe</p>
-                  <p class="text-[10px] text-zinc-500">Software Intern</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="flex-grow p-6 space-y-6">
-              <!-- Top Row Cards -->
-              <div class="grid sm:grid-cols-2 gap-4">
-                <!-- Session Timer (LIVE INTERACTIVE MECHANISM) -->
-                <div class="p-5 rounded-xl bg-zinc-900/50 border border-white/5 relative overflow-hidden flex flex-col justify-between min-h-[120px]">
-                  <div class="flex justify-between items-center">
-                    <span class="text-zinc-400 font-medium">Session Status</span>
-                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-ring-green"></span> Running
-                    </span>
-                  </div>
-                  <div class="mt-4">
-                    <h4 id="mockup-timer" class="text-3xl font-extrabold text-white tracking-widest font-heading select-none">04:18:25</h4>
-                    <p class="text-zinc-500 text-[10px] mt-1">Logged today: <span class="text-zinc-300 font-semibold">4.3 hours</span></p>
-                  </div>
-                </div>
-
-                <!-- Goal Progress Bar -->
-                <div class="p-5 rounded-xl bg-zinc-900/50 border border-white/5 flex flex-col justify-between min-h-[120px]">
-                  <div class="flex justify-between items-center">
-                    <span class="text-zinc-400 font-medium">Weekly Goal</span>
-                    <span class="text-indigo-400 font-bold text-[10px]">82% Achieved</span>
-                  </div>
+                
+                <!-- Stat Card 2 -->
+                <div class="p-4 rounded-xl bg-zinc-900/50 border border-white/5 flex justify-between items-center transition hover:border-white/10">
                   <div>
-                    <div class="flex justify-between items-baseline mb-2">
-                      <h4 class="text-2xl font-bold text-white font-heading">32.8 <span class="text-zinc-600 text-xs">/ 40.0 hrs</span></h4>
+                    <span class="text-[10px] text-zinc-500 uppercase font-semibold">Month Total</span>
+                    <h4 class="text-2xl font-extrabold text-white mt-1 font-heading">32.0 <span class="text-zinc-600 text-xs font-normal">hrs</span></h4>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                </div>
+                
+                <!-- Stat Card 3 -->
+                <div class="p-4 rounded-xl bg-zinc-900/50 border border-white/5 flex justify-between items-center transition hover:border-white/10">
+                  <div>
+                    <span class="text-[10px] text-zinc-500 uppercase font-semibold">Today's Hours</span>
+                    <h4 class="text-2xl font-extrabold text-white mt-1 font-heading">8.0 <span class="text-zinc-600 text-xs font-normal">hrs</span></h4>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="p-4 rounded-xl bg-zinc-900/50 border border-white/5 flex justify-between items-center transition hover:border-white/10">
+                  <div>
+                    <span class="text-[10px] text-zinc-500 uppercase font-semibold">Average/Day</span>
+                    <h4 class="text-2xl font-extrabold text-white mt-1 font-heading">6.5 <span class="text-zinc-600 text-xs font-normal">hrs</span></h4>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.1)]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Date Filtering Panel -->
+                <div class="p-4 rounded-xl bg-zinc-900/30 border border-white/5 space-y-2">
+                  <span class="text-[10px] text-zinc-500 uppercase font-semibold block">Filter by Date</span>
+                  <div class="grid grid-cols-2 gap-2 text-[9px]">
+                    <div>
+                      <label class="text-zinc-500 block mb-1">From Date</label>
+                      <input type="text" value="2024-12-01" class="w-full bg-zinc-950/60 border border-white/5 rounded px-2 py-1 text-zinc-300" disabled>
                     </div>
-                    <div class="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
-                      <div class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(99,102,241,0.5)]" style="width: 82%;"></div>
+                    <div>
+                      <label class="text-zinc-500 block mb-1">To Date</label>
+                      <input type="text" value="2024-12-31" class="w-full bg-zinc-950/60 border border-white/5 rounded px-2 py-1 text-zinc-300" disabled>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <!-- Log Entries Sheet -->
-              <div class="rounded-xl bg-zinc-900/40 border border-white/5 overflow-hidden">
-                <div class="px-4 py-3 bg-zinc-900/80 border-b border-white/5 flex justify-between items-center">
-                  <span class="font-bold text-white">Recent Hours Sheet</span>
-                  <button class="px-2.5 py-1 bg-white/5 hover:bg-white/10 rounded text-[10px] font-semibold transition border border-white/5">Export PDF</button>
-                </div>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
-                    <thead>
-                      <tr class="text-zinc-500 border-b border-white/5 bg-zinc-950/20 text-[10px]">
-                        <th class="p-3">Date</th>
-                        <th class="p-3">Activity</th>
-                        <th class="p-3">Hours</th>
-                        <th class="p-3 text-right">Approval Status</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5">
-                      <tr class="text-zinc-300">
-                        <td class="p-3 font-medium">May 18, 2026</td>
-                        <td class="p-3 text-zinc-400">Created high-fidelity bento elements</td>
-                        <td class="p-3 font-semibold text-white">8.0 hrs</td>
-                        <td class="p-3 text-right">
-                          <span class="inline-block px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Approved</span>
-                        </td>
-                      </tr>
-                      <tr class="text-zinc-300">
-                        <td class="p-3 font-medium">May 17, 2026</td>
-                        <td class="p-3 text-zinc-400">Restructured PHP connection framework</td>
-                        <td class="p-3 font-semibold text-white">7.5 hrs</td>
-                        <td class="p-3 text-right">
-                          <span class="inline-block px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Approved</span>
-                        </td>
-                      </tr>
-                      <tr class="text-zinc-300">
-                        <td class="p-3 font-medium">May 16, 2026</td>
-                        <td class="p-3 text-zinc-400">Resolved double-click menu accessibility issue</td>
-                        <td class="p-3 font-semibold text-white">6.0 hrs</td>
-                        <td class="p-3 text-right">
-                          <span class="inline-block px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold animate-pulse">Pending</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Trust Stats Section -->
-      <section class="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-8 rounded-2xl glass-panel shadow-inner relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 pointer-events-none"></div>
-          
-          <div class="text-center p-4 border-r border-white/5 last:border-0">
-            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">5,000+</h3>
-            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Active Interns</p>
-          </div>
-          <div class="text-center p-4 border-r border-white/5 last:border-0">
-            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">150K+</h3>
-            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Hours Tracked</p>
-          </div>
-          <div class="text-center p-4 border-r border-white/5 last:border-0">
-            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">99.8%</h3>
-            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Approval Rate</p>
-          </div>
-          <div class="text-center p-4">
-            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">100%</h3>
-            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Secure Storage</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Bento Grid Features Section -->
-      <section id="features" class="max-w-7xl mx-auto px-6 lg:px-8 py-20 relative">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Visual Insights, <span class="text-brand-gradient">Simplified Logging</span>
-          </h2>
-          <p class="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Engineered with modern, fluid capabilities to make tracking effortless for students and clear for supervisors.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <!-- Feature 1: Analytics (Double Bento Card) -->
-          <div class="md:col-span-2 rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
-            <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-indigo-500/5 rounded-full filter blur-2xl group-hover:bg-indigo-500/10 transition-all duration-300"></div>
-            
-            <div class="flex flex-col sm:flex-row gap-6 justify-between">
-              <div class="max-w-sm">
-                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
-                  <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                  </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-white mb-3">Intelligent Activity Analytics</h3>
-                <p class="text-zinc-400 text-sm leading-relaxed">
-                  Understand your progress instantly. Our Tracker parses your log sheets automatically to produce weekly trend bars, goal completion status, and dynamic reports.
-                </p>
-              </div>
-
-              <!-- Inline Interactive Visual -->
-              <div class="w-full sm:w-48 bg-zinc-950/60 p-4 rounded-xl border border-white/5 flex flex-col justify-between shrink-0 h-40">
-                <div class="flex justify-between items-center text-[10px]">
-                  <span class="text-zinc-500 uppercase font-semibold">Weekly Status</span>
-                  <span class="text-emerald-400 font-bold">Good Progress</span>
-                </div>
-                <div class="space-y-2 mt-2">
-                  <div class="flex justify-between text-[10px]">
-                    <span class="text-zinc-400">Total Hours</span>
-                    <span class="text-white font-semibold">32.8 Hrs</span>
-                  </div>
-                  <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-indigo-500 rounded-full" style="width: 82%;"></div>
+                  <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button class="w-full py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[9px] font-semibold rounded hover:bg-indigo-500/20 transition" disabled>Apply</button>
+                    <button class="w-full py-1 bg-white/5 text-zinc-400 border border-white/5 text-[9px] font-semibold rounded hover:bg-white/10 transition" disabled>Reset</button>
                   </div>
                 </div>
-                <div class="flex gap-1 items-end h-12 mt-2 justify-between">
-                  <div class="w-5 h-6 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
-                  <div class="w-5 h-8 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
-                  <div class="w-5 h-10 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
-                  <div class="w-5 h-12 bg-indigo-500 rounded-t transition duration-300"></div>
-                  <div class="w-5 h-9 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
+              </div>
+            </div>
+
+            <!-- Colleagues Card Panel Section -->
+            <div class="p-5 rounded-xl bg-zinc-900/40 border border-white/5 mt-6">
+              <h4 class="text-sm font-bold text-white mb-4 font-heading">Your Colleagues</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center text-[10px]">
+                <!-- Colleague 1 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-indigo-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-indigo-400 mb-1.5 border border-indigo-500/20">AS</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Alice Smith</span>
+                  <span class="text-zinc-500 text-[8px]">Software Intern</span>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Feature 2: Time Logger -->
-          <div class="rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px]">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6">
-                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-3">Instant Time Entry</h3>
-              <p class="text-zinc-400 text-sm leading-relaxed">
-                Log your internship records in seconds. Just input your hours, enter the activity description, and submit. We handle the calculations and database logs instantly.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] text-zinc-500 font-semibold uppercase">
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                Simple form inputs
-              </span>
-              <span class="text-purple-400">1-click submit</span>
-            </div>
-          </div>
-
-          <!-- Feature 3: Approval engine -->
-          <div class="rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px]">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6">
-                <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-3">Supervisor Approval Gateway</h3>
-              <p class="text-zinc-400 text-sm leading-relaxed">
-                Smooth review framework. Supervisors can view submitted timesheets, view historical reports, and approve or reject submissions in real-time.
-              </p>
-            </div>
-            <!-- Mini status indicators in card bottom -->
-            <div class="flex gap-2 mt-4">
-              <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[9px] font-bold">Approved</span>
-              <span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">Pending</span>
-              <span class="px-2.5 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[9px] font-bold">Rejected</span>
-            </div>
-          </div>
-
-          <!-- Feature 4: Security (Double Bento Card) -->
-          <div class="md:col-span-2 rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
-            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-teal-500/5 rounded-full filter blur-2xl group-hover:bg-teal-500/10 transition-all duration-300"></div>
-            
-            <div class="flex flex-col sm:flex-row gap-6 justify-between">
-              <div class="max-w-sm">
-                <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6">
-                  <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                  </svg>
+                <!-- Colleague 2 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-purple-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-purple-400 mb-1.5 border border-purple-500/20">BJ</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Bob Johnson</span>
+                  <span class="text-zinc-500 text-[8px]">Software Intern</span>
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-3">Enterprise-Grade Security</h3>
-                <p class="text-zinc-400 text-sm leading-relaxed">
-                  Your data security is our absolute priority. OurTracker relies on cryptographically secure bcrypt password hashing, session tokens, and strict database guards to keep your logs private and secure.
-                </p>
-              </div>
-
-              <!-- Shield visual graphic -->
-              <div class="w-full sm:w-48 bg-zinc-950/60 p-4 rounded-xl border border-white/5 flex flex-col justify-center items-center shrink-0 h-40">
-                <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
-                  <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                  </svg>
+                <!-- Colleague 3 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-teal-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-teal-400 mb-1.5 border border-teal-500/20">CW</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Carol White</span>
+                  <span class="text-zinc-500 text-[8px]">Design Intern</span>
                 </div>
-                <span class="text-[10px] text-zinc-400 font-semibold uppercase">Encrypted Session</span>
-                <span class="text-[9px] text-zinc-600 mt-0.5">TLS 1.3 / Bcrypt active</span>
+                <!-- Colleague 4 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-amber-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-amber-400 mb-1.5 border border-amber-500/20">DB</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Dave Brown</span>
+                  <span class="text-zinc-500 text-[8px]">Systems Intern</span>
+                </div>
+                <!-- Colleague 5 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-emerald-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-emerald-400 mb-1.5 border border-emerald-500/20">ME</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Mary Evans</span>
+                  <span class="text-zinc-500 text-[8px]">Quality Intern</span>
+                </div>
+                <!-- Colleague 6 -->
+                <div class="p-3 rounded-lg bg-zinc-950/40 border border-white/5 flex flex-col items-center transition hover:border-rose-500/20 hover:bg-zinc-950/60">
+                  <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-rose-400 mb-1.5 border border-rose-500/20">TL</div>
+                  <span class="text-zinc-300 font-semibold block truncate w-full">Tom Lewis</span>
+                  <span class="text-zinc-500 text-[8px]">DevOps Intern</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+
 
       <!-- Stepper / Onboarding Timeline -->
       <section id="how-it-works" class="max-w-7xl mx-auto px-6 lg:px-8 py-20 relative">
@@ -536,7 +491,6 @@ if (isset($_SESSION['user_id'])) {
           <div>
             <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Product</h4>
             <ul class="space-y-2.5 text-sm">
-              <li><a href="#features" class="hover:text-white transition">Features</a></li>
               <li><a href="#how-it-works" class="hover:text-white transition">How It Works</a></li>
               <li><a href="views/feed.php" class="hover:text-white transition">Dashboard</a></li>
             </ul>
@@ -607,8 +561,8 @@ if (isset($_SESSION['user_id'])) {
 
       // 3. Live Ticking Timer in Dashboard Mockup
       let hours = 4;
-      let minutes = 18;
-      let seconds = 25;
+      let minutes = 19;
+      let seconds = 10;
       const timerEl = document.getElementById('mockup-timer');
 
       if (timerEl) {
