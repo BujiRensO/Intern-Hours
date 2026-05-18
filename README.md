@@ -6,6 +6,8 @@ A modern, efficient web application designed to track and manage intern working 
 **Irven Abarquez**
 **Teddy Bermudo**
 **Lawrence Heras**
+**Ivan Abarquez**
+
 
 ## 🚀 Tech Stack
 
@@ -45,14 +47,16 @@ A modern, efficient web application designed to track and manage intern working 
 2. **Database Setup**:
    - Create a MySQL database named `intern_hours_db`.
    - Import the schema from `assets/db/mysql.db` (if provided as SQL) or create the necessary tables.
+   - Run via CLI: php migrate.php
 
 3. **Configuration**:
-   - Rename `.env.example` to `.env`.
+   - Run via CLI: cp .env.example .env
    - Update your database credentials and Google OAuth keys.
 
 4. **Run Locally**:
    - Use XAMPP/WAMP or a local PHP server.
    - Access via `http://localhost/Intern-Hours`.
+   - Run via CLI: php -S localhost:8000
 
 ## 🚢 Deployment
 

@@ -276,10 +276,11 @@ function renderCalendar() {
 
     cell.innerHTML = `
             <div class="day-cell-date">${day}</div>
-            ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h</div>` : ""}
-            ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
-            ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
-            ${birthdayBadgesHtml}
+              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h</div>` : ""}
+              ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
+              ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
+              ${birthdayBadgesHtml}
+            <div class="day-cell-spotlight"></div>
         `;
 
     if (!isFuture) {
@@ -287,7 +288,38 @@ function renderCalendar() {
     } else {
       cell.onclick = () => openAbsenceModal(fullDate);
     }
+
     calendarGrid.appendChild(cell);
+  }
+
+  // High-performance proximity border glow for the entire Bento Grid
+  const grid = document.getElementById("calendar-grid");
+  if (grid) {
+    // Enable glowing border calculations when mouse is within the grid
+    grid.addEventListener("mouseenter", () => {
+      grid.querySelectorAll(".day-cell").forEach(cell => {
+        cell.style.setProperty("--border-opacity", "1");
+      });
+    });
+
+    // Fade out glows when mouse leaves the grid completely
+    grid.addEventListener("mouseleave", () => {
+      grid.querySelectorAll(".day-cell").forEach(cell => {
+        cell.style.setProperty("--border-opacity", "0");
+      });
+    });
+
+    // Track coordinates globally for all active day cells in the grid
+    grid.addEventListener("mousemove", (e) => {
+      const activeCells = grid.querySelectorAll(".day-cell:not(.disabled):not(.other-month)");
+      activeCells.forEach(cell => {
+        const rect = cell.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        cell.style.setProperty("--mouse-x", `${x}px`);
+        cell.style.setProperty("--mouse-y", `${y}px`);
+      });
+    });
   }
 
   updateStats();
