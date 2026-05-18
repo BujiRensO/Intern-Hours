@@ -14,195 +14,620 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OurTracker - Track Your Internship Time</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 stroke=%22%236366f1%22 stroke-width=%228%22 fill=%22none%22/><path d=%22M50 20 v30 l20 10%22 stroke=%22%236366f1%22 stroke-width=%228%22 stroke-linecap=%22round%22/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/index.css">
   </head>
 
-  <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm fixed w-full z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-          <div class="flex items-center">
-            <a href="index.php" class="text-2xl font-bold text-gray-900">OurTracker</a>
+  <body class="bg-gray-950 text-zinc-100 relative antialiased selection:bg-indigo-500 selection:text-white">
+    <!-- Background Radial Ambient Glows -->
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] ambient-glow-1 animate-pulse-slow pointer-events-none z-0"></div>
+    <div class="absolute top-1/3 right-10 w-[600px] h-[600px] ambient-glow-2 animate-pulse-slow pointer-events-none z-0"></div>
+    <div class="absolute top-2/3 left-10 w-[450px] h-[450px] ambient-glow-3 animate-pulse-slow pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <header class="glass-nav fixed w-full z-50 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.4)] text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <a href="index.php" class="text-2xl font-extrabold tracking-tight text-white hover:opacity-90 transition">OurTracker</a>
           </div>
-          <div class="hidden md:flex space-x-8">
-            <a href="#features" class="text-gray-600 hover:text-gray-900 transition">Features</a>
-            <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition">How It Works</a>
-            <a href="#contact" class="text-gray-600 hover:text-gray-900 transition">Contact</a>
+
+          <!-- Desktop Navigation Links -->
+          <nav class="hidden md:flex space-x-10">
+            <a href="#features" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">Features</a>
+            <a href="#how-it-works" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">How It Works</a>
+            <a href="#faqs" class="text-sm font-medium text-zinc-400 hover:text-white transition duration-200">FAQs</a>
+          </nav>
+
+          <!-- Auth CTA Actions -->
+          <div class="hidden md:flex items-center space-x-5">
+            <a href="views/feed.php" class="text-sm font-semibold text-zinc-300 hover:text-white transition duration-200">Log In</a>
+            <a href="views/feed.php?page=register" class="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
+              Sign Up Free
+            </a>
           </div>
-          <div class="flex space-x-4">
-            <a href="views/feed.php" class="px-4 py-2 text-gray-900 hover:text-black font-medium transition">Login</a>
-            <a href="views/feed.php?page=register" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-black font-medium transition">Sign Up</a>
-          </div>
+
+          <!-- Mobile Toggle Button -->
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition" aria-label="Toggle menu">
+            <svg id="menu-icon" class="w-6 h-6 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+            <svg id="close-icon" class="w-6 h-6 text-zinc-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
       </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="gradient-bg pt-32 pb-20 px-4">
-      <div class="max-w-7xl mx-auto text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-          Track Your Internship Hours with Ease
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 pt-2 bg-gray-950/95 backdrop-blur-xl border-b border-white/5 space-y-4">
+        <a href="#features" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">Features</a>
+        <a href="#how-it-works" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">How It Works</a>
+        <a href="#faqs" class="block text-base font-medium text-zinc-400 hover:text-white transition py-2 border-b border-white/5">FAQs</a>
+        <div class="pt-4 flex flex-col gap-3">
+          <a href="views/feed.php" class="w-full text-center py-3 text-base font-semibold text-zinc-300 hover:text-white border border-white/10 rounded-xl transition">Log In</a>
+          <a href="views/feed.php?page=register" class="w-full text-center py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-base font-semibold rounded-xl shadow-lg transition">Sign Up Free</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 pt-20">
+      
+      <!-- Hero Section -->
+      <section class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-24 text-center relative">
+        <!-- Notification Capsule -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-panel border border-white/10 text-xs font-semibold text-zinc-300 mb-8 animate-float shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-ring-green"></span>
+          <span>Live Internship Tracking Suite</span>
+        </div>
+
+        <!-- Headline & Subheading -->
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
+          Track Your Internship Hours <br/>
+          <span class="text-brand-gradient">With Absolute Ease</span>
         </h1>
-        <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-          A simple, efficient way for interns to log hours and for supervisors to track progress. Stay organized and never miss a beat.
+        <p class="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+          The ultimate tracking workspace for interns to log logs and supervisors to review progress. Stay aligned, visual, and ahead of schedule.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="views/feed.php?page=register" class="px-8 py-4 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg inline-block">
-            Get Started Free
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
+          <a href="views/feed.php?page=register" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_40px_rgba(99,102,241,0.5)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 text-center">
+            Start Tracking Free
           </a>
-          <a href="#features" class="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition inline-block">
+          <a href="#features" class="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-center">
             Learn More
           </a>
         </div>
-      </div>
-    </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-20 px-4">
-      <div class="max-w-7xl mx-auto">
+        <!-- Interactive Live Dashboard Mockup -->
+        <div class="max-w-5xl mx-auto relative rounded-2xl glass-panel p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden group">
+          <!-- Ambient card reflection -->
+          <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl pointer-events-none group-hover:bg-purple-500/15 transition-all"></div>
+          
+          <div class="rounded-xl overflow-hidden bg-zinc-950/80 border border-white/5 flex flex-col md:flex-row text-left font-sans text-xs">
+            <!-- Sidebar Panel -->
+            <div class="w-full md:w-48 bg-zinc-900/60 p-4 border-r border-white/5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 mb-8">
+                  <div class="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center text-white">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <span class="font-bold text-white text-sm">Dashboard</span>
+                </div>
+                <div class="space-y-1">
+                  <div class="px-3 py-2 bg-indigo-500/10 text-indigo-400 rounded-lg font-semibold flex items-center gap-2.5 border border-indigo-500/10">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Overview
+                  </div>
+                  <div class="px-3 py-2 text-zinc-400 hover:text-white rounded-lg flex items-center gap-2.5 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Log Session
+                  </div>
+                  <div class="px-3 py-2 text-zinc-400 hover:text-white rounded-lg flex items-center gap-2.5 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>
+                    File Records
+                  </div>
+                </div>
+              </div>
+              <div class="mt-8 pt-4 border-t border-white/5 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-white text-xs">JD</div>
+                <div>
+                  <p class="font-semibold text-white">John Doe</p>
+                  <p class="text-[10px] text-zinc-500">Software Intern</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-grow p-6 space-y-6">
+              <!-- Top Row Cards -->
+              <div class="grid sm:grid-cols-2 gap-4">
+                <!-- Session Timer (LIVE INTERACTIVE MECHANISM) -->
+                <div class="p-5 rounded-xl bg-zinc-900/50 border border-white/5 relative overflow-hidden flex flex-col justify-between min-h-[120px]">
+                  <div class="flex justify-between items-center">
+                    <span class="text-zinc-400 font-medium">Session Status</span>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-ring-green"></span> Running
+                    </span>
+                  </div>
+                  <div class="mt-4">
+                    <h4 id="mockup-timer" class="text-3xl font-extrabold text-white tracking-widest font-heading select-none">04:18:25</h4>
+                    <p class="text-zinc-500 text-[10px] mt-1">Logged today: <span class="text-zinc-300 font-semibold">4.3 hours</span></p>
+                  </div>
+                </div>
+
+                <!-- Goal Progress Bar -->
+                <div class="p-5 rounded-xl bg-zinc-900/50 border border-white/5 flex flex-col justify-between min-h-[120px]">
+                  <div class="flex justify-between items-center">
+                    <span class="text-zinc-400 font-medium">Weekly Goal</span>
+                    <span class="text-indigo-400 font-bold text-[10px]">82% Achieved</span>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-baseline mb-2">
+                      <h4 class="text-2xl font-bold text-white font-heading">32.8 <span class="text-zinc-600 text-xs">/ 40.0 hrs</span></h4>
+                    </div>
+                    <div class="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+                      <div class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(99,102,241,0.5)]" style="width: 82%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Log Entries Sheet -->
+              <div class="rounded-xl bg-zinc-900/40 border border-white/5 overflow-hidden">
+                <div class="px-4 py-3 bg-zinc-900/80 border-b border-white/5 flex justify-between items-center">
+                  <span class="font-bold text-white">Recent Hours Sheet</span>
+                  <button class="px-2.5 py-1 bg-white/5 hover:bg-white/10 rounded text-[10px] font-semibold transition border border-white/5">Export PDF</button>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left border-collapse">
+                    <thead>
+                      <tr class="text-zinc-500 border-b border-white/5 bg-zinc-950/20 text-[10px]">
+                        <th class="p-3">Date</th>
+                        <th class="p-3">Activity</th>
+                        <th class="p-3">Hours</th>
+                        <th class="p-3 text-right">Approval Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                      <tr class="text-zinc-300">
+                        <td class="p-3 font-medium">May 18, 2026</td>
+                        <td class="p-3 text-zinc-400">Created high-fidelity bento elements</td>
+                        <td class="p-3 font-semibold text-white">8.0 hrs</td>
+                        <td class="p-3 text-right">
+                          <span class="inline-block px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Approved</span>
+                        </td>
+                      </tr>
+                      <tr class="text-zinc-300">
+                        <td class="p-3 font-medium">May 17, 2026</td>
+                        <td class="p-3 text-zinc-400">Restructured PHP connection framework</td>
+                        <td class="p-3 font-semibold text-white">7.5 hrs</td>
+                        <td class="p-3 text-right">
+                          <span class="inline-block px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Approved</span>
+                        </td>
+                      </tr>
+                      <tr class="text-zinc-300">
+                        <td class="p-3 font-medium">May 16, 2026</td>
+                        <td class="p-3 text-zinc-400">Resolved double-click menu accessibility issue</td>
+                        <td class="p-3 font-semibold text-white">6.0 hrs</td>
+                        <td class="p-3 text-right">
+                          <span class="inline-block px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold animate-pulse">Pending</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust Stats Section -->
+      <section class="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-8 rounded-2xl glass-panel shadow-inner relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 pointer-events-none"></div>
+          
+          <div class="text-center p-4 border-r border-white/5 last:border-0">
+            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">5,000+</h3>
+            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Active Interns</p>
+          </div>
+          <div class="text-center p-4 border-r border-white/5 last:border-0">
+            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">150K+</h3>
+            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Hours Tracked</p>
+          </div>
+          <div class="text-center p-4 border-r border-white/5 last:border-0">
+            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">99.8%</h3>
+            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Approval Rate</p>
+          </div>
+          <div class="text-center p-4">
+            <h3 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">100%</h3>
+            <p class="text-zinc-500 text-xs font-semibold uppercase mt-1.5 tracking-wider">Secure Storage</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bento Grid Features Section -->
+      <section id="features" class="max-w-7xl mx-auto px-6 lg:px-8 py-20 relative">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose Intern Hours?</h2>
-          <p class="text-gray-600 text-lg max-w-2xl mx-auto">Everything you need to manage internship time tracking efficiently</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+            Visual Insights, <span class="text-brand-gradient">Simplified Logging</span>
+          </h2>
+          <p class="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Engineered with modern, fluid capabilities to make tracking effortless for students and clear for supervisors.
+          </p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300">
-            <div class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Easy Time Logging</h3>
-            <p class="text-gray-600">Log your hours in seconds with our intuitive interface. No complicated forms or processes.</p>
-          </div>
-          <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300">
-            <div class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Detailed Reports</h3>
-            <p class="text-gray-600">Generate comprehensive reports for supervisors and HR. Export data in multiple formats.</p>
-          </div>
-          <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300">
-            <div class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Secure & Private</h3>
-            <p class="text-gray-600">Your data is encrypted and secure. Only authorized personnel can access sensitive information.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-20 px-4 bg-white">
-      <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Feature 1: Analytics (Double Bento Card) -->
+          <div class="md:col-span-2 rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
+            <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-indigo-500/5 rounded-full filter blur-2xl group-hover:bg-indigo-500/10 transition-all duration-300"></div>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-between">
+              <div class="max-w-sm">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+                  <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3">Intelligent Activity Analytics</h3>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                  Understand your progress instantly. Our Tracker parses your log sheets automatically to produce weekly trend bars, goal completion status, and dynamic reports.
+                </p>
+              </div>
+
+              <!-- Inline Interactive Visual -->
+              <div class="w-full sm:w-48 bg-zinc-950/60 p-4 rounded-xl border border-white/5 flex flex-col justify-between shrink-0 h-40">
+                <div class="flex justify-between items-center text-[10px]">
+                  <span class="text-zinc-500 uppercase font-semibold">Weekly Status</span>
+                  <span class="text-emerald-400 font-bold">Good Progress</span>
+                </div>
+                <div class="space-y-2 mt-2">
+                  <div class="flex justify-between text-[10px]">
+                    <span class="text-zinc-400">Total Hours</span>
+                    <span class="text-white font-semibold">32.8 Hrs</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-500 rounded-full" style="width: 82%;"></div>
+                  </div>
+                </div>
+                <div class="flex gap-1 items-end h-12 mt-2 justify-between">
+                  <div class="w-5 h-6 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
+                  <div class="w-5 h-8 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
+                  <div class="w-5 h-10 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
+                  <div class="w-5 h-12 bg-indigo-500 rounded-t transition duration-300"></div>
+                  <div class="w-5 h-9 bg-zinc-800 rounded-t hover:bg-indigo-500 transition duration-300"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2: Time Logger -->
+          <div class="rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px]">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Instant Time Entry</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Log your internship records in seconds. Just input your hours, enter the activity description, and submit. We handle the calculations and database logs instantly.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] text-zinc-500 font-semibold uppercase">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Simple form inputs
+              </span>
+              <span class="text-purple-400">1-click submit</span>
+            </div>
+          </div>
+
+          <!-- Feature 3: Approval engine -->
+          <div class="rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px]">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6">
+                <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Supervisor Approval Gateway</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Smooth review framework. Supervisors can view submitted timesheets, view historical reports, and approve or reject submissions in real-time.
+              </p>
+            </div>
+            <!-- Mini status indicators in card bottom -->
+            <div class="flex gap-2 mt-4">
+              <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[9px] font-bold">Approved</span>
+              <span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">Pending</span>
+              <span class="px-2.5 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[9px] font-bold">Rejected</span>
+            </div>
+          </div>
+
+          <!-- Feature 4: Security (Double Bento Card) -->
+          <div class="md:col-span-2 rounded-2xl glass-card p-8 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
+            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-teal-500/5 rounded-full filter blur-2xl group-hover:bg-teal-500/10 transition-all duration-300"></div>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-between">
+              <div class="max-w-sm">
+                <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6">
+                  <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3">Enterprise-Grade Security</h3>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                  Your data security is our absolute priority. OurTracker relies on cryptographically secure bcrypt password hashing, session tokens, and strict database guards to keep your logs private and secure.
+                </p>
+              </div>
+
+              <!-- Shield visual graphic -->
+              <div class="w-full sm:w-48 bg-zinc-950/60 p-4 rounded-xl border border-white/5 flex flex-col justify-center items-center shrink-0 h-40">
+                <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
+                  <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                  </svg>
+                </div>
+                <span class="text-[10px] text-zinc-400 font-semibold uppercase">Encrypted Session</span>
+                <span class="text-[9px] text-zinc-600 mt-0.5">TLS 1.3 / Bcrypt active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stepper / Onboarding Timeline -->
+      <section id="how-it-works" class="max-w-7xl mx-auto px-6 lg:px-8 py-20 relative">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">How It Works</h2>
-          <p class="text-gray-600 text-lg max-w-2xl mx-auto">Get started in three simple steps</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+            How It Works
+          </h2>
+          <p class="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Get your internship hours tracking setup in three simple steps.
+          </p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-gray-900 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">1</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Create Account</h3>
-            <p class="text-gray-600">Sign up with your email and set up your profile in minutes.</p>
-          </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-gray-900 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">2</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Log Hours</h3>
-            <p class="text-gray-600">Start tracking your daily work hours with our easy-to-use interface.</p>
-          </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-gray-900 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">3</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Submit & Track</h3>
-            <p class="text-gray-600">Submit your timesheets and track approval status in real-time.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="gradient-bg py-20 px-4">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Start Tracking?</h2>
-        <p class="text-xl text-gray-200 mb-8">Join thousands of interns and supervisors who trust OurTracker for time tracking.</p>
-        <a href="views/feed.php?page=register" class="px-8 py-4 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg inline-block">
-          Create Free Account
-        </a>
-      </div>
-    </section>
+        <div class="relative">
+          <!-- Desktop timeline bar -->
+          <div class="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-teal-400 -translate-y-1/2 z-0 opacity-40"></div>
+          
+          <div class="grid md:grid-cols-3 gap-8 relative z-10">
+            <!-- Step 1 -->
+            <div class="rounded-2xl glass-panel p-8 text-center relative group">
+              <div class="w-16 h-16 bg-zinc-950 border border-indigo-500/20 group-hover:border-indigo-500 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg transition-colors duration-300">1</div>
+              <h3 class="text-xl font-bold text-white mb-3">Create Profile</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Sign up with your academic or work email, set your role as **Intern** or **Admin**, and link your profile to your office and organization.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="rounded-2xl glass-panel p-8 text-center relative group">
+              <div class="w-16 h-16 bg-zinc-950 border border-purple-500/20 group-hover:border-purple-500 text-purple-400 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg transition-colors duration-300">2</div>
+              <h3 class="text-xl font-bold text-white mb-3">Log Daily Hours</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Access your dashboard, input your daily hours, write brief descriptions of your accomplishments, and track your metrics.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="rounded-2xl glass-panel p-8 text-center relative group">
+              <div class="w-16 h-16 bg-zinc-950 border border-teal-500/20 group-hover:border-teal-500 text-teal-400 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg transition-colors duration-300">3</div>
+              <h3 class="text-xl font-bold text-white mb-3">Get Approvals</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Timesheets are synced with your supervisor instantly. View approval status updates in real-time and export reports anytime.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section id="faqs" class="max-w-4xl mx-auto px-6 lg:px-8 py-20">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-zinc-400 text-sm md:text-base leading-relaxed">
+            Everything you need to know about the OurTracker suite.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- FAQ 1 -->
+          <details class="rounded-xl border border-white/5 p-5 glass-card bg-zinc-900/10 cursor-pointer group">
+            <summary class="flex justify-between items-center font-bold text-white text-sm md:text-base select-none list-none">
+              <span>Is OurTracker completely free to use?</span>
+              <svg class="w-5 h-5 text-zinc-500 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 text-zinc-400 text-sm leading-relaxed">
+              Yes! OurTracker is completely open and free for interns and academic supervisors. You can log unlimited hours, export PDF reports, and manage databases without any cost.
+            </div>
+          </details>
+
+          <!-- FAQ 2 -->
+          <details class="rounded-xl border border-white/5 p-5 glass-card bg-zinc-900/10 cursor-pointer group">
+            <summary class="flex justify-between items-center font-bold text-white text-sm md:text-base select-none list-none">
+              <span>How do supervisors review and approve hours?</span>
+              <svg class="w-5 h-5 text-zinc-500 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 text-zinc-400 text-sm leading-relaxed">
+              Supervisors log in with their **Admin** role credentials. They are presented with a supervisor-specific panel displaying list sheets, pending logs, and detailed profiles of interns. They can approve or reject items with single-click options.
+            </div>
+          </details>
+
+          <!-- FAQ 3 -->
+          <details class="rounded-xl border border-white/5 p-5 glass-card bg-zinc-900/10 cursor-pointer group">
+            <summary class="flex justify-between items-center font-bold text-white text-sm md:text-base select-none list-none">
+              <span>Can I export my timesheet data?</span>
+              <svg class="w-5 h-5 text-zinc-500 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 text-zinc-400 text-sm leading-relaxed">
+              Absolutely. Inside the intern dashboard, you can view your complete hours log history. There is a built-in export tool allowing you to download clean, professionally formatted reports as spreadsheet data or print-ready files.
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- Pulse/Glow CTA Section -->
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 py-20 relative">
+        <div class="rounded-3xl glass-panel p-10 sm:p-16 text-center relative overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+          <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 via-purple-500/10 to-teal-400/5 pointer-events-none"></div>
+          <div class="absolute -bottom-48 -right-48 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-3xl pointer-events-none"></div>
+          
+          <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+            Ready to Streamline <br/>
+            Your Time Tracking?
+          </h2>
+          <p class="text-zinc-400 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Join thousands of interns and coordinators who rely on OurTracker to maintain accurate and stress-free logging.
+          </p>
+          <a href="views/feed.php?page=register" class="inline-block px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl font-bold shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 text-center">
+            Create Free Account
+          </a>
+        </div>
+      </section>
+      
+    </main>
 
     <!-- Footer -->
-    <footer id="contact" class="bg-gray-800 text-gray-300 py-12 px-4">
+    <footer class="bg-zinc-950/80 border-t border-white/5 text-zinc-400 py-16 px-6 lg:px-8 relative z-10">
       <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-4 gap-8">
-          <div>
-            <span class="text-2xl font-bold text-white">OurTracker</span>
-            <p class="mt-4 text-gray-400">Making internship time tracking simple and efficient for everyone.</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div class="col-span-2 md:col-span-1 space-y-4">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded bg-indigo-500 flex items-center justify-center text-white">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <span class="text-lg font-bold text-white">OurTracker</span>
+            </div>
+            <p class="text-zinc-500 text-sm leading-relaxed">
+              Making internship logging, reports compilation, and supervisors approval clean and secure.
+            </p>
           </div>
           <div>
-            <h4 class="text-white font-semibold mb-4">Product</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="hover:text-white transition">Features</a></li>
-              <li><a href="#" class="hover:text-white transition">Pricing</a></li>
-              <li><a href="#" class="hover:text-white transition">Security</a></li>
+            <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Product</h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="#features" class="hover:text-white transition">Features</a></li>
+              <li><a href="#how-it-works" class="hover:text-white transition">How It Works</a></li>
+              <li><a href="views/feed.php" class="hover:text-white transition">Dashboard</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="text-white font-semibold mb-4">Company</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="hover:text-white transition">About</a></li>
-              <li><a href="#" class="hover:text-white transition">Blog</a></li>
-              <li><a href="#" class="hover:text-white transition">Careers</a></li>
+            <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Security</h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="#" class="hover:text-white transition">Bcrypt Hashing</a></li>
+              <li><a href="#" class="hover:text-white transition">Data Privacy</a></li>
+              <li><a href="#" class="hover:text-white transition">SSL Protection</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="text-white font-semibold mb-4">Support</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="hover:text-white transition">Help Center</a></li>
-              <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
-              <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+            <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Contact</h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="#" class="hover:text-white transition">Support Desk</a></li>
+              <li><a href="#" class="hover:text-white transition">Documentation</a></li>
+              <li><p class="text-zinc-600">v2.0 Stable Build</p></li>
             </ul>
           </div>
         </div>
-        <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+        <div class="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-600">
           <p>&copy; 2026 OurTracker. All rights reserved.</p>
+          <div class="flex gap-4">
+            <a href="#" class="hover:text-zinc-400 transition">Terms of Service</a>
+            <a href="#" class="hover:text-zinc-400 transition">Privacy Policy</a>
+          </div>
         </div>
       </div>
     </footer>
 
+    <!-- Interactive Scripting -->
     <script>
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
+      // 1. Mobile Menu Toggle
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+
+      if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            menuIcon.classList.add('hidden');
+            closeIcon.classList.remove('hidden');
+          } else {
+            mobileMenu.classList.add('hidden');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
           }
         });
-      });
+      }
 
-      // Add scroll effect to navigation
-      window.addEventListener('scroll', function() {
-        const nav = document.querySelector('nav');
-        if (window.scrollY > 50) {
-          nav.classList.add('shadow-md');
+      // 2. Navigation Header Scroll Effect
+      const header = document.querySelector('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          header.classList.add('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
+          header.classList.remove('h-20');
+          header.classList.add('h-16');
         } else {
-          nav.classList.remove('shadow-md');
+          header.classList.remove('shadow-[0_4px_30px_rgba(0,0,0,0.4)]');
+          header.classList.remove('h-16');
+          header.classList.add('h-20');
         }
       });
+
+      // 3. Live Ticking Timer in Dashboard Mockup
+      let hours = 4;
+      let minutes = 18;
+      let seconds = 25;
+      const timerEl = document.getElementById('mockup-timer');
+
+      if (timerEl) {
+        setInterval(() => {
+          seconds++;
+          if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+            if (minutes >= 60) {
+              minutes = 0;
+              hours++;
+            }
+          }
+          const hStr = String(hours).padStart(2, '0');
+          const mStr = String(minutes).padStart(2, '0');
+          const sStr = String(seconds).padStart(2, '0');
+          timerEl.textContent = `${hStr}:${mStr}:${sStr}`;
+        }, 1000);
+      }
     </script>
   </body>
 </html>
