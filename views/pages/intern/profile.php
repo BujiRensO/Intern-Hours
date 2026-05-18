@@ -121,8 +121,24 @@ $base_url = "../";
                             <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user_name); ?></p>
                         </div>
                         <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Nickname</label>
+                            <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['nickname'] ?? 'Not Set'); ?></p>
+                        </div>
+                        <div class="space-y-1">
                             <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email Identity</label>
                             <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user_email); ?></p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Contact Number</label>
+                            <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['contact'] ?? 'Not Set'); ?></p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Birthdate</label>
+                            <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['birthdate'] ?? 'Not Set'); ?></p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">ZIP / Postal Code</label>
+                            <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['postal_code'] ?? 'Not Set'); ?></p>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Office / Department</label>
@@ -131,6 +147,20 @@ $base_url = "../";
                         <div class="space-y-1">
                             <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Assigned Organization</label>
                             <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($organization_name); ?></p>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Geographic Address</label>
+                            <p class="text-lg font-medium text-gray-900">
+                                <?php 
+                                echo htmlspecialchars(implode(', ', array_filter([
+                                    $user['address'] ?? '',
+                                    !empty($user['barangay']) ? 'Brgy. ' . $user['barangay'] : '',
+                                    $user['city'] ?? '',
+                                    $user['province'] ?? '',
+                                    $user['region'] ?? ''
+                                ]))); 
+                                ?>
+                            </p>
                         </div>
                     </div>
                 </div>

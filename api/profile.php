@@ -18,9 +18,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $organization_id = $_POST['organization_id'] ?? '';
     $new_office_name = trim($_POST['new_office_name'] ?? '');
     $new_organization_name = trim($_POST['new_organization_name'] ?? '');
+    $nickname = trim($_POST['nickname'] ?? '');
+    $contact = trim($_POST['contact'] ?? '');
+    $birthdate = trim($_POST['birthdate'] ?? '');
+    $region = trim($_POST['region'] ?? '');
+    $province = trim($_POST['province'] ?? '');
+    $city = trim($_POST['city'] ?? '');
+    $barangay = trim($_POST['barangay'] ?? '');
+    $address = trim($_POST['address'] ?? '');
+    $postal_code = trim($_POST['postal_code'] ?? '');
 
-    if (empty($name) || empty($email) || empty($office_id) || empty($organization_id)) {
-        echo json_encode(['error' => 'All fields except password are required.', 'success' => false]);
+    if (empty($name) || empty($email) || empty($office_id) || empty($organization_id) || empty($nickname) || empty($contact) || empty($birthdate) || empty($region) || empty($province) || empty($city) || empty($barangay) || empty($address) || empty($postal_code)) {
+        echo json_encode(['error' => 'All profile fields are required.', 'success' => false]);
+        exit;
+    }
+
+    // Clean phone number (keep only digits)
+    $contact_clean = preg_replace('/[^0-9]/', '', $contact);
+    if (strlen($contact_clean) !== 11) {
+        echo json_encode(['error' => 'Please enter a valid 11-digit contact number.', 'success' => false]);
+        exit;
+    }
+
+    // Clean postal code
+    $postal_clean = preg_replace('/[^0-9]/', '', $postal_code);
+    if (empty($postal_clean)) {
+        echo json_encode(['error' => 'Please enter a valid numeric ZIP / Postal code.', 'success' => false]);
         exit;
     }
 
@@ -56,8 +79,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Prepare update query
-        $params = [$name, $email, $office_id, $organization_id];
-        $sql = "UPDATE users SET name = ?, email = ?, office_id = ?, organization_id = ?";
+        $params = [
+            $name, 
+            $email, 
+            $office_id, 
+            $organization_id,
+            $nickname,
+            $contact_clean,
+            $birthdate,
+            $region,
+            $province,
+            $city,
+            $barangay,
+            $address,
+            (int)$postal_clean
+        ];
+        $sql = "UPDATE users SET 
+                name = ?, 
+                email = ?, 
+                office_id = ?, 
+                organization_id = ?,
+                nickname = ?,
+                contact = ?,
+                birthdate = ?,
+                region = ?,
+                province = ?,
+                city = ?,
+                barangay = ?,
+                address = ?,
+                postal_code = ?";
         
         if (!empty($password)) {
             if (strlen($password) < 6) {
@@ -103,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // GET request to fetch current profile
 try {
-    $stmt = $pdo->prepare("SELECT name, email, office_id, organization_id FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT name, email, office_id, organization_id, nickname, contact, birthdate, region, province, city, barangay, address, postal_code FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch();
     echo json_encode(['success' => true, 'user' => $user]);

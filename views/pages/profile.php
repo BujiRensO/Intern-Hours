@@ -15,7 +15,7 @@ $offices = $pdo->query("SELECT * FROM office ORDER BY office_name")->fetchAll();
 $orgs = $pdo->query("SELECT * FROM organization ORDER BY organization_name")->fetchAll();
 
 // Fetch current user data
-$stmt = $pdo->prepare("SELECT name, email, office_id, organization_id FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT name, email, office_id, organization_id, nickname, contact, birthdate, region, province, city, barangay, address, postal_code FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 ?>
@@ -38,47 +38,107 @@ $user = $stmt->fetch();
             <form id="profile-form" class="space-y-6">
                 <div id="alert" class="hidden p-4 rounded-lg text-sm font-medium"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                <!-- Personal Details Section -->
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Personal Details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                            <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nickname</label>
+                            <input type="text" name="nickname" value="<?php echo htmlspecialchars($user['nickname'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Number</label>
+                            <input type="tel" name="contact" maxlength="11" value="<?php echo htmlspecialchars($user['contact'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Birthdate</label>
+                            <input type="date" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Office</label>
-                        <select name="office_id" id="office_id" required onchange="toggleNewInput('office')"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
-                            <?php foreach ($offices as $o): ?>
-                                <option value="<?php echo $o['id']; ?>" <?php echo $o['id'] == $user['office_id'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($o['office_name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                            <option value="new">+ Add New Office</option>
-                        </select>
-                        <input type="text" id="new_office_name" name="new_office_name" placeholder="Enter new office name" 
-                            class="hidden mt-3 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                <!-- Affiliation Section -->
+                <div class="pt-6 border-t border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Affiliation</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Office</label>
+                            <select name="office_id" id="office_id" required onchange="toggleNewInput('office')"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                                <?php foreach ($offices as $o): ?>
+                                    <option value="<?php echo $o['id']; ?>" <?php echo $o['id'] == $user['office_id'] ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($o['office_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                                <option value="new">+ Add New Office</option>
+                            </select>
+                            <input type="text" id="new_office_name" name="new_office_name" placeholder="Enter new office name" 
+                                class="hidden mt-3 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Organization</label>
+                            <select name="organization_id" id="organization_id" required onchange="toggleNewInput('organization')"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                                <?php foreach ($orgs as $org): ?>
+                                    <option value="<?php echo $org['id']; ?>" <?php echo $org['id'] == $user['organization_id'] ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($org['organization_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                                <option value="new">+ Add New Organization</option>
+                            </select>
+                            <input type="text" id="new_organization_name" name="new_organization_name" placeholder="Enter new organization name" 
+                                class="hidden mt-3 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Organization</label>
-                        <select name="organization_id" id="organization_id" required onchange="toggleNewInput('organization')"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
-                            <?php foreach ($orgs as $org): ?>
-                                <option value="<?php echo $org['id']; ?>" <?php echo $org['id'] == $user['organization_id'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($org['organization_name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                            <option value="new">+ Add New Organization</option>
-                        </select>
-                        <input type="text" id="new_organization_name" name="new_organization_name" placeholder="Enter new organization name" 
-                            class="hidden mt-3 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                </div>
+
+                <!-- Address Details Section -->
+                <div class="pt-6 border-t border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Address Details (Philippines)</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Region</label>
+                            <input type="text" name="region" value="<?php echo htmlspecialchars($user['region'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Province</label>
+                            <input type="text" name="province" value="<?php echo htmlspecialchars($user['province'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">City / Municipality</label>
+                            <input type="text" name="city" value="<?php echo htmlspecialchars($user['city'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Barangay</label>
+                            <input type="text" name="barangay" value="<?php echo htmlspecialchars($user['barangay'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Street Address / Unit Number</label>
+                            <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ZIP / Postal Code</label>
+                            <input type="text" name="postal_code" maxlength="6" value="<?php echo htmlspecialchars($user['postal_code'] ?? ''); ?>" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition outline-none">
+                        </div>
                     </div>
                 </div>
 
