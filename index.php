@@ -84,12 +84,12 @@ if (isset($_SESSION['user_id'])) {
       <section class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-24 text-center relative">
 
         <!-- Headline & Subheading -->
-        <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
-          Track Your Internship Hours <br/>
-          <span class="text-brand-gradient">With Absolute Ease</span>
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto capitalize">
+          Track Your <span class="text-brand-gradient">OJT Hours</span>
         </h1>
-        <p class="text-base sm:text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-          The ultimate tracking workspace for interns to log logs and supervisors to review progress. Stay aligned, visual, and ahead of schedule.
+        <p class="text-base sm:text-lg md:text-xl text-zinc-400 mb-10 max-w-3xl mx-auto leading-relaxed">
+          OJT tracker ni Teddy kung gusto mog mo contribute clone ra sa github heres the link: <a href="https://github.com/Tedeyy/Intern-Hours" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline font-semibold transition">https://github.com/Tedeyy/Intern-Hours</a><br class="hidden sm:block"/>
+          tas para ma merge inyon contribution need mog 50 pesos payment 🤑🤑
         </p>
 
         <!-- CTA Buttons -->
