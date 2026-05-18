@@ -1043,6 +1043,8 @@ function renderDashboardCharts() {
     compEl.textContent = calculateEstimatedCompletion(remaining, dailyAverage);
   }
 
+  const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+
   // 2. Render Doughnut Gauge Chart
   if (myProgressChart) {
     myProgressChart.destroy();
@@ -1053,7 +1055,7 @@ function renderDashboardCharts() {
     data: {
       datasets: [{
         data: [totalLogged, remaining],
-        backgroundColor: ['#2563eb', '#e2e8f0'],
+        backgroundColor: ['#2563eb', isDark ? '#374151' : '#e2e8f0'],
         borderWidth: 0
       }]
     },
@@ -1107,11 +1109,18 @@ function renderDashboardCharts() {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { font: { size: 10 } }
+          ticks: { 
+            color: isDark ? '#94a3b8' : '#64748b',
+            font: { size: 10 } 
+          }
         },
         y: {
-          grid: { color: '#f1f5f9' },
-          ticks: { font: { size: 10 }, stepSize: 2 }
+          grid: { color: isDark ? '#374151' : '#f1f5f9' },
+          ticks: { 
+            color: isDark ? '#94a3b8' : '#64748b',
+            font: { size: 10 }, 
+            stepSize: 2 
+          }
         }
       }
     }

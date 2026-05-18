@@ -140,22 +140,142 @@ $base_url = "../";
         .text-green {
             color: #16a34a !important;
         }
+
+        /* 🌓 Burnout Counter Dark Mode Adaptation Rules */
+        .burnout-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .burnout-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
+            border: 1px solid rgba(75, 85, 99, 0.4) !important;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2) !important;
+        }
+
+        .burnout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+            transition: border-color 0.3s ease;
+        }
+
+        .dark-mode .burnout-header {
+            border-bottom-color: #374151 !important;
+        }
+
+        .burnout-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .burnout-title {
+            color: #f8fafc !important;
+        }
+
+        .burnout-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .burnout-subtitle {
+            color: #94a3b8 !important;
+        }
+
+        .dark-mode .burnout-subtitle span {
+            color: #cbd5e1 !important;
+        }
+
+        .burnout-goal-badge {
+            font-size: 12px;
+            font-weight: 800;
+            color: #1e3a8a;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
+            box-shadow: 0 2px 5px rgba(59, 130, 246, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .burnout-goal-badge {
+            color: #60a5fa !important;
+            background: rgba(30, 58, 138, 0.4) !important;
+            border-color: #1e3a8a !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .dark-mode .chart-box {
+            background: #1e293b !important;
+            border-color: #374151 !important;
+        }
+
+        .dark-mode .chart-box:hover {
+            border-color: #4b5563 !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dark-mode .chart-title {
+            color: #94a3b8 !important;
+        }
+
+        .dark-mode #chart-percent {
+            color: #f8fafc !important;
+        }
+
+        .dark-mode #chart-ratio {
+            color: #94a3b8 !important;
+        }
+
+        .dark-mode .burndown-item {
+            color: #cbd5e1 !important;
+        }
+
+        .dark-mode .burndown-item.highlight {
+            background: rgba(20, 83, 45, 0.3) !important;
+            border-color: #166534 !important;
+        }
+
+        .dark-mode .burndown-item .label {
+            color: #94a3b8 !important;
+        }
+
+        .dark-mode .burndown-item .value {
+            color: #e2e8f0 !important;
+        }
         </style>
 
         <!-- Internship Burnout Counter -->
-        <div class="analytics-card full-width mb-6 glass-card p-6" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+        <div class="burnout-card full-width mb-6 p-6">
+            <div class="burnout-header">
                 <div>
-                    <h3 class="text-xl font-extrabold text-gray-900" style="display: flex; align-items: center; gap: 10px; margin: 0; letter-spacing: -0.02em;">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="stroke-width: 2.2;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                    <h3 class="text-xl font-extrabold burnout-title">
+                        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="stroke-width: 2.2;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
                         Internship Burnout Counter
                     </h3>
-                    <p style="font-size: 12px; color: #64748b; margin-top: 4px; font-weight: 500;">
-                        Started: <span class="font-bold text-gray-700"><?php echo date('M d, Y', strtotime($hour_from)); ?></span> &bull; 
-                        Schedule: <span class="font-bold text-gray-700"><?php echo $duty_from; ?> to <?php echo $duty_to; ?></span>
+                    <p class="burnout-subtitle">
+                        Started: <span class="font-bold"><?php echo date('M d, Y', strtotime($hour_from)); ?></span> &bull; 
+                        Schedule: <span class="font-bold"><?php echo $duty_from; ?> to <?php echo $duty_to; ?></span>
                     </p>
                 </div>
-                <span style="font-size: 12px; font-weight: 800; color: #1e3a8a; background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 9999px; letter-spacing: 0.02em; box-shadow: 0 2px 5px rgba(59, 130, 246, 0.05);">
+                <span class="burnout-goal-badge">
                     Goal: <?php echo $hour_goal; ?> Hours
                 </span>
             </div>
