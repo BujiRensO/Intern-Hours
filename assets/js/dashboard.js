@@ -221,11 +221,65 @@ function renderCalendar() {
       cell.classList.add("holiday");
     }
 
+    let birthdayBadgesHtml = "";
+    if (typeof birthdaysData !== "undefined" && Array.isArray(birthdaysData)) {
+      const dayBirthdays = birthdaysData.filter(b => {
+        if (!b.birthdate) return false;
+        const parts = b.birthdate.split(/[-/.]/);
+        if (parts.length !== 3) return false;
+        
+        let bMonth = 0;
+        let bDay = 0;
+        
+        if (parts[0].length === 4) {
+          // YYYY-MM-DD or YYYY/MM/DD
+          bMonth = parseInt(parts[1], 10);
+          bDay = parseInt(parts[2], 10);
+        } else if (parts[2].length === 4) {
+          // MM-DD-YYYY or DD-MM-YYYY
+          const p0 = parseInt(parts[0], 10);
+          const p1 = parseInt(parts[1], 10);
+          if (p0 > 12) {
+            bDay = p0;
+            bMonth = p1;
+          } else if (p1 > 12) {
+            bMonth = p0;
+            bDay = p1;
+          } else {
+            bMonth = p0;
+            bDay = p1;
+          }
+        } else {
+          bMonth = parseInt(parts[1], 10);
+          bDay = parseInt(parts[2], 10);
+        }
+        
+        return bMonth === currentMonth && bDay === day;
+      });
+      
+      dayBirthdays.forEach(b => {
+        const displayName = b.nickname || b.name.split(" ")[0];
+        const parts = b.birthdate.split(/[-/.]/);
+        let ageHtml = "";
+        if (parts.length === 3) {
+          const birthYear = parseInt(parts[0].length === 4 ? parts[0] : (parts[2].length === 4 ? parts[2] : null), 10);
+          if (birthYear && birthYear <= currentYear) {
+            const age = currentYear - birthYear;
+            if (age > 0) {
+              ageHtml = ` (${age})`;
+            }
+          }
+        }
+        birthdayBadgesHtml += `<div class="birthday-badge" title="${displayName}'s Birthday! 🎉">🎂 ${displayName}${ageHtml}</div>`;
+      });
+    }
+
     cell.innerHTML = `
             <div class="day-cell-date">${day}</div>
             ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h</div>` : ""}
             ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
             ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
+            ${birthdayBadgesHtml}
         `;
 
     if (!isFuture) {

@@ -10,6 +10,24 @@ $user_name = $_SESSION['user_name'];
 $current_month = (int)($_GET['month'] ?? date('m'));
 $current_year = (int)($_GET['year'] ?? date('Y'));
 
+$office_id = $_SESSION['office_id'] ?? null;
+$organization_id = $_SESSION['organization_id'] ?? null;
+
+$birthdays = [];
+if ($office_id && $organization_id) {
+    $stmt = $pdo->prepare("
+        SELECT name, nickname, birthdate 
+        FROM users 
+        WHERE office_id = ? 
+          AND organization_id = ? 
+          AND role = 'Intern' 
+          AND birthdate IS NOT NULL 
+          AND birthdate != ''
+    ");
+    $stmt->execute([$office_id, $organization_id]);
+    $birthdays = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $base_url = "../";
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>assets/css/dashboard.css">
@@ -194,6 +212,7 @@ $base_url = "../";
         let filterToDate = null;
         const currentUserId = userId;
         const apiBasePath = '../';
+        const birthdaysData = <?php echo json_encode($birthdays); ?>;
     </script>
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/colleagues.js"></script>
