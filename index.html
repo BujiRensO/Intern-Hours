@@ -19,8 +19,9 @@
   </head>
 
   <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm fixed w-full z-50">
+    <div class="overflow-hidden min-h-screen w-full relative flex flex-col">
+      <!-- Navigation -->
+      <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
@@ -87,11 +88,11 @@
       <section class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-24 text-center relative">
 
         <!-- Headline & Subheading -->
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
           Track Your Internship Hours <br/>
           <span class="text-brand-gradient">With Absolute Ease</span>
         </h1>
-        <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
+        <p class="text-base sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
           A simple, efficient way for interns to log hours and for supervisors
           to track progress. Stay organized and never miss a beat.
         </p>
@@ -115,7 +116,7 @@
           <!-- Ambient card reflection -->
           <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl pointer-events-none group-hover:bg-purple-500/15 transition-all"></div>
           
-          <div class="rounded-xl overflow-hidden bg-zinc-950/80 border border-white/5 p-6 text-left font-sans text-xs">
+          <div class="rounded-xl overflow-x-auto bg-zinc-950/80 border border-white/5 p-4 sm:p-6 text-left font-sans text-xs">
             <!-- Welcome Card -->
             <div class="p-5 rounded-xl bg-zinc-900/60 border border-white/5 mb-6 flex justify-between items-center">
               <div>
@@ -592,6 +593,7 @@
         </div>
       </div>
     </footer>
+    </div>
 
     <!-- Interactive Scripting -->
     <script>

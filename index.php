@@ -20,13 +20,14 @@ if (isset($_SESSION['user_id'])) {
   </head>
 
   <body class="bg-gray-950 text-zinc-100 relative antialiased selection:bg-indigo-500 selection:text-white">
-    <!-- Background Radial Ambient Glows -->
+    <div class="overflow-hidden min-h-screen w-full relative flex flex-col">
+      <!-- Background Radial Ambient Glows -->
     <div class="absolute top-0 left-1/4 w-[500px] h-[500px] ambient-glow-1 animate-pulse-slow pointer-events-none z-0"></div>
     <div class="absolute top-1/3 right-10 w-[600px] h-[600px] ambient-glow-2 animate-pulse-slow pointer-events-none z-0"></div>
     <div class="absolute top-2/3 left-10 w-[450px] h-[450px] ambient-glow-3 animate-pulse-slow pointer-events-none z-0"></div>
 
     <!-- Navigation Header -->
-    <header class="glass-nav fixed w-full z-50 transition-all duration-300">
+    <header class="glass-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300">
       <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex justify-between h-20 items-center">
           <!-- Logo -->
@@ -83,11 +84,11 @@ if (isset($_SESSION['user_id'])) {
       <section class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-24 text-center relative">
 
         <!-- Headline & Subheading -->
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
           Track Your Internship Hours <br/>
           <span class="text-brand-gradient">With Absolute Ease</span>
         </h1>
-        <p class="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        <p class="text-base sm:text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
           The ultimate tracking workspace for interns to log logs and supervisors to review progress. Stay aligned, visual, and ahead of schedule.
         </p>
 
@@ -106,7 +107,7 @@ if (isset($_SESSION['user_id'])) {
           <!-- Ambient card reflection -->
           <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl pointer-events-none group-hover:bg-purple-500/15 transition-all"></div>
           
-          <div class="rounded-xl overflow-hidden bg-zinc-950/80 border border-white/5 p-6 text-left font-sans text-xs">
+          <div class="rounded-xl overflow-x-auto bg-zinc-950/80 border border-white/5 p-4 sm:p-6 text-left font-sans text-xs">
             <!-- Welcome Card -->
             <div class="p-5 rounded-xl bg-zinc-900/60 border border-white/5 mb-6 flex justify-between items-center">
               <div>
@@ -521,6 +522,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
       </div>
     </footer>
+    </div>
 
     <!-- Interactive Scripting -->
     <script>
