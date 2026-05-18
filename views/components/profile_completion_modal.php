@@ -87,14 +87,23 @@
                 </select>
             </div>
 
+            <!-- Barangay Dropdown -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1" for="pc-barangay">Barangay <span class="text-red-500">*</span></label>
+                <select id="pc-barangay" required disabled
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 outline-none appearance-none cursor-pointer disabled:opacity-50">
+                    <option value="">Select City / Municipality first</option>
+                </select>
+            </div>
+
             <!-- Detailed Street Address & Zip Code -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Street Address / Barangay -->
+                <!-- Street Address -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1" for="pc-address">Street / Barangay / Unit <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1" for="pc-address">Street Address / Unit Number <span class="text-red-500">*</span></label>
                     <input type="text" id="pc-address" name="address" required
                            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 outline-none placeholder-gray-400"
-                           placeholder="House number, Street, Barangay" value="<?php echo htmlspecialchars($user_profile['address'] ?? ''); ?>">
+                           placeholder="House number, Street, Subd" value="<?php echo htmlspecialchars($user_profile['address'] ?? ''); ?>">
                 </div>
 
                 <!-- ZIP / Postal Code -->
@@ -131,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
 const regionSelect = document.getElementById('pc-region');
 const provinceSelect = document.getElementById('pc-province');
 const citySelect = document.getElementById('pc-city');
+const barangaySelect = document.getElementById('pc-barangay');
 
 // Dynamic Location Data Fetching
 async function initGeographicApi() {
@@ -151,6 +161,7 @@ async function initGeographicApi() {
         // Trigger change handlers
         regionSelect.addEventListener('change', handleRegionChange);
         provinceSelect.addEventListener('change', handleProvinceChange);
+        citySelect.addEventListener('change', handleCityChange);
 
     } catch (error) {
         console.error('Error fetching regions:', error);
@@ -165,8 +176,10 @@ async function handleRegionChange() {
     // Reset dependant selects
     provinceSelect.innerHTML = '<option value="">Select Province first</option>';
     citySelect.innerHTML = '<option value="">Select Region / Province first</option>';
+    barangaySelect.innerHTML = '<option value="">Select City / Municipality first</option>';
     provinceSelect.disabled = true;
     citySelect.disabled = true;
+    barangaySelect.disabled = true;
 
     if (!regionCode) return;
 
@@ -200,7 +213,9 @@ async function handleRegionChange() {
 
 async function loadCitiesForRegion(regionCode) {
     citySelect.innerHTML = '<option value="">Loading cities...</option>';
+    barangaySelect.innerHTML = '<option value="">Select City / Municipality first</option>';
     citySelect.disabled = true;
+    barangaySelect.disabled = true;
 
     try {
         const response = await fetch(`https://psgc.gitlab.io/api/regions/${regionCode}/cities-municipalities/`);
@@ -223,7 +238,9 @@ async function loadCitiesForRegion(regionCode) {
 async function handleProvinceChange() {
     const provinceCode = this.value;
     citySelect.innerHTML = '<option value="">Select Province first</option>';
+    barangaySelect.innerHTML = '<option value="">Select City / Municipality first</option>';
     citySelect.disabled = true;
+    barangaySelect.disabled = true;
 
     if (!provinceCode) return;
 
@@ -243,6 +260,35 @@ async function handleProvinceChange() {
     } catch (error) {
         console.error('Error fetching cities for province:', error);
         citySelect.innerHTML = '<option value="">Error loading cities</option>';
+    }
+}
+
+async function handleCityChange() {
+    const cityCode = this.value;
+    barangaySelect.innerHTML = '<option value="">Select City / Municipality first</option>';
+    barangaySelect.disabled = true;
+
+    if (!cityCode) return;
+
+    try {
+        barangaySelect.innerHTML = '<option value="">Loading barangays...</option>';
+        const response = await fetch(`https://psgc.gitlab.io/api/cities-municipalities/${cityCode}/barangays/`);
+        const barangays = await response.json();
+
+        // Sort alphabetically
+        barangays.sort((a, b) => a.name.localeCompare(b.name));
+
+        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+        barangays.forEach(brgy => {
+            const opt = document.createElement('option');
+            opt.value = brgy.code;
+            opt.textContent = brgy.name;
+            barangaySelect.appendChild(opt);
+        });
+        barangaySelect.disabled = false;
+    } catch (error) {
+        console.error('Error fetching barangays:', error);
+        barangaySelect.innerHTML = '<option value="">Error loading barangays</option>';
     }
 }
 
@@ -270,6 +316,11 @@ async function submitProfileCompletion(event) {
         selectedCity = citySelect.options[citySelect.selectedIndex].text;
     }
 
+    let selectedBarangay = '';
+    if (barangaySelect.selectedIndex > 0) {
+        selectedBarangay = barangaySelect.options[barangaySelect.selectedIndex].text;
+    }
+
     const nicknameVal = document.getElementById('pc-nickname').value.trim();
     const contactVal = document.getElementById('pc-contact').value.trim();
     const birthdateVal = document.getElementById('pc-birthdate').value;
@@ -277,7 +328,7 @@ async function submitProfileCompletion(event) {
     const zipVal = document.getElementById('pc-zip').value.trim();
 
     // Validation checks
-    if (!nicknameVal || !contactVal || !birthdateVal || !selectedRegion || !selectedCity || !addressVal || !zipVal) {
+    if (!nicknameVal || !contactVal || !birthdateVal || !selectedRegion || !selectedCity || !selectedBarangay || !addressVal || !zipVal) {
         showAlert('Please fill out all required fields.', 'error');
         return;
     }
@@ -294,8 +345,10 @@ async function submitProfileCompletion(event) {
     formData.append('nickname', nicknameVal);
     formData.append('contact', contactVal);
     formData.append('birthdate', birthdateVal);
+    formData.append('region', selectedRegion);
     formData.append('province', selectedProvince);
     formData.append('city', selectedCity);
+    formData.append('barangay', selectedBarangay);
     formData.append('address', addressVal);
     formData.append('postal_code', zipVal);
 

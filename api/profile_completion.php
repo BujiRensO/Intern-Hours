@@ -15,14 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nickname = trim($_POST['nickname'] ?? '');
     $contact = trim($_POST['contact'] ?? '');
     $birthdate = trim($_POST['birthdate'] ?? '');
+    $region = trim($_POST['region'] ?? '');
     $province = trim($_POST['province'] ?? '');
     $city = trim($_POST['city'] ?? '');
+    $barangay = trim($_POST['barangay'] ?? '');
     $address = trim($_POST['address'] ?? '');
     $postal_code = trim($_POST['postal_code'] ?? '');
 
     // Validation
-    if (empty($contact) || empty($birthdate) || empty($province) || empty($city) || empty($address) || empty($postal_code)) {
-        echo json_encode(['success' => false, 'error' => 'All profile fields (Contact, Birthdate, Province, City, Address, and Zip Code) are required.']);
+    if (empty($contact) || empty($birthdate) || empty($region) || empty($province) || empty($city) || empty($barangay) || empty($address) || empty($postal_code)) {
+        echo json_encode(['success' => false, 'error' => 'All profile fields (Contact, Birthdate, Region, Province, City, Barangay, Address, and Zip Code) are required.']);
         exit;
     }
 
@@ -46,16 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "UPDATE users SET 
                 contact = ?, 
                 birthdate = ?, 
+                region = ?,
                 province = ?, 
                 city = ?, 
+                barangay = ?,
                 address = ?, 
                 postal_code = ?";
         
         $params = [
-            (int)$contact_clean,
+            $contact_clean,
             $birthdate,
+            $region,
             $province,
             $city,
+            $barangay,
             $address,
             (int)$postal_clean
         ];

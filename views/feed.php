@@ -9,15 +9,17 @@ $user_profile = null;
 if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
     // Check if profile is complete
     try {
-        $stmt = $pdo->prepare("SELECT contact, birthdate, province, city, address, postal_code, nickname FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT contact, birthdate, region, province, city, barangay, address, postal_code, nickname FROM users WHERE id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $user_profile = $stmt->fetch();
         
         if ($user_profile) {
             $needs_profile_completion = empty($user_profile['contact']) || 
                                         empty($user_profile['birthdate']) || 
+                                        empty($user_profile['region']) ||
                                         empty($user_profile['province']) || 
                                         empty($user_profile['city']) || 
+                                        empty($user_profile['barangay']) || 
                                         empty($user_profile['address']) ||
                                         empty($user_profile['postal_code']);
         }
