@@ -104,8 +104,12 @@ $base_url = "../";
         <div class="lg:w-1/3 space-y-6">
             <!-- Identity Card -->
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center lg:text-left glass-card">
-                <div class="inline-flex lg:flex items-center justify-center w-20 h-20 bg-gray-900 rounded-2xl mb-6 text-white text-3xl font-bold shadow-lg">
-                    <?php echo strtoupper(substr($user_name, 0, 1)); ?>
+                <div id="sidebar-avatar-container" class="inline-flex lg:flex items-center justify-center w-20 h-20 bg-gray-900 rounded-2xl mb-6 text-white text-3xl font-bold shadow-lg overflow-hidden">
+                    <?php if (!empty($user['profile_picture'])): ?>
+                        <img id="sidebar-profile-pic" src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture" class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <span id="sidebar-initials"><?php echo strtoupper(substr($user_name, 0, 1)); ?></span>
+                    <?php endif; ?>
                 </div>
                 <h1 class="text-2xl font-bold text-gray-900 tracking-tight"><?php echo htmlspecialchars($user_name); ?></h1>
                 <p class="text-blue-600 font-semibold text-sm mt-1 uppercase tracking-widest"><?php echo htmlspecialchars($user_role); ?></p>
@@ -160,6 +164,35 @@ $base_url = "../";
                             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
+                </div>
+
+                <!-- Profile Picture Settings -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 glass-card">
+                    <div id="profile-picture-alert" class="hidden"></div>
+                    <form id="profile-picture-form" class="space-y-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Profile Picture</h2>
+                            <p class="text-sm text-gray-500 mt-1">Enter a public URL to display a profile picture.</p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row items-center gap-6 pt-2">
+                            <!-- Live Preview -->
+                            <div class="relative w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg overflow-hidden shrink-0">
+                                <img id="preview-profile-pic" src="<?php echo !empty($user['profile_picture']) ? htmlspecialchars($user['profile_picture']) : ''; ?>" alt="Preview" class="w-full h-full object-cover <?php echo empty($user['profile_picture']) ? 'hidden' : ''; ?>">
+                                <span id="preview-initials" class="<?php echo !empty($user['profile_picture']) ? 'hidden' : ''; ?>"><?php echo strtoupper(substr($user_name, 0, 1)); ?></span>
+                            </div>
+                            
+                            <!-- Input Field -->
+                            <div class="flex-1 w-full space-y-2">
+                                <label class="text-sm font-semibold text-gray-700">Image URL</label>
+                                <input type="url" id="profile_picture_url" placeholder="https://example.com/avatar.jpg" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none transition form-input" value="<?php echo htmlspecialchars($user['profile_picture'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition shadow-lg shadow-gray-100">
+                            Save Profile Picture
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Account Details -->

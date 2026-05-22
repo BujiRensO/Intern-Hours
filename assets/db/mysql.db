@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS burnout_counter (
   user_id INT NOT NULL,
   hour_goal INT NOT NULL DEFAULT 0,
   starting_date DATETIME NOT NULL,
-  duty_days VARCHAR(255), --'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'
+  duty_days VARCHAR(255), -- 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP()
     ON UPDATE CURRENT_TIMESTAMP(),

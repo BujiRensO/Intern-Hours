@@ -1,4 +1,21 @@
 <?php
+/**
+ * Intern Hours Log Retrieval Endpoint
+ *
+ * Fetches log details and total hours for a specific colleague (intern_id).
+ *
+ * Parameters:
+ * - intern_id (int, required): Target user ID.
+ * - month (int, optional): Log month.
+ * - year (int, optional): Log year.
+ * - all (string, optional): "true" to bypass month filters and retrieve all history.
+ *
+ * Security & Data Privacy:
+ * - Requires explicit session authorization.
+ * - Validates that the viewer and the target intern belong to the same office and organization.
+ * - Enforces privacy controls: If the target profile is private, returns a redacted payload
+ *   (excluding detailed logs and total hours) unless the viewer has Admin privileges.
+ */
 require_once __DIR__ . '/../config.php';
 
 session_start();
@@ -26,7 +43,7 @@ try {
     // Fetch the target intern's info
     $stmt = $pdo->prepare("
         SELECT u.id, u.name, u.email, u.is_public, u.office_id, u.organization_id, u.role,
-               o.office_name, org.organization_name
+               u.profile_picture, o.office_name, org.organization_name
         FROM users u
         LEFT JOIN office o ON u.office_id = o.id
         LEFT JOIN organization org ON u.organization_id = org.id
@@ -56,6 +73,7 @@ try {
             'intern' => [
                 'id' => $intern['id'],
                 'name' => $intern['name'],
+                'profile_picture' => $intern['profile_picture'],
                 'office_name' => $intern['office_name'],
                 'organization_name' => $intern['organization_name'],
             ],
@@ -111,6 +129,7 @@ try {
             'id' => $intern['id'],
             'name' => $intern['name'],
             'email' => $intern['email'],
+            'profile_picture' => $intern['profile_picture'],
             'office_name' => $intern['office_name'],
             'organization_name' => $intern['organization_name'],
         ],

@@ -3,29 +3,29 @@
  */
 
 .settings-tab.active {
-    background-color: #111827;
-    color: #ffffff;
+  background-color: #111827;
+  color: #ffffff;
 }
 
 .dark-mode .settings-tab.active {
-    background-color: #3b82f6;
-    color: #ffffff;
+  background-color: #3b82f6;
+  color: #ffffff;
 }
 
 .settings-section.hidden {
-    display: none;
+  display: none;
 }
 
 .dark-mode .settings-tab:hover:not(.active) {
-    background-color: #374151;
-    color: #f9fafb;
+  background-color: #374151;
+  color: #f9fafb;
 }
 
 /* Custom Toggle Switch for Dark Mode & Privacy */
 .relative.inline-flex.items-center.cursor-pointer input:checked ~ .w-10 {
-    background-color: #2563eb;
+  background-color: #2563eb;
 }
 
 .dark-mode .relative.inline-flex.items-center.cursor-pointer .bg-gray-200 {
-    background-color: #4b5563;
+  background-color: #4b5563;
 }

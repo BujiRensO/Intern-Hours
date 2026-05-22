@@ -78,17 +78,19 @@ function loadInterns() {
           if (parseInt(intern.id) === userId) return;
 
           const div = document.createElement("div");
-          div.className = "flex flex-col items-center gap-2 bg-white p-3 rounded-lg border border-gray-100 shadow-sm cursor-pointer hover:border-blue-200 hover:shadow-md transition-all";
+          div.className =
+            "flex flex-col items-center gap-2 bg-white p-3 rounded-lg border border-gray-100 shadow-sm cursor-pointer hover:border-blue-200 hover:shadow-md transition-all";
           div.title = "Click to view " + intern.name.split(" ")[0] + "'s hours";
           div.onclick = () => {
-            if (typeof openInternModal === 'function') {
+            if (typeof openInternModal === "function") {
               openInternModal(parseInt(intern.id));
             }
           };
-          const hoursBadge = intern.total_hours !== null 
-            ? `<div class="mt-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full">${parseFloat(intern.total_hours).toFixed(1)}h</div>` 
-            : `<div class="mt-1 px-2 py-0.5 bg-gray-100 text-gray-400 text-[10px] font-bold rounded-full">Private</div>`;
-            
+          const hoursBadge =
+            intern.total_hours !== null
+              ? `<div class="mt-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full">${parseFloat(intern.total_hours).toFixed(1)}h</div>`
+              : `<div class="mt-1 px-2 py-0.5 bg-gray-100 text-gray-400 text-[10px] font-bold rounded-full">Private</div>`;
+
           div.innerHTML = `
                         <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold text-lg" title="${intern.email}">
                             ${intern.name.charAt(0)}
@@ -225,14 +227,14 @@ function renderCalendar() {
 
     let birthdayBadgesHtml = "";
     if (typeof birthdaysData !== "undefined" && Array.isArray(birthdaysData)) {
-      const dayBirthdays = birthdaysData.filter(b => {
+      const dayBirthdays = birthdaysData.filter((b) => {
         if (!b.birthdate) return false;
         const parts = b.birthdate.split(/[-/.]/);
         if (parts.length !== 3) return false;
-        
+
         let bMonth = 0;
         let bDay = 0;
-        
+
         if (parts[0].length === 4) {
           // YYYY-MM-DD or YYYY/MM/DD
           bMonth = parseInt(parts[1], 10);
@@ -255,16 +257,23 @@ function renderCalendar() {
           bMonth = parseInt(parts[1], 10);
           bDay = parseInt(parts[2], 10);
         }
-        
+
         return bMonth === currentMonth && bDay === day;
       });
-      
-      dayBirthdays.forEach(b => {
+
+      dayBirthdays.forEach((b) => {
         const displayName = b.nickname || b.name.split(" ")[0];
         const parts = b.birthdate.split(/[-/.]/);
         let ageHtml = "";
         if (parts.length === 3) {
-          const birthYear = parseInt(parts[0].length === 4 ? parts[0] : (parts[2].length === 4 ? parts[2] : null), 10);
+          const birthYear = parseInt(
+            parts[0].length === 4
+              ? parts[0]
+              : parts[2].length === 4
+                ? parts[2]
+                : null,
+            10,
+          );
           if (birthYear && birthYear <= currentYear) {
             const age = currentYear - birthYear;
             if (age > 0) {
@@ -299,22 +308,24 @@ function renderCalendar() {
   if (grid) {
     // Enable glowing border calculations when mouse is within the grid
     grid.addEventListener("mouseenter", () => {
-      grid.querySelectorAll(".day-cell").forEach(cell => {
+      grid.querySelectorAll(".day-cell").forEach((cell) => {
         cell.style.setProperty("--border-opacity", "1");
       });
     });
 
     // Fade out glows when mouse leaves the grid completely
     grid.addEventListener("mouseleave", () => {
-      grid.querySelectorAll(".day-cell").forEach(cell => {
+      grid.querySelectorAll(".day-cell").forEach((cell) => {
         cell.style.setProperty("--border-opacity", "0");
       });
     });
 
     // Track coordinates globally for all active day cells in the grid
     grid.addEventListener("mousemove", (e) => {
-      const activeCells = grid.querySelectorAll(".day-cell:not(.disabled):not(.other-month)");
-      activeCells.forEach(cell => {
+      const activeCells = grid.querySelectorAll(
+        ".day-cell:not(.disabled):not(.other-month)",
+      );
+      activeCells.forEach((cell) => {
         const rect = cell.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -329,7 +340,8 @@ function renderCalendar() {
 
 function loadAbsences() {
   fetch(
-    apiBasePath + "api/absences.php?month=" +
+    apiBasePath +
+      "api/absences.php?month=" +
       currentMonth +
       "&year=" +
       currentYear +
@@ -447,7 +459,8 @@ function deleteAbsence() {
 
 function loadHours() {
   fetch(
-    apiBasePath + "api/hours.php?month=" +
+    apiBasePath +
+      "api/hours.php?month=" +
       currentMonth +
       "&year=" +
       currentYear +
@@ -468,7 +481,8 @@ let checkInsData = {};
 
 function loadCheckIns() {
   fetch(
-    apiBasePath + "api/check-in.php?month=" +
+    apiBasePath +
+      "api/check-in.php?month=" +
       currentMonth +
       "&year=" +
       currentYear +
@@ -487,8 +501,8 @@ function loadCheckIns() {
 function getTodayDateStr() {
   const d = new Date();
   const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
@@ -499,7 +513,11 @@ function startQuickClockTimer() {
 
   function updateTime() {
     const now = new Date();
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    const timeStr = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
     timeEl.textContent = timeStr;
   }
 
@@ -514,14 +532,18 @@ function updateQuickClockWidget() {
     morning_in: "",
     morning_out: "",
     afternoon_in: "",
-    afternoon_out: ""
+    afternoon_out: "",
   };
 
   const fields = ["morning_in", "morning_out", "afternoon_in", "afternoon_out"];
-  fields.forEach(field => {
-    const btn = document.getElementById(`quick-clock-${field.replace('_', '-')}`);
-    const statusEl = document.getElementById(`status-${field.replace('_', '-')}`);
-    
+  fields.forEach((field) => {
+    const btn = document.getElementById(
+      `quick-clock-${field.replace("_", "-")}`,
+    );
+    const statusEl = document.getElementById(
+      `status-${field.replace("_", "-")}`,
+    );
+
     if (btn && statusEl) {
       if (todayLogs[field]) {
         statusEl.textContent = todayLogs[field];
@@ -536,21 +558,30 @@ function updateQuickClockWidget() {
 
 function quickClockStamp(field) {
   const todayStr = getTodayDateStr();
-  const todayLogs = JSON.parse(JSON.stringify(checkInsData[todayStr] || {
-    morning_in: "",
-    morning_out: "",
-    afternoon_in: "",
-    afternoon_out: ""
-  }));
+  const todayLogs = JSON.parse(
+    JSON.stringify(
+      checkInsData[todayStr] || {
+        morning_in: "",
+        morning_out: "",
+        afternoon_in: "",
+        afternoon_out: "",
+      },
+    ),
+  );
 
   // Toggle or Set current time
   if (todayLogs[field]) {
-    if (!confirm(`Do you want to clear your clocked time for ${field.replace('_', ' ')}?`)) return;
+    if (
+      !confirm(
+        `Do you want to clear your clocked time for ${field.replace("_", " ")}?`,
+      )
+    )
+      return;
     todayLogs[field] = "";
   } else {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
     todayLogs[field] = `${hours}:${minutes}`;
   }
 
@@ -563,13 +594,13 @@ function quickClockStamp(field) {
 
   fetch(apiBasePath + "api/check-in.php", {
     method: "POST",
-    body: formData
+    body: formData,
   })
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       if (data.success) {
         checkInsData[todayStr] = todayLogs;
-        
+
         // Update local hoursData so calendar displays hours instantly
         if (data.hours > 0) {
           hoursData[todayStr] = data.hours;
@@ -578,7 +609,7 @@ function quickClockStamp(field) {
           delete hoursData[todayStr];
           delete monthHoursData[todayStr];
         }
-        
+
         renderCalendar();
         updateQuickClockWidget();
         loadHours(); // Reload total hours metrics
@@ -586,7 +617,7 @@ function quickClockStamp(field) {
         alert(data.error || "Error clocking time");
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       alert("Error clocking time");
     });
@@ -617,11 +648,12 @@ function calculateModalDuration() {
   }
 
   const total = morningHours + afternoonHours;
-  document.getElementById("modal-duration-preview").textContent = total.toFixed(2);
+  document.getElementById("modal-duration-preview").textContent =
+    total.toFixed(2);
 }
 
 function parseTimeStr(timeStr) {
-  const parts = timeStr.split(':');
+  const parts = timeStr.split(":");
   const d = new Date();
   d.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
   return d;
@@ -643,14 +675,23 @@ function openLogModal(dateStr) {
   if (logs) {
     document.getElementById("modal-morning-in").value = logs.morning_in || "";
     document.getElementById("modal-morning-out").value = logs.morning_out || "";
-    document.getElementById("modal-afternoon-in").value = logs.afternoon_in || "";
-    document.getElementById("modal-afternoon-out").value = logs.afternoon_out || "";
+    document.getElementById("modal-afternoon-in").value =
+      logs.afternoon_in || "";
+    document.getElementById("modal-afternoon-out").value =
+      logs.afternoon_out || "";
   }
 
   calculateModalDuration();
 
-  const hasLogs = logs && (logs.morning_in || logs.morning_out || logs.afternoon_in || logs.afternoon_out);
-  document.getElementById("delete-btn").style.display = hasLogs ? "block" : "none";
+  const hasLogs =
+    logs &&
+    (logs.morning_in ||
+      logs.morning_out ||
+      logs.afternoon_in ||
+      logs.afternoon_out);
+  document.getElementById("delete-btn").style.display = hasLogs
+    ? "block"
+    : "none";
   document.getElementById("log-modal").classList.add("active");
 }
 
@@ -683,7 +724,7 @@ function saveHours() {
           morning_in: mi,
           morning_out: mo,
           afternoon_in: ai,
-          afternoon_out: ao
+          afternoon_out: ao,
         };
 
         if (data.hours > 0) {
@@ -709,7 +750,12 @@ function saveHours() {
 }
 
 function deleteHours() {
-  if (!confirm("Are you sure you want to delete all clocked entries for this date?")) return;
+  if (
+    !confirm(
+      "Are you sure you want to delete all clocked entries for this date?",
+    )
+  )
+    return;
 
   const formData = new FormData();
   formData.append("date", selectedDate);
@@ -725,7 +771,7 @@ function deleteHours() {
         delete checkInsData[selectedDate];
         delete hoursData[selectedDate];
         delete monthHoursData[selectedDate];
-        
+
         renderCalendar();
         updateQuickClockWidget();
         closeModal();
@@ -940,13 +986,18 @@ function downloadPDF() {
     const lastDayObj = new Date(currentYear, currentMonth, 0);
     const lastDay = String(lastDayObj.getDate()).padStart(2, "0");
     const monthStr = String(currentMonth).padStart(2, "0");
-    
+
     fromDate = `${currentYear}-${monthStr}-${firstDay}`;
     toDate = `${currentYear}-${monthStr}-${lastDay}`;
   }
 
   // Build the API URL
-  let url = apiBasePath + "api/download-dtr.php?from_date=" + fromDate + "&to_date=" + toDate;
+  let url =
+    apiBasePath +
+    "api/download-dtr.php?from_date=" +
+    fromDate +
+    "&to_date=" +
+    toDate;
 
   // If in supervisor view, append the target userId
   if (typeof isSupervisorView !== "undefined" && isSupervisorView) {
@@ -956,27 +1007,30 @@ function downloadPDF() {
   // Visual feedback: show loading state on the button
   const btn = document.getElementById("btn-download-pdf");
   if (!btn) return;
-  
+
   const originalText = btn.innerHTML;
   btn.disabled = true;
   btn.innerHTML = "<span>⏳</span> Generating PDF...";
 
   fetch(url)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        return response.text().then(text => {
+        return response.text().then((text) => {
           try {
             const err = JSON.parse(text);
             throw new Error(err.error || "Server error");
           } catch (e) {
-            const plainText = text.replace(/<[^>]*>/g, '').trim().substring(0, 150);
+            const plainText = text
+              .replace(/<[^>]*>/g, "")
+              .trim()
+              .substring(0, 150);
             throw new Error(plainText || `Server error (${response.status})`);
           }
         });
       }
       return response.blob();
     })
-    .then(blob => {
+    .then((blob) => {
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
@@ -987,7 +1041,7 @@ function downloadPDF() {
       window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Error downloading DTR:", error);
       alert("Failed to download DTR: " + error.message);
     })
@@ -1007,67 +1061,77 @@ let myBarChart = null;
 function renderDashboardCharts() {
   const progressCanvas = document.getElementById("progressChart");
   const barCanvas = document.getElementById("hoursBarChart");
-  
+
   if (!progressCanvas || !barCanvas) return;
   if (typeof Chart === "undefined") return;
 
   // 1. Calculate stats
-  const totalLogged = Object.values(allHoursData).reduce((sum, val) => sum + parseFloat(val), 0);
+  const totalLogged = Object.values(allHoursData).reduce(
+    (sum, val) => sum + parseFloat(val),
+    0,
+  );
   const target = typeof hourGoal !== "undefined" ? hourGoal : 480;
-  
+
   const percent = Math.min((totalLogged / target) * 100, 100);
   const displayPercent = (totalLogged / target) * 100;
-  
+
   const remaining = Math.max(target - totalLogged, 0);
-  
+
   // Calculate average of days with logged hours
-  const loggedDays = Object.values(allHoursData).filter(val => parseFloat(val) > 0);
+  const loggedDays = Object.values(allHoursData).filter(
+    (val) => parseFloat(val) > 0,
+  );
   const totalLoggedDaysCount = loggedDays.length;
-  const dailyAverage = totalLoggedDaysCount > 0 ? totalLogged / totalLoggedDaysCount : 0;
-  
+  const dailyAverage =
+    totalLoggedDaysCount > 0 ? totalLogged / totalLoggedDaysCount : 0;
+
   // Update HTML elements
   const percentEl = document.getElementById("chart-percent");
   if (percentEl) percentEl.textContent = `${displayPercent.toFixed(0)}%`;
-  
+
   const ratioEl = document.getElementById("chart-ratio");
   if (ratioEl) ratioEl.textContent = `${totalLogged.toFixed(1)}/${target}h`;
-  
+
   const remainingEl = document.getElementById("burndown-remaining");
   if (remainingEl) remainingEl.textContent = `${remaining.toFixed(1)} hrs`;
-  
+
   const avgEl = document.getElementById("burndown-avg");
   if (avgEl) avgEl.textContent = `${dailyAverage.toFixed(1)} hrs/day`;
-  
+
   const compEl = document.getElementById("burndown-completion");
   if (compEl) {
     compEl.textContent = calculateEstimatedCompletion(remaining, dailyAverage);
   }
 
-  const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+  const isDark =
+    document.documentElement.classList.contains("dark") ||
+    document.body.classList.contains("dark-mode");
 
   // 2. Render Doughnut Gauge Chart
   if (myProgressChart) {
     myProgressChart.destroy();
   }
-  
+
   myProgressChart = new Chart(progressCanvas, {
-    type: 'doughnut',
+    type: "doughnut",
     data: {
-      datasets: [{
-        data: [totalLogged, remaining],
-        backgroundColor: ['#2563eb', isDark ? '#374151' : '#e2e8f0'],
-        borderWidth: 0
-      }]
+      datasets: [
+        {
+          data: [totalLogged, remaining],
+          backgroundColor: ["#2563eb", isDark ? "#374151" : "#e2e8f0"],
+          borderWidth: 0,
+        },
+      ],
     },
     options: {
-      cutout: '80%',
+      cutout: "80%",
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { enabled: false }
-      }
-    }
+        tooltip: { enabled: false },
+      },
+    },
   });
 
   // 3. Render Monthly Bar Chart
@@ -1079,51 +1143,54 @@ function renderDashboardCharts() {
   const lastDay = new Date(currentYear, currentMonth, 0).getDate();
   const labels = [];
   const barData = [];
-  
+
   for (let day = 1; day <= lastDay; day++) {
     const dateStr = String(day).padStart(2, "0");
-    const fullDate = currentYear + "-" + String(currentMonth).padStart(2, "0") + "-" + dateStr;
+    const fullDate =
+      currentYear + "-" + String(currentMonth).padStart(2, "0") + "-" + dateStr;
     labels.push(day);
     barData.push(parseFloat(monthHoursData[fullDate] || 0));
   }
 
   myBarChart = new Chart(barCanvas, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels: labels,
-      datasets: [{
-        label: 'Hours Logged',
-        data: barData,
-        backgroundColor: 'rgba(37, 99, 235, 0.75)',
-        hoverBackgroundColor: '#2563eb',
-        borderRadius: 4,
-        borderWidth: 0
-      }]
+      datasets: [
+        {
+          label: "Hours Logged",
+          data: barData,
+          backgroundColor: "rgba(37, 99, 235, 0.75)",
+          hoverBackgroundColor: "#2563eb",
+          borderRadius: 4,
+          borderWidth: 0,
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: false }
+        legend: { display: false },
       },
       scales: {
         x: {
           grid: { display: false },
-          ticks: { 
-            color: isDark ? '#94a3b8' : '#64748b',
-            font: { size: 10 } 
-          }
+          ticks: {
+            color: isDark ? "#94a3b8" : "#64748b",
+            font: { size: 10 },
+          },
         },
         y: {
-          grid: { color: isDark ? '#374151' : '#f1f5f9' },
-          ticks: { 
-            color: isDark ? '#94a3b8' : '#64748b',
-            font: { size: 10 }, 
-            stepSize: 2 
-          }
-        }
-      }
-    }
+          grid: { color: isDark ? "#374151" : "#f1f5f9" },
+          ticks: {
+            color: isDark ? "#94a3b8" : "#64748b",
+            font: { size: 10 },
+            stepSize: 2,
+          },
+        },
+      },
+    },
   });
 }
 
@@ -1136,13 +1203,25 @@ function calculateEstimatedCompletion(remainingHours, dailyAvg) {
   let addedDays = 0;
   let safetyLoop = 0;
 
-  const daysOfWeekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const activeDaysList = (typeof dutyDays !== 'undefined' ? dutyDays : 'Monday,Tuesday,Wednesday,Thursday,Friday').split(',');
+  const daysOfWeekNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const activeDaysList = (
+    typeof dutyDays !== "undefined"
+      ? dutyDays
+      : "Monday,Tuesday,Wednesday,Thursday,Friday"
+  ).split(",");
 
   while (addedDays < daysNeeded && safetyLoop < 1000) {
     safetyLoop++;
     currentDate.setDate(currentDate.getDate() + 1);
-    
+
     // Check if on-duty day
     const dayName = daysOfWeekNames[currentDate.getDay()];
     if (!activeDaysList.includes(dayName)) {
@@ -1150,12 +1229,17 @@ function calculateEstimatedCompletion(remainingHours, dailyAvg) {
     }
 
     // Check if holiday
-    const dateStr = currentDate.getFullYear() + "-" + 
-                    String(currentDate.getMonth() + 1).padStart(2, '0') + "-" + 
-                    String(currentDate.getDate()).padStart(2, '0');
-    const monthDay = String(currentDate.getMonth() + 1).padStart(2, '0') + "-" + 
-                     String(currentDate.getDate()).padStart(2, '0');
-    
+    const dateStr =
+      currentDate.getFullYear() +
+      "-" +
+      String(currentDate.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(currentDate.getDate()).padStart(2, "0");
+    const monthDay =
+      String(currentDate.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(currentDate.getDate()).padStart(2, "0");
+
     if (movableHolidays[dateStr] || fixedHolidays[monthDay]) {
       continue; // Skip holidays
     }
@@ -1163,8 +1247,8 @@ function calculateEstimatedCompletion(remainingHours, dailyAvg) {
     addedDays++;
   }
 
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return currentDate.toLocaleDateString('en-US', options);
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return currentDate.toLocaleDateString("en-US", options);
 }
 
 // =========================================================================
@@ -1195,8 +1279,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (openGoalModalBtn) openGoalModalBtn.addEventListener("click", openModal);
-  if (closeGoalModalBtn) closeGoalModalBtn.addEventListener("click", closeModal);
-  if (cancelGoalModalBtn) cancelGoalModalBtn.addEventListener("click", closeModal);
+  if (closeGoalModalBtn)
+    closeGoalModalBtn.addEventListener("click", closeModal);
+  if (cancelGoalModalBtn)
+    cancelGoalModalBtn.addEventListener("click", closeModal);
 
   // Close modal when clicking outside content box
   goalModal.addEventListener("click", (e) => {
@@ -1211,18 +1297,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const hourGoal = document.getElementById("modal_hour_goal").value;
       const startingDate = document.getElementById("modal_starting_date").value;
-      const checkedBoxes = Array.from(document.querySelectorAll('input[name="modal_duty_days[]"]:checked'));
-      
+      const checkedBoxes = Array.from(
+        document.querySelectorAll('input[name="modal_duty_days[]"]:checked'),
+      );
+
       if (checkedBoxes.length === 0) {
         if (goalModalAlert) {
-          goalModalAlert.className = "p-4 rounded-xl text-xs font-bold mb-5 bg-red-50 text-red-600 border border-red-100";
+          goalModalAlert.className =
+            "p-4 rounded-xl text-xs font-bold mb-5 bg-red-50 text-red-600 border border-red-100";
           goalModalAlert.textContent = "Please select at least one duty day.";
           goalModalAlert.classList.remove("hidden");
         }
         return;
       }
 
-      const dutyDays = checkedBoxes.map(cb => cb.value).join(",");
+      const dutyDays = checkedBoxes.map((cb) => cb.value).join(",");
       const submitBtn = goalModalForm.querySelector('button[type="submit"]');
       const originalBtnText = submitBtn.textContent;
 
@@ -1237,35 +1326,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
       fetch("../api/burnout_update.php", {
         method: "POST",
-        body: formData
+        body: formData,
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            if (goalModalAlert) {
+              goalModalAlert.className =
+                "p-4 rounded-xl text-xs font-bold mb-5 bg-green-50 text-green-600 border border-green-100";
+              goalModalAlert.textContent =
+                "Goal saved successfully! Reloading...";
+              goalModalAlert.classList.remove("hidden");
+            }
+            setTimeout(() => {
+              window.location.reload();
+            }, 800);
+          } else {
+            throw new Error(data.error || "Failed to save goal settings.");
+          }
+        })
+        .catch((err) => {
+          console.error("Error updating goal:", err);
           if (goalModalAlert) {
-            goalModalAlert.className = "p-4 rounded-xl text-xs font-bold mb-5 bg-green-50 text-green-600 border border-green-100";
-            goalModalAlert.textContent = "Goal saved successfully! Reloading...";
+            goalModalAlert.className =
+              "p-4 rounded-xl text-xs font-bold mb-5 bg-red-50 text-red-600 border border-red-100";
+            goalModalAlert.textContent = err.message;
             goalModalAlert.classList.remove("hidden");
           }
-          setTimeout(() => {
-            window.location.reload();
-          }, 800);
-        } else {
-          throw new Error(data.error || "Failed to save goal settings.");
-        }
-      })
-      .catch(err => {
-        console.error("Error updating goal:", err);
-        if (goalModalAlert) {
-          goalModalAlert.className = "p-4 rounded-xl text-xs font-bold mb-5 bg-red-50 text-red-600 border border-red-100";
-          goalModalAlert.textContent = err.message;
-          goalModalAlert.classList.remove("hidden");
-        }
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-      });
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        });
     });
   }
 });
-
-

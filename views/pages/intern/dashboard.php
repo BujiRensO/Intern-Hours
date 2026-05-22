@@ -263,6 +263,8 @@ $base_url = "../";
         .dark-mode .burndown-item .value {
             color: #e2e8f0 !important;
         }
+
+
         </style>
 
         <!-- Internship Burnout Counter -->
@@ -462,6 +464,8 @@ $base_url = "../";
                 <p class="text-gray-500 italic text-sm">Loading colleagues...</p>
             </div>
         </div>
+
+
     </div>
 
     <!-- Intern Hours Detail Modal (shared with colleagues page) -->
@@ -635,6 +639,8 @@ $base_url = "../";
         let filterFromDate = null;
         let filterToDate = null;
         const currentUserId = userId;
+        const currentUserName = '<?php echo htmlspecialchars($user_name, ENT_QUOTES); ?>';
+        const currentUserEmail = '<?php echo htmlspecialchars($_SESSION['user_email'] ?? '', ENT_QUOTES); ?>';
         const apiBasePath = '../';
         const birthdaysData = <?php echo json_encode($birthdays); ?>;
         const hourGoal = parseInt('<?php echo $hour_goal; ?>');

@@ -1,23 +1,22 @@
 .dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    min-height: 60vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 60vh;
 }
 .welcome-card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-    border: 1px solid rgba(229, 231, 235, 0.6);
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
 @media (max-width: 768px) {
-    .dashboard-container {
-        padding: 20px 12px;
-    }
-    .welcome-card {
-        padding: 20px 16px;
-    }
+  .dashboard-container {
+    padding: 20px 12px;
+  }
+  .welcome-card {
+    padding: 20px 16px;
+  }
 }
-
