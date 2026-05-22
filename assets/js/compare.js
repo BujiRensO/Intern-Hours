@@ -2,6 +2,7 @@ let allColleagues = [];
 let compareDataLeft = null;
 let compareDataRight = null;
 let myComparisonChart = null;
+let diffOnlyMode = false;
 
 // Initialize on load
 document.addEventListener("DOMContentLoaded", function () {
@@ -424,11 +425,15 @@ function updateComparisonUI() {
     compareDataRight &&
     !compareDataRight.is_private;
 
+  const tableContainer = document.getElementById("compare-table-container");
   if (canShowChart) {
     chartContainer.classList.remove("hidden");
+    if (tableContainer) tableContainer.classList.remove("hidden");
     renderComparisonChart();
+    renderComparisonTable();
   } else {
     chartContainer.classList.add("hidden");
+    if (tableContainer) tableContainer.classList.add("hidden");
     if (myComparisonChart) {
       myComparisonChart.destroy();
       myComparisonChart = null;
@@ -522,6 +527,94 @@ function renderComparisonChart() {
       },
     },
   });
+}
+
+function toggleDiffOnly() {
+  const checkbox = document.getElementById("diff-only-checkbox");
+  diffOnlyMode = checkbox ? checkbox.checked : false;
+  renderComparisonTable();
+}
+
+function renderComparisonTable() {
+  const tbody = document.getElementById("compare-table-body");
+  const headerLeft = document.getElementById("table-header-left");
+  const headerRight = document.getElementById("table-header-right");
+  if (!tbody) return;
+
+  // Set headers to names
+  if (headerLeft) headerLeft.textContent = escapeHtml(compareDataLeft.name);
+  if (headerRight) headerRight.textContent = escapeHtml(compareDataRight.name);
+
+  tbody.innerHTML = "";
+
+  const lastDay = new Date(currentYear, currentMonth, 0).getDate();
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  const monthName = monthNames[currentMonth - 1];
+
+  let hasVisibleRows = false;
+
+  for (let day = 1; day <= lastDay; day++) {
+    const dateStr = String(day).padStart(2, "0");
+    const fullDate = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${dateStr}`;
+    
+    const hLeft = parseFloat(compareDataLeft.hours[fullDate] || 0);
+    const hRight = parseFloat(compareDataRight.hours[fullDate] || 0);
+    const diff = hLeft - hRight;
+
+    // If differences only mode, skip equal hours
+    if (diffOnlyMode && diff === 0) {
+      continue;
+    }
+
+    hasVisibleRows = true;
+
+    const formattedDate = `${monthName} ${day}, ${currentYear}`;
+    
+    let leftCellClass = "py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 transition-colors";
+    let rightCellClass = "py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 transition-colors";
+    let diffBadgeClass = "px-2 py-1 rounded text-xs font-bold";
+    let diffText = "";
+
+    if (diff > 0) {
+      leftCellClass += " bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400";
+      rightCellClass += " bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400";
+      diffBadgeClass += " bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300";
+      diffText = `+${diff.toFixed(1)}h`;
+    } else if (diff < 0) {
+      leftCellClass += " bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400";
+      rightCellClass += " bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400";
+      diffBadgeClass += " bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300";
+      diffText = `${diff.toFixed(1)}h`;
+    } else {
+      diffBadgeClass += " bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400";
+      diffText = "0.0h";
+    }
+
+    const tr = document.createElement("tr");
+    tr.className = "hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors border-b border-gray-100 dark:border-gray-800";
+    tr.innerHTML = `
+      <td class="py-3 px-4 text-gray-500 dark:text-gray-400 font-medium">${formattedDate}</td>
+      <td class="${leftCellClass}">${hLeft.toFixed(1)}h</td>
+      <td class="${rightCellClass}">${hRight.toFixed(1)}h</td>
+      <td class="py-3 px-4 text-right">
+        <span class="${diffBadgeClass}">${diffText}</span>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  if (!hasVisibleRows) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" class="py-8 text-center text-gray-400 dark:text-gray-500 font-medium">
+          No differences found for this month!
+        </td>
+      </tr>
+    `;
+  }
 }
 
 /**

@@ -277,6 +277,36 @@ $currentUserProfilePicture = $stmt->fetchColumn() ?: '';
                 <canvas id="comparisonBarChart"></canvas>
             </div>
         </div>
+
+        <!-- Daily Differences Table -->
+        <div id="compare-table-container" class="mt-6 p-6 rounded-xl border border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-900 hidden">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h4 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Daily Hours Comparison Breakdown</h4>
+                <div class="flex items-center gap-2">
+                    <label class="inline-flex items-center cursor-pointer text-xs font-bold text-gray-500 dark:text-gray-400">
+                        <input type="checkbox" id="diff-only-checkbox" class="sr-only peer" onchange="toggleDiffOnly()">
+                        <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                        <span class="ms-2">Differences Only</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-850 text-sm">
+                    <thead>
+                        <tr class="text-left text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                            <th class="py-3 px-4">Date</th>
+                            <th id="table-header-left" class="py-3 px-4">Person A</th>
+                            <th id="table-header-right" class="py-3 px-4">Person B</th>
+                            <th class="py-3 px-4 text-right">Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compare-table-body" class="divide-y divide-gray-100 dark:divide-gray-800">
+                        <!-- Content dynamic -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
