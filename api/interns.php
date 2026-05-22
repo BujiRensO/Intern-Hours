@@ -1,4 +1,17 @@
 <?php
+/**
+ * Interns List Endpoint
+ *
+ * Retrieves the list of colleagues (interns) belonging to the same office
+ * and organization as the logged-in user.
+ *
+ * Security & Data Privacy:
+ * - Requires explicit session authorization.
+ * - Restricts lookup to the viewer's office and organization.
+ * - Eagerly evaluates and includes `total_hours` only if the target intern's profile
+ *   is public OR the viewer is an Admin.
+ * - Fetches user `profile_picture` avatar URLs for rendering.
+ */
 require_once __DIR__ . '/../config.php';
 
 session_start();
@@ -15,7 +28,7 @@ $organization_id = $_SESSION['organization_id'];
 try {
     // Fetch interns in the same office and organization, including hours if public (or if user is Admin)
     $stmt = $pdo->prepare("
-        SELECT u.id, u.name, u.email, u.is_public, o.office_name, org.organization_name,
+        SELECT u.id, u.name, u.email, u.is_public, u.profile_picture, o.office_name, org.organization_name,
         CASE 
             WHEN ? = 'Admin' OR u.is_public = 1 THEN (SELECT SUM(hours) FROM hours_log WHERE user_id = u.id) 
             ELSE NULL 

@@ -73,6 +73,9 @@ require_once __DIR__ . '/components/header.php';
         case 'colleagues':
             require_once __DIR__ . '/pages/intern/colleagues.php';
             break;
+        case 'compare':
+            require_once __DIR__ . '/pages/intern/compare.php';
+            break;
         case 'settings':
             require_once __DIR__ . '/pages/intern/settings.php';
             break;

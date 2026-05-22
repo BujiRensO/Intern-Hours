@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(255) NOT NULL,
   nickname VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
+  profile_picture VARCHAR(500) DEFAULT NULL,
   password VARCHAR(255) NOT NULL,
   role ENUM('Intern', 'Admin') NOT NULL,
   office_id INT NOT NULL,
@@ -126,7 +127,7 @@ CREATE TABLE IF NOT EXISTS burnout_counter (
   user_id INT NOT NULL,
   hour_goal INT NOT NULL DEFAULT 0,
   starting_date DATETIME NOT NULL,
-  duty_days VARCHAR(255), --'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'
+  duty_days VARCHAR(255), -- 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP()
     ON UPDATE CURRENT_TIMESTAMP(),

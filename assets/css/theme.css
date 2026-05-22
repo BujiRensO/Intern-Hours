@@ -3,27 +3,31 @@
  */
 
 :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f9fafb;
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
-    --border-color: #e5e7eb;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border-color: #e5e7eb;
 }
 
 .dark-mode {
-    --bg-primary: #111827;
-    --bg-secondary: #1f2937;
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
-    --border-color: #374151;
-    
-    background-color: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 /* Transitions */
-.dark-mode, .dark-mode * {
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+.dark-mode,
+.dark-mode * {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Universal Background Fixes */
@@ -48,18 +52,27 @@
 .dark-mode [style*="background-color: white"],
 .dark-mode [style*="background:white"],
 .dark-mode [style*="background-color:white"] {
-    background-color: var(--bg-secondary) !important;
-    background: var(--bg-secondary) !important;
+  background-color: var(--bg-secondary) !important;
+  background: var(--bg-secondary) !important;
 }
 
 .dark-mode .hover\:bg-white:hover {
-    background-color: #374151 !important;
+  background-color: #374151 !important;
 }
 
 /* Universal Text Fixes */
-.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
-.dark-mode p, .dark-mode span, .dark-mode label, .dark-mode div, .dark-mode a {
-    color: var(--text-primary) !important;
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode p,
+.dark-mode span,
+.dark-mode label,
+.dark-mode div,
+.dark-mode a {
+  color: var(--text-primary) !important;
 }
 
 .dark-mode .text-gray-900,
@@ -74,7 +87,7 @@
 .dark-mode [style*="color: #1a1a1a"],
 .dark-mode [style*="color:#1a1a1a"],
 .dark-mode [style*="color: black"] {
-    color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 .dark-mode .text-gray-600,
@@ -90,72 +103,176 @@
 .dark-mode [style*="color:#6b7280"],
 .dark-mode [style*="color: #666"],
 .dark-mode [style*="color:#666"] {
-    color: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
 }
 
 /* Specialized Colors */
-.dark-mode .text-blue-600, .dark-mode .text-blue-500, .dark-mode .blue { color: #60a5fa !important; }
-.dark-mode .text-green-600, .dark-mode .text-green-500, .dark-mode .green { color: #34d399 !important; }
-.dark-mode .text-amber-600, .dark-mode .text-amber-500, .dark-mode .amber { color: #fbbf24 !important; }
-.dark-mode .text-red-600, .dark-mode .text-red-500, .dark-mode .red { color: #f87171 !important; }
+.dark-mode .text-blue-600,
+.dark-mode .text-blue-500,
+.dark-mode .blue {
+  color: #60a5fa !important;
+}
+.dark-mode .text-green-600,
+.dark-mode .text-green-500,
+.dark-mode .green {
+  color: #34d399 !important;
+}
+.dark-mode .text-amber-600,
+.dark-mode .text-amber-500,
+.dark-mode .amber {
+  color: #fbbf24 !important;
+}
+.dark-mode .text-red-600,
+.dark-mode .text-red-500,
+.dark-mode .red {
+  color: #f87171 !important;
+}
 
 /* Refined Backgrounds for semantic elements */
-.dark-mode .bg-blue-50:not(button) { background-color: #1e3a8a !important; }
-.dark-mode .bg-green-50:not(button) { background-color: #064e3b !important; }
-.dark-mode .bg-red-50:not(button) { background-color: #450a0a !important; }
-.dark-mode .bg-amber-50:not(button) { background-color: #451a03 !important; }
+.dark-mode .bg-blue-50:not(button) {
+  background-color: #1e3a8a !important;
+}
+.dark-mode .bg-green-50:not(button) {
+  background-color: #064e3b !important;
+}
+.dark-mode .bg-red-50:not(button) {
+  background-color: #450a0a !important;
+}
+.dark-mode .bg-amber-50:not(button) {
+  background-color: #451a03 !important;
+}
 
 /* Stat Icons */
-.dark-mode .stat-icon.blue { background: #1e3a8a !important; color: #60a5fa !important; }
-.dark-mode .stat-icon.green { background: #064e3b !important; color: #34d399 !important; }
-.dark-mode .stat-icon.amber { background: #451a03 !important; color: #fbbf24 !important; }
+.dark-mode .stat-icon.blue {
+  background: #1e3a8a !important;
+  color: #60a5fa !important;
+}
+.dark-mode .stat-icon.green {
+  background: #064e3b !important;
+  color: #34d399 !important;
+}
+.dark-mode .stat-icon.amber {
+  background: #451a03 !important;
+  color: #fbbf24 !important;
+}
 
 /* Navigation & Borders */
-.dark-mode nav { background-color: var(--bg-secondary) !important; border-bottom: 1px solid var(--border-color) !important; }
-.dark-mode .border, .dark-mode .border-gray-100, .dark-mode .border-gray-50 { border-color: var(--border-color) !important; }
+.dark-mode nav {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+.dark-mode .border,
+.dark-mode .border-gray-100,
+.dark-mode .border-gray-50 {
+  border-color: var(--border-color) !important;
+}
 
 /* Sort Buttons */
-.dark-mode .sort-btn:not(.active) { background: #374151 !important; color: #d1d5db !important; border-color: #4b5563 !important; }
-.dark-mode .sort-btn.active { background: #3b82f6 !important; color: white !important; border-color: #3b82f6 !important; }
+.dark-mode .sort-btn:not(.active) {
+  background: #374151 !important;
+  color: #d1d5db !important;
+  border-color: #4b5563 !important;
+}
+.dark-mode .sort-btn.active {
+  background: #3b82f6 !important;
+  color: white !important;
+  border-color: #3b82f6 !important;
+}
 
-.dark-mode .colleague-card:hover { border-color: #3b82f6 !important; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important; }
-.dark-mode .colleague-card-body { border-top: 1px solid var(--border-color) !important; }
-.dark-mode .colleague-view-btn { background: #374151 !important; color: #f9fafb !important; }
-.dark-mode .colleague-view-btn:hover { background: #3b82f6 !important; color: white !important; }
+.dark-mode .colleague-card:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+.dark-mode .colleague-card-body {
+  border-top: 1px solid var(--border-color) !important;
+}
+.dark-mode .colleague-view-btn {
+  background: #374151 !important;
+  color: #f9fafb !important;
+}
+.dark-mode .colleague-view-btn:hover {
+  background: #3b82f6 !important;
+  color: white !important;
+}
 
 /* Intern Modal Specifics */
-.dark-mode .intern-modal-stat { background: #111827 !important; border: 1px solid #374151 !important; }
-.dark-mode .intern-modal-stat .value { color: #f9fafb !important; }
-.dark-mode .intern-modal-stat .label { color: #9ca3af !important; }
-.dark-mode .intern-modal-close { background: #374151 !important; color: #f9fafb !important; }
-.dark-mode .intern-modal-close:hover { background: #4b5563 !important; }
-.dark-mode .intern-modal-stats { border-color: #374151 !important; }
-.dark-mode .intern-hours-modal-content { border: 1px solid #374151 !important; }
-.dark-mode .intern-modal-calendar-nav button { background: #1f2937 !important; color: #f9fafb !important; border-color: #374151 !important; }
-.dark-mode .intern-modal-calendar-nav button:hover { background: #374151 !important; }
-.dark-mode .intern-modal-grid .day { background: #111827 !important; color: #f9fafb !important; border: 1px solid #1f2937 !important; }
-.dark-mode .intern-modal-grid .day.empty { background: transparent !important; border-color: transparent !important; }
-.dark-mode .intern-modal-grid .day.logged { background: rgba(16, 185, 129, 0.2) !important; border-color: #10b981 !important; }
-.dark-mode .intern-modal-grid .day-hrs { color: #34d399 !important; }
-.dark-mode .colleague-private-badge { background: #111827 !important; color: #9ca3af !important; }
+.dark-mode .intern-modal-stat {
+  background: #111827 !important;
+  border: 1px solid #374151 !important;
+}
+.dark-mode .intern-modal-stat .value {
+  color: #f9fafb !important;
+}
+.dark-mode .intern-modal-stat .label {
+  color: #9ca3af !important;
+}
+.dark-mode .intern-modal-close {
+  background: #374151 !important;
+  color: #f9fafb !important;
+}
+.dark-mode .intern-modal-close:hover {
+  background: #4b5563 !important;
+}
+.dark-mode .intern-modal-stats {
+  border-color: #374151 !important;
+}
+.dark-mode .intern-hours-modal-content {
+  border: 1px solid #374151 !important;
+}
+.dark-mode .intern-modal-calendar-nav button {
+  background: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+.dark-mode .intern-modal-calendar-nav button:hover {
+  background: #374151 !important;
+}
+.dark-mode .intern-modal-grid .day {
+  background: #111827 !important;
+  color: #f9fafb !important;
+  border: 1px solid #1f2937 !important;
+}
+.dark-mode .intern-modal-grid .day.empty {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+.dark-mode .intern-modal-grid .day.logged {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border-color: #10b981 !important;
+}
+.dark-mode .intern-modal-grid .day-hrs {
+  color: #34d399 !important;
+}
+.dark-mode .colleague-private-badge {
+  background: #111827 !important;
+  color: #9ca3af !important;
+}
 
 /* Calendar - Bento Grid Dark Mode Overrides */
 .dark-mode .day-cell {
-  background-image: 
-    linear-gradient(rgba(17, 12, 28, 0.78), rgba(17, 12, 28, 0.78)), /* Deep, rich dark violet background */
-    radial-gradient(110px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), 
-      rgba(217, 70, 239, calc(var(--border-opacity, 0) * 0.4)) 0%, 
-      rgba(139, 92, 246, calc(var(--border-opacity, 0) * 0.3)) 50%, 
-      rgba(255, 255, 255, 0.08) 100%) !important;
+  background-image:
+    linear-gradient(rgba(17, 12, 28, 0.78), rgba(17, 12, 28, 0.78)),
+    /* Deep, rich dark violet background */
+    radial-gradient(
+        110px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        rgba(217, 70, 239, calc(var(--border-opacity, 0) * 0.4)) 0%,
+        rgba(139, 92, 246, calc(var(--border-opacity, 0) * 0.3)) 50%,
+        rgba(255, 255, 255, 0.08) 100%
+      ) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
 .dark-mode .day-cell:hover {
-  background-image: 
-    linear-gradient(rgba(17, 12, 28, 0.82), rgba(17, 12, 28, 0.82)), 
-    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), #d946ef 0%, #8b5cf6 50%, rgba(255, 255, 255, 0.05) 100%) !important; /* Luminous pink/purple border tracks mouse */
-  box-shadow: 
-    0 15px 30px -5px rgba(168, 85, 247, 0.35), 
+  background-image:
+    linear-gradient(rgba(17, 12, 28, 0.82), rgba(17, 12, 28, 0.82)),
+    radial-gradient(
+      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      #d946ef 0%,
+      #8b5cf6 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    ) !important; /* Luminous pink/purple border tracks mouse */
+  box-shadow:
+    0 15px 30px -5px rgba(168, 85, 247, 0.35),
     0 8px 16px -6px rgba(99, 102, 241, 0.3) !important;
 }
 
@@ -166,8 +283,8 @@
 .dark-mode .day-cell-spotlight {
   background: radial-gradient(
     140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(168, 85, 247, 0.08), /* Soft neon purple inner glow */
-    transparent 80%
+    rgba(168, 85, 247, 0.08),
+    /* Soft neon purple inner glow */ transparent 80%
   ) !important;
 }
 
@@ -177,16 +294,25 @@
 
 /* Dark Mode Status: Logged Days */
 .dark-mode .day-cell.logged {
-  background-image: 
-    linear-gradient(rgba(6, 78, 59, 0.45), rgba(6, 78, 59, 0.45)), 
-    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(16, 185, 129, 0.35), rgba(255, 255, 255, 0.05)) !important;
+  background-image:
+    linear-gradient(rgba(6, 78, 59, 0.45), rgba(6, 78, 59, 0.45)),
+    radial-gradient(
+      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(16, 185, 129, 0.35),
+      rgba(255, 255, 255, 0.05)
+    ) !important;
 }
 .dark-mode .day-cell.logged:hover {
-  background-image: 
-    linear-gradient(rgba(6, 78, 59, 0.52), rgba(6, 78, 59, 0.52)), 
-    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), #10b981 0%, #34d399 50%, rgba(255, 255, 255, 0.05) 100%) !important;
-  box-shadow: 
-    0 15px 30px -5px rgba(16, 185, 129, 0.35), 
+  background-image:
+    linear-gradient(rgba(6, 78, 59, 0.52), rgba(6, 78, 59, 0.52)),
+    radial-gradient(
+      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      #10b981 0%,
+      #34d399 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    ) !important;
+  box-shadow:
+    0 15px 30px -5px rgba(16, 185, 129, 0.35),
     0 8px 16px -6px rgba(52, 211, 153, 0.3) !important;
 }
 .dark-mode .day-cell.logged .day-cell-spotlight {
@@ -202,17 +328,26 @@
 
 /* Dark Mode Status: Today */
 .dark-mode .day-cell.today {
-  background-image: 
-    linear-gradient(rgba(30, 58, 138, 0.55), rgba(30, 58, 138, 0.55)), 
-    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.45), rgba(255, 255, 255, 0.08)) !important;
+  background-image:
+    linear-gradient(rgba(30, 58, 138, 0.55), rgba(30, 58, 138, 0.55)),
+    radial-gradient(
+      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(59, 130, 246, 0.45),
+      rgba(255, 255, 255, 0.08)
+    ) !important;
   box-shadow: 0 0 14px rgba(59, 130, 246, 0.2) !important;
 }
 .dark-mode .day-cell.today:hover {
-  background-image: 
-    linear-gradient(rgba(30, 58, 138, 0.65), rgba(30, 58, 138, 0.65)), 
-    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), #3b82f6 0%, #60a5fa 50%, rgba(255, 255, 255, 0.05) 100%) !important;
-  box-shadow: 
-    0 15px 30px -5px rgba(59, 130, 246, 0.4), 
+  background-image:
+    linear-gradient(rgba(30, 58, 138, 0.65), rgba(30, 58, 138, 0.65)),
+    radial-gradient(
+      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      #3b82f6 0%,
+      #60a5fa 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    ) !important;
+  box-shadow:
+    0 15px 30px -5px rgba(59, 130, 246, 0.4),
     0 8px 16px -6px rgba(96, 165, 250, 0.3) !important;
 }
 .dark-mode .day-cell.today .day-cell-date {
@@ -221,16 +356,25 @@
 
 /* Dark Mode Status: Holidays */
 .dark-mode .day-cell.holiday {
-  background-image: 
-    linear-gradient(rgba(69, 26, 3, 0.45), rgba(69, 26, 3, 0.45)), 
-    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(245, 158, 11, 0.35), rgba(255, 255, 255, 0.05)) !important;
+  background-image:
+    linear-gradient(rgba(69, 26, 3, 0.45), rgba(69, 26, 3, 0.45)),
+    radial-gradient(
+      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(245, 158, 11, 0.35),
+      rgba(255, 255, 255, 0.05)
+    ) !important;
 }
 .dark-mode .day-cell.holiday:hover {
-  background-image: 
-    linear-gradient(rgba(69, 26, 3, 0.52), rgba(69, 26, 3, 0.52)), 
-    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), #f59e0b 0%, #fbbf24 50%, rgba(255, 255, 255, 0.05) 100%) !important;
-  box-shadow: 
-    0 15px 30px -5px rgba(245, 158, 11, 0.35), 
+  background-image:
+    linear-gradient(rgba(69, 26, 3, 0.52), rgba(69, 26, 3, 0.52)),
+    radial-gradient(
+      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      #f59e0b 0%,
+      #fbbf24 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    ) !important;
+  box-shadow:
+    0 15px 30px -5px rgba(245, 158, 11, 0.35),
     0 8px 16px -6px rgba(251, 191, 36, 0.3) !important;
 }
 .dark-mode .day-cell.holiday .day-cell-spotlight {
@@ -245,41 +389,63 @@
 .dark-mode .day-cell.disabled,
 .dark-mode .day-cell.other-month {
   opacity: 0.25 !important;
-  background-image: 
-    linear-gradient(rgba(17, 24, 39, 0.65), rgba(17, 24, 39, 0.65)), 
+  background-image:
+    linear-gradient(rgba(17, 24, 39, 0.65), rgba(17, 24, 39, 0.65)),
     linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)) !important;
 }
 
 /* Absence Badges in Dark Mode */
-.dark-mode .absence-badge.pending { 
-    background-color: #451a03 !important; 
-    color: #fbbf24 !important; 
-    border-color: #b45309 !important; 
+.dark-mode .absence-badge.pending {
+  background-color: #451a03 !important;
+  color: #fbbf24 !important;
+  border-color: #b45309 !important;
 }
-.dark-mode .absence-badge.approved { 
-    background-color: #064e3b !important; 
-    color: #34d399 !important; 
-    border-color: #065f46 !important; 
+.dark-mode .absence-badge.approved {
+  background-color: #064e3b !important;
+  color: #34d399 !important;
+  border-color: #065f46 !important;
 }
-.dark-mode .absence-badge.rejected { 
-    background-color: #450a0a !important; 
-    color: #f87171 !important; 
-    border-color: #991b1b !important; 
+.dark-mode .absence-badge.rejected {
+  background-color: #450a0a !important;
+  color: #f87171 !important;
+  border-color: #991b1b !important;
 }
 
 /* Inputs */
-.dark-mode input, .dark-mode select, .dark-mode textarea { background-color: #111827 !important; border-color: #374151 !important; color: #ffffff !important; }
-.dark-mode input::placeholder { color: #4b5563 !important; }
-.dark-mode .colleagues-search svg { color: #4b5563 !important; }
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+}
+.dark-mode input::placeholder {
+  color: #4b5563 !important;
+}
+.dark-mode .colleagues-search svg {
+  color: #4b5563 !important;
+}
 
 /* Scrollbar */
-.dark-mode ::-webkit-scrollbar-track { background: #111827; }
-.dark-mode ::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
-.dark-mode ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+.dark-mode ::-webkit-scrollbar-track {
+  background: #111827;
+}
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 5px;
+}
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
 
 /* Bento Grid Calendar Section Container & Buttons Dark Mode Overrides */
 .dark-mode .calendar-section {
-  background: rgba(31, 41, 55, 0.45) !important; /* Elegant glassmorphic dark slate */
+  background: rgba(
+    31,
+    41,
+    55,
+    0.45
+  ) !important; /* Elegant glassmorphic dark slate */
   border: 1px solid rgba(75, 85, 99, 0.45) !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
 }
@@ -303,55 +469,84 @@
 
 /* Quick Clock & Check-In Modal Dark Mode */
 .dark-mode .quick-clock-card {
-    background-color: var(--bg-secondary) !important;
-    border-color: var(--border-color) !important;
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
 }
 .dark-mode .quick-clock-title {
-    color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 .dark-mode .quick-clock-time {
-    color: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
 }
 .dark-mode .quick-clock-btn {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-secondary) !important;
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-secondary) !important;
 }
 .dark-mode .quick-clock-btn:hover {
-    background-color: #374151 !important;
-    color: var(--text-primary) !important;
+  background-color: #374151 !important;
+  color: var(--text-primary) !important;
 }
 .dark-mode .quick-clock-btn.active {
-    background-color: #1e3a8a !important;
-    border-color: #3b82f6 !important;
-    color: #60a5fa !important;
+  background-color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  color: #60a5fa !important;
 }
 .dark-mode .quick-clock-btn .btn-status {
-    background-color: #374151 !important;
-    color: var(--text-secondary) !important;
+  background-color: #374151 !important;
+  color: var(--text-secondary) !important;
 }
 .dark-mode .quick-clock-btn.active .btn-status {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
 }
 .dark-mode .time-segment {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-color) !important;
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
 }
 .dark-mode .time-segment-title {
-    color: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
 }
 .dark-mode .time-input-group label {
-    color: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
 }
 .dark-mode .time-input-group input[type="time"] {
-    background-color: var(--bg-secondary) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
 }
 .dark-mode .live-duration-display {
-    background-color: #064e3b !important;
-    border-color: #059669 !important;
-    color: #34d399 !important;
+  background-color: #064e3b !important;
+  border-color: #059669 !important;
+  color: #34d399 !important;
 }
 
+/* 📊 Colleague Comparison Dark Mode Overrides */
+.dark-mode .comparison-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+.dark-mode .compare-profile-card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+}
+.dark-mode .compare-column select {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+.dark-mode .compare-stat-row {
+  border-bottom-color: var(--border-color) !important;
+}
+.dark-mode .diff-badge.positive {
+  background-color: rgba(52, 211, 153, 0.15) !important;
+  color: #34d399 !important;
+}
+.dark-mode .diff-badge.negative {
+  background-color: rgba(248, 113, 113, 0.15) !important;
+  color: #f87171 !important;
+}
+.dark-mode .diff-badge.neutral {
+  background-color: rgba(156, 163, 175, 0.15) !important;
+  color: #9ca3af !important;
+}
