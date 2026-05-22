@@ -74,31 +74,33 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .day-header {
   text-align: center;
-  font-weight: 600;
-  color: #666;
-  padding: 10px;
-  font-size: 12px;
+  font-weight: 700;
+  color: #9ca3af;
+  padding: 10px 4px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .day-cell {
   aspect-ratio: 1;
   border-radius: 14px;
-  border: 1.5px solid transparent !important; /* Exposes the border region for the glowing background gradient */
+  border: 1.5px solid transparent !important;
+  /* Exposes the border region for the glowing background gradient */
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
     /* Inner glass container background */
-    radial-gradient(
-        110px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-        rgba(139, 92, 246, calc(var(--border-opacity, 0) * 0.35)) 0%,
-        rgba(37, 99, 235, calc(var(--border-opacity, 0) * 0.25)) 50%,
-        rgba(229, 231, 235, 0.6) 100%
-      ) !important; /* Border radial tracking */
+    radial-gradient(110px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(139, 92, 246, calc(var(--border-opacity, 0) * 0.35)) 0%,
+      rgba(37, 99, 235, calc(var(--border-opacity, 0) * 0.25)) 50%,
+      rgba(229, 231, 235, 0.6) 100%) !important;
+  /* Border radial tracking */
   background-origin: border-box !important;
   background-clip: padding-box, border-box !important;
   cursor: pointer;
@@ -120,12 +122,11 @@
     0 8px 16px -6px rgba(139, 92, 246, 0.15) !important;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)),
-    radial-gradient(
-      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       #8b5cf6 0%,
       #3b82f6 50%,
-      rgba(229, 231, 235, 0.3) 100%
-    ) !important; /* Glowing rainbow border tracks mouse */
+      rgba(229, 231, 235, 0.3) 100%) !important;
+  /* Glowing rainbow border tracks mouse */
 }
 
 /* Glassmorphic content mask - transparent since parent handles the container background */
@@ -140,18 +141,17 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 14px 13px 11px;
 }
 
 /* Subtle spotlight overlay */
 .day-cell-spotlight {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(59, 130, 246, 0.06),
-    /* Soft inner blue glow */ transparent 80%
-  ) !important;
+  background: radial-gradient(140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(59, 130, 246, 0.06),
+      /* Soft inner blue glow */
+      transparent 80%) !important;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -166,57 +166,51 @@
 .day-cell.logged {
   background-image:
     linear-gradient(rgba(236, 253, 245, 0.9), rgba(236, 253, 245, 0.9)),
-    radial-gradient(
-      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       rgba(16, 185, 129, 0.3),
-      rgba(16, 185, 129, 0.15)
-    ) !important;
+      rgba(16, 185, 129, 0.15)) !important;
 }
+
 .day-cell.logged:hover {
   background-image:
     linear-gradient(rgba(236, 253, 245, 0.94), rgba(236, 253, 245, 0.94)),
-    radial-gradient(
-      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       #10b981 0%,
       #34d399 50%,
-      rgba(16, 185, 129, 0.1) 100%
-    ) !important;
+      rgba(16, 185, 129, 0.1) 100%) !important;
   box-shadow:
     0 15px 30px -5px rgba(16, 185, 129, 0.2),
     0 8px 16px -6px rgba(52, 211, 153, 0.2) !important;
 }
+
 .day-cell.logged .day-cell-spotlight {
-  background: radial-gradient(
-    140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(16, 185, 129, 0.08),
-    transparent 80%
-  ) !important;
+  background: radial-gradient(140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(16, 185, 129, 0.08),
+      transparent 80%) !important;
 }
 
 /* Status: Today */
 .day-cell.today {
   background-image:
     linear-gradient(rgba(239, 246, 255, 0.92), rgba(239, 246, 255, 0.92)),
-    radial-gradient(
-      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       rgba(37, 99, 235, 0.4),
-      rgba(37, 99, 235, 0.2)
-    ) !important;
+      rgba(37, 99, 235, 0.2)) !important;
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.1) !important;
 }
+
 .day-cell.today:hover {
   background-image:
     linear-gradient(rgba(239, 246, 255, 0.95), rgba(239, 246, 255, 0.95)),
-    radial-gradient(
-      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       #2563eb 0%,
       #60a5fa 50%,
-      rgba(37, 99, 235, 0.1) 100%
-    ) !important;
+      rgba(37, 99, 235, 0.1) 100%) !important;
   box-shadow:
     0 15px 30px -5px rgba(37, 99, 235, 0.25),
     0 8px 16px -6px rgba(96, 165, 250, 0.25) !important;
 }
+
 .day-cell.today .day-cell-date {
   color: #1d4ed8 !important;
   font-weight: 700 !important;
@@ -243,35 +237,32 @@
   background: #f5f5f5;
   color: #ccc;
 }
+
 /* Status: Holidays */
 .day-cell.holiday {
   background-image:
     linear-gradient(rgba(255, 251, 235, 0.9), rgba(255, 251, 235, 0.9)),
-    radial-gradient(
-      90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       rgba(245, 158, 11, 0.3),
-      rgba(245, 158, 11, 0.15)
-    ) !important;
+      rgba(245, 158, 11, 0.15)) !important;
 }
+
 .day-cell.holiday:hover {
   background-image:
     linear-gradient(rgba(255, 251, 235, 0.94), rgba(255, 251, 235, 0.94)),
-    radial-gradient(
-      120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
       #f59e0b 0%,
       #fbbf24 50%,
-      rgba(245, 158, 11, 0.1) 100%
-    ) !important;
+      rgba(245, 158, 11, 0.1) 100%) !important;
   box-shadow:
     0 15px 30px -5px rgba(245, 158, 11, 0.2),
     0 8px 16px -6px rgba(251, 191, 36, 0.2) !important;
 }
+
 .day-cell.holiday .day-cell-spotlight {
-  background: radial-gradient(
-    140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(245, 158, 11, 0.08),
-    transparent 80%
-  ) !important;
+  background: radial-gradient(140px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+      rgba(245, 158, 11, 0.08),
+      transparent 80%) !important;
 }
 
 /* Status: Disabled & Other Month */
@@ -285,6 +276,7 @@
     linear-gradient(rgba(249, 250, 251, 0.7), rgba(249, 250, 251, 0.7)),
     linear-gradient(rgba(229, 231, 235, 0.3), rgba(229, 231, 235, 0.3)) !important;
 }
+
 .day-cell.disabled:hover,
 .day-cell.other-month:hover {
   transform: none !important;
@@ -292,16 +284,19 @@
 }
 
 .day-cell-date {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   color: #1f2937;
+  line-height: 1.2;
   z-index: 3;
 }
 
 .day-cell-hours {
-  font-size: 13px;
+  font-size: 12px;
   color: #10b981 !important;
   font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   z-index: 3;
 }
 
@@ -576,21 +571,21 @@
 
   .calendar-grid {
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 5px;
   }
 
   .day-header {
-    padding: 4px;
-    font-size: 10px;
+    padding: 4px 2px 8px;
+    font-size: 9px;
   }
 
   .day-cell {
     font-size: 11px;
-    border-radius: 8px;
+    border-radius: 9px;
   }
 
   .day-cell-inner {
-    padding: 6px;
+    padding: 9px 8px 7px;
   }
 
   .day-cell-date {
@@ -615,12 +610,14 @@
   gap: 16px;
   margin-bottom: 20px;
 }
+
 .time-segment {
   background: #f8fafc;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }
+
 .time-segment-title {
   font-size: 11px;
   font-weight: 700;
@@ -632,20 +629,24 @@
   align-items: center;
   gap: 4px;
 }
+
 .time-input-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-bottom: 8px;
 }
+
 .time-input-group:last-child {
   margin-bottom: 0;
 }
+
 .time-input-group label {
   font-size: 11px;
   color: #475569;
   font-weight: 600;
 }
+
 .time-input-group input[type="time"] {
   padding: 8px;
   border-radius: 6px;
@@ -656,6 +657,7 @@
   box-sizing: border-box;
   background: white;
 }
+
 .live-duration-display {
   text-align: center;
   padding: 12px;
@@ -677,12 +679,14 @@
   margin-bottom: 20px;
   border: 1px solid #e2e8f0;
 }
+
 .quick-clock-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
 }
+
 .quick-clock-title {
   font-size: 14px;
   font-weight: 700;
@@ -691,16 +695,19 @@
   align-items: center;
   gap: 6px;
 }
+
 .quick-clock-time {
   font-size: 12px;
   color: #64748b;
   font-weight: 600;
 }
+
 .quick-clock-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .quick-clock-btn {
   display: flex;
   justify-content: space-between;
@@ -717,15 +724,18 @@
   width: 100%;
   text-align: left;
 }
+
 .quick-clock-btn:hover {
   background: #f1f5f9;
   border-color: #cbd5e1;
 }
+
 .quick-clock-btn.active {
   background: #eff6ff;
   border-color: #3b82f6;
   color: #1d4ed8;
 }
+
 .quick-clock-btn .btn-status {
   font-size: 10px;
   padding: 2px 6px;
@@ -733,7 +743,325 @@
   background: #e2e8f0;
   color: #475569;
 }
+
 .quick-clock-btn.active .btn-status {
   background: #dbeafe;
   color: #1d4ed8;
+}
+
+/* =========================================================================
+   BIRTHDAY CELEBRATION MODAL & CONFETTI STYLES
+   ========================================================================= */
+.birthday-badge {
+  cursor: pointer !important;
+  transition: transform 0.2s ease, filter 0.2s ease !important;
+}
+
+.birthday-badge:hover {
+  transform: scale(1.06) !important;
+  filter: brightness(1.1) saturate(1.1) !important;
+}
+
+/* Confetti Container & Particles */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100000;
+  overflow: hidden;
+}
+
+.confetti-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100001;
+  animation: confetti-explosion var(--duration) cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes confetti-explosion {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  30% {
+    transform: translate3d(var(--explode-x), var(--explode-y), 0) scale(1.25) rotate(var(--rotate-mid));
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(var(--drift-x), var(--fall-y), 0) scale(0.4) rotate(var(--rotate-end));
+    opacity: 0;
+  }
+}
+
+/* Celebration Modal Container */
+.birthday-modal-container {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  background: rgba(15, 23, 42, 0.5) !important;
+  z-index: 99999 !important;
+}
+
+.birthday-modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%) !important;
+  border: 1px solid rgba(236, 72, 153, 0.25) !important;
+  border-radius: 24px !important;
+  padding: 42px 32px 32px !important;
+  max-width: 360px !important;
+  text-align: center;
+  position: relative;
+  box-shadow:
+    0 25px 50px -12px rgba(236, 72, 153, 0.3),
+    0 12px 24px -8px rgba(139, 92, 246, 0.2) !important;
+  animation: birthdayModalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  overflow: visible !important;
+}
+
+.dark-mode .birthday-modal-content {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
+  border: 1px solid rgba(236, 72, 153, 0.4) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(236, 72, 153, 0.2) !important;
+}
+
+@keyframes birthdayModalIn {
+  0% {
+    transform: scale(0.7) translateY(30px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.birthday-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.dark-mode .birthday-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.birthday-modal-close:hover {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+  transform: rotate(90deg);
+}
+
+.birthday-card-deco {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin-bottom: 16px !important;
+  animation: bounceDeco 2.2s infinite ease-in-out;
+}
+
+.birthday-card-deco picture {
+  display: inline-block !important;
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.birthday-card-deco img {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@keyframes bounceDeco {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.08);
+  }
+}
+
+.birthday-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ec4899 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin: 0 0 16px;
+}
+
+.birthday-name-wrap {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+.birthday-emoji {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  width: 40px !important;
+  height: 40px !important;
+  animation: wobbleEmoji 1.5s infinite ease-in-out;
+}
+
+.birthday-emoji picture {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.birthday-emoji img {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@keyframes wobbleEmoji {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-15deg);
+  }
+
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+.birthday-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b !important;
+  letter-spacing: -0.02em;
+}
+
+.dark-mode .birthday-name {
+  color: #f8fafc !important;
+}
+
+.birthday-nickname {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 20px;
+  font-style: italic;
+}
+
+.dark-mode .birthday-nickname {
+  color: #94a3b8;
+}
+
+.birthday-details {
+  background: rgba(236, 72, 153, 0.05);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  border: 1px dashed rgba(236, 72, 153, 0.2);
+}
+
+.dark-mode .birthday-details {
+  background: rgba(236, 72, 153, 0.08);
+  border: 1px dashed rgba(236, 72, 153, 0.3);
+}
+
+.birthday-details p {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4f46e5 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  margin: 0;
+}
+
+.dark-mode .birthday-details p {
+  color: #a5b4fc !important;
+}
+
+.birthday-text-emoji {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.birthday-text-emoji picture,
+.birthday-text-emoji img {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.birthday-modal-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: white !important;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.birthday-btn-emoji {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.birthday-btn-emoji picture,
+.birthday-btn-emoji img {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.birthday-modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.45);
+  filter: brightness(1.05);
+}
+
+.birthday-modal-btn:active {
+  transform: translateY(0);
 }

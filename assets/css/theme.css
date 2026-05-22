@@ -167,6 +167,22 @@
   border-color: var(--border-color) !important;
 }
 
+/* Navbar pill tab container in dark mode */
+.dark-mode nav .bg-gray-100\/50 {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+/* Active nav tab pill in dark mode */
+.dark-mode nav .bg-white.text-gray-900.shadow-sm {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+/* Inactive nav tab hover in dark mode */
+.dark-mode nav a.text-gray-600:hover {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
 /* Sort Buttons */
 .dark-mode .sort-btn:not(.active) {
   background: #374151 !important;

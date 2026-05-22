@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initDarkModeToggle();
   initProfilePictureForm();
   initPasswordForm();
+  initNicknameEdit();
   initNetwork();
 });
 
@@ -324,4 +325,92 @@ function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
   return div.innerHTML;
+}
+
+/**
+ * Initialize Nickname Inline Editing
+ */
+function initNicknameEdit() {
+  const editBtn = document.getElementById("edit-nickname-btn");
+  const saveBtn = document.getElementById("save-nickname-btn");
+  const cancelBtn = document.getElementById("cancel-nickname-btn");
+  
+  const displayContainer = document.getElementById("nickname-display-container");
+  const editContainer = document.getElementById("nickname-edit-container");
+  
+  const displayVal = document.getElementById("nickname-display");
+  const inputVal = document.getElementById("nickname-input");
+  
+  if (!editBtn || !saveBtn || !cancelBtn || !displayContainer || !editContainer || !displayVal || !inputVal) {
+    return;
+  }
+  
+  // Transition to edit mode
+  editBtn.addEventListener("click", function () {
+    displayContainer.classList.add("hidden");
+    editContainer.classList.remove("hidden");
+    inputVal.focus();
+  });
+  
+  // Cancel edit
+  cancelBtn.addEventListener("click", function () {
+    editContainer.classList.add("hidden");
+    displayContainer.classList.remove("hidden");
+    // Reset input to current display value (ignoring "Not Set" translation fallback)
+    const currentVal = displayVal.textContent.trim();
+    inputVal.value = currentVal === TRANSLATIONS.not_set ? "" : currentVal;
+  });
+  
+  // Save edit
+  saveBtn.addEventListener("click", function () {
+    const val = inputVal.value.trim();
+    if (!val) {
+      alert(TRANSLATIONS.nickname_required);
+      return;
+    }
+    
+    // Disable input and buttons during request
+    inputVal.disabled = true;
+    saveBtn.disabled = true;
+    cancelBtn.disabled = true;
+    
+    const formData = new FormData();
+    formData.append("nickname", val);
+    
+    fetch(apiBasePath + "api/profile_update.php", {
+      method: "POST",
+      body: formData
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        inputVal.disabled = false;
+        saveBtn.disabled = false;
+        cancelBtn.disabled = false;
+        
+        if (data.success) {
+          displayVal.textContent = val;
+          editContainer.classList.add("hidden");
+          displayContainer.classList.remove("hidden");
+          showToast(TRANSLATIONS.nickname_updated);
+        } else {
+          alert(data.error || "Save failed");
+        }
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        inputVal.disabled = false;
+        saveBtn.disabled = false;
+        cancelBtn.disabled = false;
+        alert("Connection error");
+      });
+  });
+  
+  // Allow Enter key to save
+  inputVal.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      saveBtn.click();
+    } else if (e.key === "Escape") {
+      cancelBtn.click();
+    }
+  });
 }

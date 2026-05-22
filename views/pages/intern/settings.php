@@ -197,17 +197,31 @@ $base_url = "../";
 
                 <!-- Account Details -->
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden glass-card">
-                    <div class="py-6 border-b border-gray-100">
+                    <div class="py-6 px-8 border-b border-gray-100">
                         <h2 class="text-xl font-bold text-gray-900">Account Details</h2>
                     </div>
-                    <div class="py-8 grid md:grid-cols-2 gap-x-12 gap-y-10">
+                    <div class="py-8 px-8 grid md:grid-cols-2 gap-x-12 gap-y-10">
                         <div class="space-y-1">
                             <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Full Name</label>
                             <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user_name); ?></p>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Nickname</label>
-                            <p class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['nickname'] ?? 'Not Set'); ?></p>
+                        <div class="space-y-1 relative group">
+                            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest"><?php echo __('nickname', 'Nickname'); ?></label>
+                            <div id="nickname-display-container" class="flex items-center gap-2">
+                                <span id="nickname-display" class="text-lg font-medium text-gray-900 dark:text-white"><?php echo htmlspecialchars($user['nickname'] ?: __('not_set', 'Not Set')); ?></span>
+                                <button type="button" id="edit-nickname-btn" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition duration-200" title="<?php echo __('edit_nickname', 'Edit Nickname'); ?>">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </button>
+                            </div>
+                            <div id="nickname-edit-container" class="hidden flex items-center gap-2 mt-1">
+                                <input type="text" id="nickname-input" class="px-3 py-1.5 text-sm rounded-lg border border-gray-200 outline-none transition form-input w-full max-w-[200px]" value="<?php echo htmlspecialchars($user['nickname'] ?? ''); ?>" placeholder="<?php echo __('enter_nickname', 'Enter nickname'); ?>">
+                                <button type="button" id="save-nickname-btn" class="p-1.5 bg-green-50 text-green-600 hover:bg-green-100 rounded-lg transition" title="<?php echo __('save', 'Save'); ?>">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                                <button type="button" id="cancel-nickname-btn" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition" title="<?php echo __('cancel', 'Cancel'); ?>">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email Identity</label>
@@ -252,10 +266,10 @@ $base_url = "../";
 
                 <!-- Password Change -->
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden glass-card">
-                    <div class="py-6 border-b border-gray-100">
+                    <div class="py-6 px-8 border-b border-gray-100">
                         <h2 class="text-xl font-bold text-gray-900">Security & Password</h2>
                     </div>
-                    <div class="py-8">
+                    <div class="py-8 px-8">
                         <div id="password-alert" class="hidden"></div>
                         <form id="password-form" class="space-y-6">
                             <div class="grid md:grid-cols-2 gap-6">
@@ -406,6 +420,11 @@ $base_url = "../";
     const organizationId = <?php echo json_encode($organization_id); ?>;
     const currentUserId = <?php echo $user_id; ?>;
     const apiBasePath = '<?php echo $base_url; ?>';
+    const TRANSLATIONS = {
+        nickname_updated: <?php echo json_encode(__('nickname_updated', 'Nickname updated successfully')); ?>,
+        nickname_required: <?php echo json_encode(__('nickname_required', 'Nickname cannot be empty')); ?>,
+        not_set: <?php echo json_encode(__('not_set', 'Not Set')); ?>
+    };
 </script>
 <script src="<?php echo $base_url; ?>assets/js/colleagues.js"></script>
 <script src="<?php echo $base_url; ?>assets/js/profile.js"></script>

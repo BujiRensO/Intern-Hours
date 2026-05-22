@@ -67,6 +67,20 @@ try {
         $params[] = $profile_picture;
     }
 
+    // 4. Nickname Update
+    if (isset($_POST['nickname'])) {
+        $nickname = trim($_POST['nickname']);
+        if (empty($nickname)) {
+            echo json_encode(['success' => false, 'error' => __('nickname_required', 'Nickname cannot be empty.')]);
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            exit;
+        }
+        $updates[] = "nickname = ?";
+        $params[] = $nickname;
+    }
+
     if (empty($updates)) {
         echo json_encode(['success' => false, 'error' => 'No fields specified for update.']);
         if ($pdo->inTransaction()) {

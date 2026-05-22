@@ -287,16 +287,19 @@ function renderCalendar() {
             }
           }
         }
-        birthdayBadgesHtml += `<div class="birthday-badge" title="${displayName}'s Birthday! 🎉">🎂 ${displayName}${ageHtml}</div>`;
+        const bEscaped = JSON.stringify(b).replace(/"/g, '&quot;');
+        birthdayBadgesHtml += `<div class="birthday-badge" onclick="event.stopPropagation(); showBirthdayModal(${bEscaped}, event)" title="${displayName}'s Birthday! 🎉">🎂 ${displayName}${ageHtml}</div>`;
       });
     }
 
     cell.innerHTML = `
-            <div class="day-cell-date">${day}</div>
+            <div class="day-cell-inner">
+              <div class="day-cell-date">${day}</div>
               ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h</div>` : ""}
               ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
+            </div>
             <div class="day-cell-spotlight"></div>
         `;
 
@@ -347,11 +350,11 @@ function renderCalendar() {
 function loadAbsences() {
   fetch(
     apiBasePath +
-      "api/absences.php?month=" +
-      currentMonth +
-      "&year=" +
-      currentYear +
-      getUserIdQuery(),
+    "api/absences.php?month=" +
+    currentMonth +
+    "&year=" +
+    currentYear +
+    getUserIdQuery(),
   )
     .then((response) => response.json())
     .then((data) => {
@@ -466,11 +469,11 @@ function deleteAbsence() {
 function loadHours() {
   fetch(
     apiBasePath +
-      "api/hours.php?month=" +
-      currentMonth +
-      "&year=" +
-      currentYear +
-      getUserIdQuery(),
+    "api/hours.php?month=" +
+    currentMonth +
+    "&year=" +
+    currentYear +
+    getUserIdQuery(),
   )
     .then((response) => response.json())
     .then((data) => {
@@ -488,11 +491,11 @@ let checkInsData = {};
 function loadCheckIns() {
   fetch(
     apiBasePath +
-      "api/check-in.php?month=" +
-      currentMonth +
-      "&year=" +
-      currentYear +
-      getUserIdQuery(),
+    "api/check-in.php?month=" +
+    currentMonth +
+    "&year=" +
+    currentYear +
+    getUserIdQuery(),
   )
     .then((response) => response.json())
     .then((data) => {
@@ -1365,3 +1368,199 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// =========================================================================
+// BIRTHDAY MODAL & CONFETTI CELEBRATION
+// =========================================================================
+function showBirthdayModal(b, event) {
+  let modal = document.getElementById("birthday-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "birthday-modal";
+    modal.className = "modal birthday-modal-container";
+    modal.innerHTML = `
+      <div class="modal-content birthday-modal-content">
+        <button class="birthday-modal-close" onclick="closeBirthdayModal()">&times;</button>
+        <div class="birthday-card-deco">
+          <picture>
+            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f389/512.webp" type="image/webp">
+            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f389/512.gif" alt="🎉" width="48" height="48">
+          </picture>
+          <picture>
+            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f382/512.webp" type="image/webp">
+            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f382/512.gif" alt="🎂" width="48" height="48">
+          </picture>
+          <picture>
+            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/2728/512.webp" type="image/webp">
+            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2728/512.gif" alt="✨" width="48" height="48">
+          </picture>
+        </div>
+        <h3 class="birthday-title">It's a Celebration!</h3>
+        <div class="birthday-name-wrap">
+          <span class="birthday-emoji">
+            <picture>
+              <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f382/512.webp" type="image/webp">
+              <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f382/512.gif" alt="🎂" width="32" height="32">
+            </picture>
+          </span>
+          <span class="birthday-name" id="birthday-modal-name"></span>
+        </div>
+        <p class="birthday-nickname" id="birthday-modal-nickname"></p>
+        <div class="birthday-details">
+          <p id="birthday-modal-date-text"></p>
+        </div>
+        <button class="birthday-modal-btn" onclick="triggerBirthdayConfetti();">
+          Blow More Confetti! 
+          <picture class="birthday-btn-emoji">
+            <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.webp" type="image/webp">
+            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.gif" alt="🎊" width="20" height="20">
+          </picture>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Add event listener to close modal when clicking outside content
+    modal.addEventListener("click", function (e) {
+      if (e.target === this) closeBirthdayModal();
+    });
+  }
+
+  // Fill data
+  const displayName = b.name;
+  const nickname = b.nickname ? `"${b.nickname}"` : "";
+
+  // Format birthdate nicely (e.g. "May 22")
+  let formattedDate = "";
+  if (b.birthdate) {
+    const parts = b.birthdate.split(/[-/.]/);
+    if (parts.length === 3) {
+      let month = 0, day = 0;
+      if (parts[0].length === 4) {
+        month = parseInt(parts[1], 10);
+        day = parseInt(parts[2], 10);
+      } else {
+        month = parseInt(parts[0], 10);
+        day = parseInt(parts[1], 10);
+      }
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      if (month >= 1 && month <= 12) {
+        formattedDate = months[month - 1] + " " + day;
+      }
+    }
+  }
+
+  document.getElementById("birthday-modal-name").textContent = displayName;
+  document.getElementById("birthday-modal-nickname").textContent = nickname;
+
+  if (formattedDate) {
+    document.getElementById("birthday-modal-date-text").innerHTML = `
+      Birthday: ${formattedDate} 
+      <picture class="birthday-text-emoji">
+        <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f388/512.webp" type="image/webp">
+        <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f388/512.gif" alt="🎈" width="20" height="20">
+      </picture>
+    `;
+  } else {
+    document.getElementById("birthday-modal-date-text").innerHTML = `
+      Happy Birthday! 
+      <picture class="birthday-text-emoji">
+        <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f389/512.webp" type="image/webp">
+        <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f389/512.gif" alt="🎉" width="20" height="20">
+      </picture>
+    `;
+  }
+
+  // Show modal
+  modal.classList.add("active");
+
+  // Trigger confetti!
+  const x = event ? event.clientX : window.innerWidth / 2;
+  const y = event ? event.clientY : window.innerHeight / 2;
+  triggerBirthdayConfetti(x, y);
+}
+
+function closeBirthdayModal() {
+  const modal = document.getElementById("birthday-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+function triggerBirthdayConfetti(startX, startY) {
+  const x = startX !== undefined ? startX : window.innerWidth / 2;
+  const y = startY !== undefined ? startY : window.innerHeight / 2;
+
+  const particleCount = 80;
+  const colors = ["#ff007f", "#ff00ff", "#7f00ff", "#00ffff", "#00ff00", "#ffff00", "#ff7f00", "#ff0000"];
+  const container = document.createElement("div");
+  container.className = "confetti-container";
+  document.body.appendChild(container);
+
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement("div");
+    particle.className = "confetti-particle";
+
+    // Randomize colors
+    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+    // Randomize shape (square, circle, triangle, rectangle)
+    const shapeType = Math.floor(Math.random() * 4);
+    if (shapeType === 1) {
+      particle.style.borderRadius = "50%"; // circle
+    } else if (shapeType === 2) {
+      particle.style.width = "0";
+      particle.style.height = "0";
+      particle.style.borderLeft = "5px solid transparent";
+      particle.style.borderRight = "5px solid transparent";
+      particle.style.borderBottom = "10px solid " + colors[Math.floor(Math.random() * colors.length)];
+      particle.style.backgroundColor = "transparent"; // triangle
+    } else if (shapeType === 3) {
+      particle.style.width = "4px";
+      particle.style.height = "12px"; // long strip
+    } else {
+      particle.style.width = "8px";
+      particle.style.height = "8px"; // square
+    }
+
+    if (shapeType !== 2) {
+      const w = Math.floor(Math.random() * 6) + 6;
+      const h = Math.floor(Math.random() * 6) + 6;
+      particle.style.width = w + "px";
+      particle.style.height = h + "px";
+    }
+
+    // Starting position at click coordinate
+    particle.style.left = x + "px";
+    particle.style.top = y + "px";
+
+    // Trajectory parameters
+    const angle = Math.random() * Math.PI * 2; // Direction
+    const velocity = Math.random() * 180 + 80; // Speed
+
+    const explodeX = Math.cos(angle) * velocity;
+    const explodeY = Math.sin(angle) * velocity - 80; // Extra upward thrust
+
+    const driftX = explodeX + (Math.random() * 80 - 40);
+    const fallY = explodeY + (Math.random() * 250 + 250);
+
+    const rotateMid = Math.random() * 360;
+    const rotateEnd = rotateMid + Math.random() * 720 + 360;
+    const duration = Math.random() * 1.2 + 1.3; // 1.3s - 2.5s
+
+    particle.style.setProperty("--explode-x", `${explodeX}px`);
+    particle.style.setProperty("--explode-y", `${explodeY}px`);
+    particle.style.setProperty("--drift-x", `${driftX}px`);
+    particle.style.setProperty("--fall-y", `${fallY}px`);
+    particle.style.setProperty("--rotate-mid", `${rotateMid}deg`);
+    particle.style.setProperty("--rotate-end", `${rotateEnd}deg`);
+    particle.style.setProperty("--duration", `${duration}s`);
+
+    container.appendChild(particle);
+  }
+
+  // Clean up container
+  setTimeout(() => {
+    container.remove();
+  }, 3000);
+}

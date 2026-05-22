@@ -159,4 +159,28 @@ function get_device_from_ua($user_agent) {
     
     return 'Desktop PC';
 }
+
+/**
+ * Localization helper for i18n readiness.
+ * Returns the translated string for a key. Fallbacks to default string.
+ */
+if (!function_exists('__')) {
+    function __($key, $default = '') {
+        global $translations;
+        if (!isset($translations)) {
+            // Load language dictionary (could be expanded in future to load other languages)
+            $translations = [
+                'nickname' => 'Nickname',
+                'save' => 'Save',
+                'cancel' => 'Cancel',
+                'edit_nickname' => 'Edit Nickname',
+                'nickname_updated' => 'Nickname updated successfully',
+                'nickname_required' => 'Nickname cannot be empty',
+                'enter_nickname' => 'Enter nickname',
+                'not_set' => 'Not Set'
+            ];
+        }
+        return $translations[$key] ?? ($default ?: $key);
+    }
+}
 ?>
