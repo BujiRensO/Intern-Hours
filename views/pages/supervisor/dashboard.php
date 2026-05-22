@@ -37,7 +37,7 @@ $base_url = "../";
         });
 
         function loadInterns() {
-            fetch('../../../api/interns.php')
+            fetch('<?php echo $base_url; ?>api/interns.php')
                 .then(response => response.json())
                 .then(data => {
                     const list = document.getElementById('interns-list');

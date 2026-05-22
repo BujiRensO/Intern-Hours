@@ -12,9 +12,15 @@ $current_year = (int)($_GET['year'] ?? date('Y'));
 $base_url = "../";
 
 // Fetch current user's profile picture URL
-$stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE id = ?");
-$stmt->execute([$user_id]);
-$currentUserProfilePicture = $stmt->fetchColumn() ?: '';
+$currentUserProfilePicture = '';
+try {
+    $stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $currentUserProfilePicture = $stmt->fetchColumn() ?: '';
+} catch (Exception $e) {
+    // Fallback if schema changes have not been fully applied yet
+    error_log("Error fetching profile picture: " . $e->getMessage());
+}
 ?>
 
 <link rel="stylesheet" href="<?php echo $base_url; ?>assets/css/dashboard.css">

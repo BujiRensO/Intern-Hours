@@ -107,7 +107,13 @@ function loadInterns() {
           list.innerHTML =
             '<p class="text-gray-500 text-sm">No other colleagues.</p>';
         }
+      } else {
+        list.innerHTML = `<p class="text-red-500 text-sm">Error: ${data.error || "Failed to load colleagues."}</p>`;
       }
+    })
+    .catch((error) => {
+      console.error("Error loading colleagues:", error);
+      list.innerHTML = '<p class="text-red-500 text-sm">Connection error. Please try again.</p>';
     });
 }
 
