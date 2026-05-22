@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initTabs();
   initPrivacyToggle();
   initDarkModeToggle();
+  initProfilePictureForm();
   initPasswordForm();
   initNetwork();
 });
@@ -132,6 +133,77 @@ function initPasswordForm() {
 }
 
 /**
+ * Initialize Profile Picture Form and Live Preview
+ */
+function initProfilePictureForm() {
+  const form = document.getElementById("profile-picture-form");
+  const input = document.getElementById("profile_picture_url");
+  const previewPic = document.getElementById("preview-profile-pic");
+  const previewInitials = document.getElementById("preview-initials");
+  const alertBox = document.getElementById("profile-picture-alert");
+
+  if (!form || !input) return;
+
+  // Real-time live preview update
+  input.addEventListener("input", function () {
+    const url = this.value.trim();
+    if (url) {
+      previewPic.src = url;
+      previewPic.classList.remove("hidden");
+      previewInitials.classList.add("hidden");
+    } else {
+      previewPic.classList.add("hidden");
+      previewInitials.classList.remove("hidden");
+    }
+  });
+
+  // Preview fallback on image error (broken URL)
+  previewPic.addEventListener("error", function () {
+    previewPic.classList.add("hidden");
+    previewInitials.classList.remove("hidden");
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const url = input.value.trim();
+
+    const formData = new FormData();
+    formData.append("profile_picture", url);
+
+    fetch(apiBasePath + "api/profile_update.php", {
+      method: "POST",
+      body: formData
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          showAlert(alertBox, "Profile picture updated successfully", "success");
+          
+          // Update sidebar avatar in real-time
+          const sidebarContainer = document.getElementById("sidebar-avatar-container");
+          if (sidebarContainer) {
+            if (url) {
+              sidebarContainer.innerHTML = `<img id="sidebar-profile-pic" src="${escapeHtml(url)}" alt="Profile Picture" class="w-full h-full object-cover">`;
+            } else {
+              const initial = userName.charAt(0).toUpperCase();
+              sidebarContainer.innerHTML = `<span id="sidebar-initials">${initial}</span>`;
+            }
+          }
+          
+          showToast("Profile Picture Updated");
+        } else {
+          showAlert(alertBox, data.error || "Save failed", "error");
+        }
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        showAlert(alertBox, "Connection error", "error");
+      });
+  });
+}
+
+/**
  * Helper: Show Alert
  */
 function showAlert(box, message, type) {
@@ -204,6 +276,10 @@ function renderNetwork(interns) {
   interns.forEach((intern) => {
     const isPublic = parseInt(intern.is_public) === 1;
     const initial = intern.name.charAt(0).toUpperCase();
+    const avatarHtml = intern.profile_picture
+      ? `<img src="${escapeHtml(intern.profile_picture)}" alt="${escapeHtml(intern.name)}" class="w-full h-full object-cover">`
+      : initial;
+    const avatarBg = intern.profile_picture ? 'bg-transparent' : 'bg-gray-900 text-white';
 
     const card = document.createElement("div");
     card.className =
@@ -211,8 +287,8 @@ function renderNetwork(interns) {
 
     card.innerHTML = `
             <div class="flex flex-col items-center text-center">
-                <div class="w-12 h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center font-bold text-lg mb-3 shadow-lg shadow-gray-200">
-                    ${initial}
+                <div class="w-12 h-12 rounded-xl ${avatarBg} flex items-center justify-center font-bold text-lg mb-3 shadow-lg shadow-gray-200 overflow-hidden">
+                    ${avatarHtml}
                 </div>
                 <h5 class="font-bold text-gray-900 text-sm truncate w-full">${intern.name}</h5>
                 <div class="mt-2 flex items-center gap-1.5">
@@ -238,4 +314,14 @@ function renderNetwork(interns) {
         `;
     list.appendChild(card);
   });
+}
+
+/**
+ * Helper to escape HTML characters (XSS Prevention)
+ */
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
 }

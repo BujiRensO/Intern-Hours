@@ -138,6 +138,7 @@ function onCompareSelectChange(side) {
       id: userId,
       name: currentUserName,
       email: currentUserEmail,
+      profile_picture: typeof currentUserProfilePicture !== "undefined" ? currentUserProfilePicture : "",
       is_private: false,
       total_hours: total,
       hours: allHoursData,
@@ -154,6 +155,7 @@ function onCompareSelectChange(side) {
             id: data.intern.id,
             name: data.intern.name,
             email: data.intern.email || "",
+            profile_picture: data.intern.profile_picture || "",
             is_private: data.is_private,
             total_hours: data.total_hours,
             hours: data.hours || {},
@@ -295,14 +297,21 @@ function renderProfileCard(person, metrics, otherMetrics, isLeft) {
       )
     : "";
 
+  const color = getAvatarGradient(person.name);
+  const initial = escapeHtml(person.name.charAt(0).toUpperCase());
+  const avatarHtml = person.profile_picture
+    ? `<img src="${escapeHtml(person.profile_picture)}" alt="${escapeHtml(person.name)}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.textContent='${initial}';">`
+    : initial;
+  const avatarBg = person.profile_picture ? 'transparent' : color;
+
   return `
     <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(226, 232, 240, 0.5);">
-      <div class="compare-avatar" style="background: ${getAvatarGradient(person.name)}; min-width: 48px;">
-        ${person.name.charAt(0)}
+      <div class="compare-avatar" style="background: ${avatarBg}; min-width: 48px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        ${avatarHtml}
       </div>
       <div style="overflow: hidden; width: 100%;">
-        <div class="font-bold text-gray-800 dark:text-gray-200 truncate" style="font-size: 15px;">${person.name}</div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 truncate">${person.email}</div>
+        <div class="font-bold text-gray-800 dark:text-gray-200 truncate" style="font-size: 15px;">${escapeHtml(person.name)}</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400 truncate">${escapeHtml(person.email)}</div>
       </div>
     </div>
     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
@@ -513,4 +522,19 @@ function renderComparisonChart() {
       },
     },
   });
+}
+
+/**
+ * Escapes HTML characters to prevent XSS injection.
+ * @param {string} str The string to escape.
+ * @returns {string} The escaped string.
+ */
+function escapeHtml(str) {
+  if (!str) return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }

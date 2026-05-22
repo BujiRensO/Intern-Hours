@@ -141,10 +141,14 @@ function renderInterns() {
     const initial = intern.name.charAt(0).toUpperCase();
     const hasHours = intern.total_hours !== null;
     const hours = hasHours ? parseFloat(intern.total_hours).toFixed(1) : null;
+    const avatarHtml = intern.profile_picture
+      ? `<img src="${escapeHtml(intern.profile_picture)}" alt="${escapeHtml(intern.name)}" class="w-full h-full object-cover">`
+      : initial;
+    const avatarBg = intern.profile_picture ? 'transparent' : color;
 
     card.innerHTML = `
             <div class="colleague-card-header">
-                <div class="colleague-avatar" style="background: ${color};">${initial}</div>
+                <div class="colleague-avatar" style="background: ${avatarBg}; overflow: hidden;">${avatarHtml}</div>
                 <div>
                     <div class="colleague-name">${escapeHtml(intern.name)}</div>
                     <div class="colleague-email">${escapeHtml(intern.email || "")}</div>
@@ -227,10 +231,18 @@ function loadInternAllHours(callback) {
         // Populate modal header
         const intern = data.intern;
         const color = getAvatarColor(intern.name);
-        document.getElementById("intern-modal-avatar").style.background = color;
-        document.getElementById("intern-modal-avatar").textContent = intern.name
-          .charAt(0)
-          .toUpperCase();
+        const modalAvatar = document.getElementById("intern-modal-avatar");
+        if (modalAvatar) {
+          if (intern.profile_picture) {
+            modalAvatar.style.background = "transparent";
+            modalAvatar.style.overflow = "hidden";
+            modalAvatar.innerHTML = `<img src="${escapeHtml(intern.profile_picture)}" alt="${escapeHtml(intern.name)}" class="w-full h-full object-cover">`;
+          } else {
+            modalAvatar.style.background = color;
+            modalAvatar.style.overflow = "";
+            modalAvatar.textContent = intern.name.charAt(0).toUpperCase();
+          }
+        }
         document.getElementById("intern-modal-name").textContent = intern.name;
         document.getElementById("intern-modal-subtitle").textContent =
           (intern.office_name || "") + " • " + (intern.organization_name || "");
@@ -287,10 +299,18 @@ function loadInternMonthHours() {
 
 function renderPrivateNotice(intern) {
   const color = getAvatarColor(intern.name);
-  document.getElementById("intern-modal-avatar").style.background = color;
-  document.getElementById("intern-modal-avatar").textContent = intern.name
-    .charAt(0)
-    .toUpperCase();
+  const modalAvatar = document.getElementById("intern-modal-avatar");
+  if (modalAvatar) {
+    if (intern.profile_picture) {
+      modalAvatar.style.background = "transparent";
+      modalAvatar.style.overflow = "hidden";
+      modalAvatar.innerHTML = `<img src="${escapeHtml(intern.profile_picture)}" alt="${escapeHtml(intern.name)}" class="w-full h-full object-cover">`;
+    } else {
+      modalAvatar.style.background = color;
+      modalAvatar.style.overflow = "";
+      modalAvatar.textContent = intern.name.charAt(0).toUpperCase();
+    }
+  }
   document.getElementById("intern-modal-name").textContent = intern.name;
   document.getElementById("intern-modal-subtitle").textContent =
     (intern.office_name || "") + " • " + (intern.organization_name || "");

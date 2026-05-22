@@ -10,6 +10,11 @@ $user_name = $_SESSION['user_name'];
 $current_month = (int)($_GET['month'] ?? date('m'));
 $current_year = (int)($_GET['year'] ?? date('Y'));
 $base_url = "../";
+
+// Fetch current user's profile picture URL
+$stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$currentUserProfilePicture = $stmt->fetchColumn() ?: '';
 ?>
 
 <link rel="stylesheet" href="<?php echo $base_url; ?>assets/css/dashboard.css">
@@ -283,6 +288,7 @@ $base_url = "../";
     const currentUserId = userId;
     const currentUserName = '<?php echo htmlspecialchars($user_name, ENT_QUOTES); ?>';
     const currentUserEmail = '<?php echo htmlspecialchars($_SESSION['user_email'] ?? '', ENT_QUOTES); ?>';
+    const currentUserProfilePicture = '<?php echo htmlspecialchars($currentUserProfilePicture, ENT_QUOTES); ?>';
     const apiBasePath = '../';
 </script>
 <script src="../assets/js/compare.js"></script>
