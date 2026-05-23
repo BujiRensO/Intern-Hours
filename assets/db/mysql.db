@@ -1,20 +1,15 @@
-Create database intern_hours_db;
-use intern_hours_db;
-
 CREATE TABLE IF NOT EXISTS office (
   id INT AUTO_INCREMENT PRIMARY KEY,
   office_name VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() 
-    ON UPDATE CURRENT_TIMESTAMP()
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS organization (
   id INT AUTO_INCREMENT PRIMARY KEY,
   organization_name VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() 
-    ON UPDATE CURRENT_TIMESTAMP()
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -25,29 +20,26 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(255) NOT NULL,
   nickname VARCHAR(255) NOT NULL DEFAULT '',
   email VARCHAR(255) UNIQUE NOT NULL,
+  profile_picture VARCHAR(500) DEFAULT NULL,
   password VARCHAR(255) DEFAULT NULL,
   role ENUM('Intern', 'Admin') NOT NULL,
   office_id INT DEFAULT NULL,
   organization_id INT DEFAULT NULL,
-  birthdate DATE,
+  birthdate DATE DEFAULT NULL,
   contact BIGINT(11) DEFAULT NULL,
-  address VARCHAR (255),
-  barangay VARCHAR (255),
-  city VARCHAR(255),
-  province VARCHAR(255),
-  region VARCHAR(255),
-  postal_code INT(6),
+  address VARCHAR(255) DEFAULT NULL,
+  barangay VARCHAR(255) DEFAULT NULL,
+  city VARCHAR(255) DEFAULT NULL,
+  province VARCHAR(255) DEFAULT NULL,
+  region VARCHAR(255) DEFAULT NULL,
+  postal_code INT(6) DEFAULT NULL,
   is_darkmode ENUM('0', '1') DEFAULT '0' NOT NULL,
   is_public ENUM('0', '1') DEFAULT '0' NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() 
-    ON UPDATE CURRENT_TIMESTAMP(),
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
 
-  CONSTRAINT fk_users_office
-    FOREIGN KEY (office_id) REFERENCES office(id),
-
-  CONSTRAINT fk_users_organization
-    FOREIGN KEY (organization_id) REFERENCES organization(id)
+  CONSTRAINT fk_users_office FOREIGN KEY (office_id) REFERENCES office(id) ON DELETE SET NULL,
+  CONSTRAINT fk_users_organization FOREIGN KEY (organization_id) REFERENCES organization(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS hours (
@@ -56,9 +48,17 @@ CREATE TABLE IF NOT EXISTS hours (
   date DATE NOT NULL,
   hours DECIMAL(5,2) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  CONSTRAINT fk_hours_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
-  CONSTRAINT fk_hours_user
-    FOREIGN KEY (user_id) REFERENCES users(id)
+CREATE TABLE IF NOT EXISTS hours_log (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  date DATE NOT NULL,
+  hours DECIMAL(5,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  CONSTRAINT fk_hours_log_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS check_in (
@@ -70,30 +70,21 @@ CREATE TABLE IF NOT EXISTS check_in (
   afternoon_in DATETIME DEFAULT NULL,
   afternoon_out DATETIME DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() 
-    ON UPDATE CURRENT_TIMESTAMP(),
-  
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE IF NOT EXISTS absences (
   absences_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   date DATE NOT NULL,
   reason TEXT,
-  status ENUM('Pending', 'Approved', 'Rejected')
-    DEFAULT 'Pending' NOT NULL,
-  approved_by INT,
+  status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending' NOT NULL,
+  approved_by INT DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP()
-    ON UPDATE CURRENT_TIMESTAMP(),
-
-  CONSTRAINT fk_absence_user
-    FOREIGN KEY (user_id) REFERENCES users(id),
-
-  CONSTRAINT fk_absence_approved_by
-    FOREIGN KEY (approved_by) REFERENCES users(id)
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  CONSTRAINT fk_absence_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_absence_approved_by FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS accomplishment (
@@ -103,11 +94,8 @@ CREATE TABLE IF NOT EXISTS accomplishment (
   date_to DATE NOT NULL,
   accomplishment TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP()
-    ON UPDATE CURRENT_TIMESTAMP(),
-
-  CONSTRAINT fk_accomplishment_user
-    FOREIGN KEY (user_id) REFERENCES users(id)
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  CONSTRAINT fk_accomplishment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS login_logs (
@@ -116,9 +104,8 @@ CREATE TABLE IF NOT EXISTS login_logs (
   ip_address VARCHAR(255) NOT NULL,
   browser VARCHAR(255) NOT NULL,
   device VARCHAR(255) NOT NULL,
-
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS burnout_counter (
@@ -126,11 +113,10 @@ CREATE TABLE IF NOT EXISTS burnout_counter (
   user_id INT NOT NULL,
   hour_goal INT NOT NULL DEFAULT 0,
   starting_date DATETIME NOT NULL,
-  duty_days VARCHAR(255), -- 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'
+  duty_days VARCHAR(255) DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP()
-    ON UPDATE CURRENT_TIMESTAMP(),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS biometric_credentials (
@@ -148,8 +134,8 @@ CREATE TABLE IF NOT EXISTS attendance_logs (
   employee_id INT NOT NULL,
   device_token VARCHAR(255) NOT NULL,
   action_type ENUM('clock_in', 'clock_out') NOT NULL,
-  gps_latitude DECIMAL(10, 8),
-  gps_longitude DECIMAL(11, 8),
+  gps_latitude DECIMAL(10, 8) DEFAULT NULL,
+  gps_longitude DECIMAL(11, 8) DEFAULT NULL,
   server_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
   FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;

@@ -1,42 +1,140 @@
 CREATE TABLE IF NOT EXISTS `office` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `office_name` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `office_name` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `organization` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `organization_name` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `organization_name` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
-    `email` varchar(255) NOT NULL,
-    `password` varchar(255) NOT NULL,
-    `role` enum('Admin','Intern') NOT NULL DEFAULT 'Intern',
-    `office_id` int(11) DEFAULT NULL,
-    `organization_id` int(11) DEFAULT NULL,
-    `is_public` tinyint(1) NOT NULL DEFAULT 0,
-    `is_darkmode` tinyint(1) NOT NULL DEFAULT 0,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `email` (`email`),
-    KEY `office_id` (`office_id`),
-    KEY `organization_id` (`organization_id`),
-    CONSTRAINT `users_ibfk_1` FOREIGN KEY (`office_id`) REFERENCES `office` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `users_ibfk_2` FOREIGN KEY (`organization_id`) REFERENCES `organization` (`id`) ON DELETE SET NULL
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `google_id` TEXT DEFAULT NULL,
+  `google_refresh_token` TEXT DEFAULT NULL,
+  `google_access_token` TEXT DEFAULT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `nickname` VARCHAR(255) NOT NULL DEFAULT '',
+  `email` VARCHAR(255) UNIQUE NOT NULL,
+  `profile_picture` VARCHAR(500) DEFAULT NULL,
+  `password` VARCHAR(255) DEFAULT NULL,
+  `role` ENUM('Intern', 'Admin') NOT NULL,
+  `office_id` INT DEFAULT NULL,
+  `organization_id` INT DEFAULT NULL,
+  `birthdate` DATE DEFAULT NULL,
+  `contact` BIGINT(11) DEFAULT NULL,
+  `address` VARCHAR(255) DEFAULT NULL,
+  `barangay` VARCHAR(255) DEFAULT NULL,
+  `city` VARCHAR(255) DEFAULT NULL,
+  `province` VARCHAR(255) DEFAULT NULL,
+  `region` VARCHAR(255) DEFAULT NULL,
+  `postal_code` INT(6) DEFAULT NULL,
+  `is_darkmode` ENUM('0', '1') DEFAULT '0' NOT NULL,
+  `is_public` ENUM('0', '1') DEFAULT '0' NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+
+  CONSTRAINT `fk_users_office` FOREIGN KEY (`office_id`) REFERENCES `office` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_users_organization` FOREIGN KEY (`organization_id`) REFERENCES `organization` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `hours_log` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `user_id` int(11) NOT NULL,
-    `date` date NOT NULL,
-    `hours` decimal(5,2) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `user_date` (`user_id`, `date`),
-    CONSTRAINT `hours_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `hours` DECIMAL(5,2) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_hours_log_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `check_in` (
+  `check_in_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `morning_in` DATETIME DEFAULT NULL,
+  `morning_out` DATETIME DEFAULT NULL,
+  `afternoon_in` DATETIME DEFAULT NULL,
+  `afternoon_out` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_check_in_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `absences` (
+  `absences_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `reason` TEXT,
+  `status` ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending' NOT NULL,
+  `approved_by` INT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+
+  CONSTRAINT `fk_absence_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_absence_approved_by` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `accomplishment` (
+  `accomplishment_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `date_from` DATE NOT NULL,
+  `date_to` DATE NOT NULL,
+  `accomplishment` TEXT,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+
+  CONSTRAINT `fk_accomplishment_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `login_logs` (
+  `log_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `ip_address` VARCHAR(255) NOT NULL,
+  `browser` VARCHAR(255) NOT NULL,
+  `device` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_login_logs_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `burnout_counter` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `hour_goal` INT NOT NULL DEFAULT 0,
+  `starting_date` DATETIME NOT NULL,
+  `duty_days` VARCHAR(255) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_burnout_counter_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `biometric_credentials` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `credential_id` VARCHAR(255) NOT NULL UNIQUE,
+  `public_key` TEXT NOT NULL,
+  `sign_count` INT NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_biometric_credentials_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `attendance_logs` (
+  `log_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `employee_id` INT NOT NULL,
+  `device_token` VARCHAR(255) NOT NULL,
+  `action_type` ENUM('clock_in', 'clock_out') NOT NULL,
+  `gps_latitude` DECIMAL(10, 8) DEFAULT NULL,
+  `gps_longitude` DECIMAL(11, 8) DEFAULT NULL,
+  `server_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  
+  CONSTRAINT `fk_attendance_logs_user` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
