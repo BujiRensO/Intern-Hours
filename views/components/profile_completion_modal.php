@@ -1,5 +1,5 @@
 <!-- Profile Completion Modal Overlay -->
-<div id="profile-completion-overlay" class="fixed inset-0 bg-gray-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+<div id="profile-completion-overlay" class="fixed inset-0 bg-gray-900/60 backdrop-blur-md z-[200] flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-xl w-full p-6 md:p-8 transform scale-100 transition-all duration-300 border border-gray-100 dark:border-gray-700 max-h-[95vh] overflow-y-auto my-auto">
         
         <!-- Header -->
