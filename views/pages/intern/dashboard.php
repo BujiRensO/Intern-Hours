@@ -414,6 +414,14 @@ $base_url = "../";
             </div>
 
             <div class="stat-card">
+                <div class="stat-label">Overtime (Month)</div>
+                <div class="stat-value" style="color: #f97316;">
+                    <span id="overtime-hours">0.0</span>
+                    <span class="stat-unit">hrs</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
                 <div class="stat-label">Today's Hours</div>
                 <div class="stat-value">
                     <span id="today-hours">0</span>
