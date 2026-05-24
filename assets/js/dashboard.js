@@ -303,7 +303,9 @@ function renderCalendar() {
             <div class="day-cell-spotlight"></div>
         `;
 
-    if (!isFuture) {
+    if (absencesData[fullDate]) {
+      cell.onclick = () => openAbsenceModal(fullDate);
+    } else if (!isFuture) {
       cell.onclick = () => openLogModal(fullDate);
     } else {
       cell.onclick = () => openAbsenceModal(fullDate);
@@ -367,6 +369,12 @@ function loadAbsences() {
       }
     })
     .catch((error) => console.error("Error loading absences:", error));
+}
+
+function openAbsenceFromLogModal() {
+  const dateStr = selectedDate;
+  closeModal();
+  openAbsenceModal(dateStr);
 }
 
 function openAbsenceModal(dateStr) {

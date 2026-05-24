@@ -462,6 +462,15 @@
   background: #d32f2f;
 }
 
+.btn-absent {
+  background: #f97316;
+  color: white;
+}
+
+.btn-absent:hover {
+  background: #ea580c;
+}
+
 .filter-section {
   background: white;
   padding: 15px;

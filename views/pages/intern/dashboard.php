@@ -547,6 +547,7 @@ $base_url = "../";
                 <button class="btn-save" onclick="saveHours()">Save</button>
                 <button class="btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn-delete" id="delete-btn" style="display: none;" onclick="deleteHours()">Delete</button>
+                <button class="btn-absent" id="absent-btn" onclick="openAbsenceFromLogModal()">Absent</button>
             </div>
         </div>
     </div>
