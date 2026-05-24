@@ -68,6 +68,42 @@ try {
         if (!in_array('profile_picture', $columns)) {
             $pdo->exec("ALTER TABLE users ADD COLUMN profile_picture VARCHAR(500) DEFAULT NULL AFTER email");
         }
+        if (!in_array('google_id', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN google_id TEXT DEFAULT NULL AFTER id");
+        }
+        if (!in_array('google_refresh_token', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN google_refresh_token TEXT DEFAULT NULL AFTER google_id");
+        }
+        if (!in_array('google_access_token', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN google_access_token TEXT DEFAULT NULL AFTER google_refresh_token");
+        }
+        if (!in_array('nickname', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN nickname VARCHAR(255) NOT NULL DEFAULT '' AFTER name");
+        }
+        if (!in_array('birthdate', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN birthdate DATE AFTER organization_id");
+        }
+        if (!in_array('contact', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN contact BIGINT(11) DEFAULT NULL AFTER birthdate");
+        }
+        if (!in_array('address', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN address VARCHAR(255) DEFAULT NULL AFTER contact");
+        }
+        if (!in_array('barangay', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN barangay VARCHAR(255) DEFAULT NULL AFTER address");
+        }
+        if (!in_array('city', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN city VARCHAR(255) DEFAULT NULL AFTER barangay");
+        }
+        if (!in_array('province', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN province VARCHAR(255) DEFAULT NULL AFTER city");
+        }
+        if (!in_array('region', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN region VARCHAR(255) DEFAULT NULL AFTER province");
+        }
+        if (!in_array('postal_code', $columns)) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN postal_code INT(6) DEFAULT NULL AFTER region");
+        }
 
         // Auto-migration: Adjust user columns to support Google signup and optional fields
         $pdo->exec("ALTER TABLE users MODIFY COLUMN nickname VARCHAR(255) NOT NULL DEFAULT ''");

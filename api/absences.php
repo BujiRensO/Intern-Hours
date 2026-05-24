@@ -95,11 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Check if date is in the future
-        if (strtotime($date) < strtotime(date('Y-m-d'))) {
-            echo json_encode(['error' => 'Absence can only be requested for future dates', 'success' => false]);
-            exit;
-        }
+
 
         try {
             $stmt = $pdo->prepare("

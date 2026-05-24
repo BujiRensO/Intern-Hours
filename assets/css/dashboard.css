@@ -328,6 +328,26 @@
   border: 1px solid #ffcdd2;
 }
 
+.ot-tag {
+  font-size: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  padding: 1px 3.5px;
+  border-radius: 4px;
+  margin-left: 3px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dark-mode .ot-tag {
+  background: rgba(30, 58, 138, 0.4) !important;
+  color: #60a5fa !important;
+  border-color: #1e3a8a !important;
+}
+
 .stats-sidebar {
   display: flex;
   flex-direction: column;
@@ -460,6 +480,15 @@
 
 .btn-delete:hover {
   background: #d32f2f;
+}
+
+.btn-absent {
+  background: #f97316;
+  color: white;
+}
+
+.btn-absent:hover {
+  background: #ea580c;
 }
 
 .filter-section {

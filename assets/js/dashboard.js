@@ -295,7 +295,7 @@ function renderCalendar() {
     cell.innerHTML = `
             <div class="day-cell-inner">
               <div class="day-cell-date">${day}</div>
-              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h</div>` : ""}
+              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${parseFloat(hoursData[fullDate]) > 8 ? `<span class="ot-tag" title="Overtime: ${parseFloat(hoursData[fullDate] - 8).toFixed(1)} hrs">+${parseFloat(hoursData[fullDate] - 8).toFixed(1)} OT</span>` : ""}</div>` : ""}
               ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
@@ -303,7 +303,9 @@ function renderCalendar() {
             <div class="day-cell-spotlight"></div>
         `;
 
-    if (!isFuture) {
+    if (absencesData[fullDate]) {
+      cell.onclick = () => openAbsenceModal(fullDate);
+    } else if (!isFuture) {
       cell.onclick = () => openLogModal(fullDate);
     } else {
       cell.onclick = () => openAbsenceModal(fullDate);
@@ -367,6 +369,12 @@ function loadAbsences() {
       }
     })
     .catch((error) => console.error("Error loading absences:", error));
+}
+
+function openAbsenceFromLogModal() {
+  const dateStr = selectedDate;
+  closeModal();
+  openAbsenceModal(dateStr);
 }
 
 function openAbsenceModal(dateStr) {
@@ -833,6 +841,17 @@ function updateStats() {
   );
   const monthTotalEl = document.getElementById("month-total");
   if (monthTotalEl) monthTotalEl.textContent = monthTotal.toFixed(1);
+
+  // Overtime Hours (daily hours > 8)
+  const overtimeTotal = Object.values(monthHoursData).reduce(
+    (sum, val) => {
+      const h = parseFloat(val);
+      return sum + (h > 8 ? h - 8 : 0);
+    },
+    0,
+  );
+  const overtimeHoursEl = document.getElementById("overtime-hours");
+  if (overtimeHoursEl) overtimeHoursEl.textContent = overtimeTotal.toFixed(1);
 
   // Today's hours
   const today = new Date();
