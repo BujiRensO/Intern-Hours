@@ -141,3 +141,15 @@ CREATE TABLE IF NOT EXISTS attendance_logs (
   server_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
   FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS accomplishment_report_logs (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  from_date DATE NOT NULL,
+  to_date DATE NOT NULL,
+  objectives JSON DEFAULT NULL,
+  activities TEXT DEFAULT NULL,
+  reflections TEXT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
