@@ -322,7 +322,7 @@ $base_url = '../';
     <!-- Header -->
     <div class="acc-header">
         <div class="acc-header-left">
-            <h2>📋 Accomplishments</h2>
+            <h2 style="display: flex; align-items: center; flex-wrap: wrap;">📋 Accomplishments <span style="font-size: 11px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 8px; margin-left: 12px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: #fff; backdrop-filter: blur(4px);">In Development</span></h2>
             <p>Track daily progress · Generate professional reports</p>
         </div>
         <div class="acc-header-stats">
