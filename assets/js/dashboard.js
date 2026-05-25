@@ -691,6 +691,7 @@ function openLogModal(dateStr) {
   document.getElementById("modal-afternoon-in").value = "";
   document.getElementById("modal-afternoon-out").value = "";
   document.getElementById("modal-duration-preview").textContent = "0.00";
+  document.getElementById("modal-accomplishment").value = "";
 
   // Check if check-in log exists for this date
   const logs = checkInsData[dateStr];
@@ -704,6 +705,16 @@ function openLogModal(dateStr) {
   }
 
   calculateModalDuration();
+
+  // Fetch accomplishment data for the modal
+  fetch(apiBasePath + "api/accomplishments.php?date=" + dateStr)
+      .then(res => res.json())
+      .then(data => {
+          if (data.success && data.accomplishment) {
+              document.getElementById("modal-accomplishment").value = data.accomplishment;
+          }
+      })
+      .catch(err => console.error("Error fetching accomplishment:", err));
 
   const hasLogs =
     logs &&
@@ -727,6 +738,12 @@ function saveHours() {
   const mo = document.getElementById("modal-morning-out").value;
   const ai = document.getElementById("modal-afternoon-in").value;
   const ao = document.getElementById("modal-afternoon-out").value;
+  const accomp = document.getElementById("modal-accomplishment").value;
+
+  if (ao !== "" && accomp.trim() === "") {
+      alert("Please enter your Daily Accomplishment before saving.");
+      return;
+  }
 
   const formData = new FormData();
   formData.append("date", selectedDate);
@@ -762,8 +779,14 @@ function saveHours() {
         closeModal();
         loadHours();
 
-        if (ao !== "") {
-            promptForAccomplishment(selectedDate);
+        if (accomp.trim() !== "") {
+            const accData = new FormData();
+            accData.append("date", selectedDate);
+            accData.append("accomplishment", accomp);
+            fetch(apiBasePath + "api/accomplishments.php", {
+                method: "POST",
+                body: accData
+            }).catch(e => console.error(e));
         }
       } else {
         alert(data.error || "Error saving check-in");
