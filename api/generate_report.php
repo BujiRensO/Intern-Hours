@@ -2,18 +2,19 @@
 /**
  * API: Generate 2-page Accomplishment Report PDF (dompdf)
  */
+ob_start(); // Buffer ALL output to prevent corruption of binary PDF stream
 
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(0);
+
+session_start(); // Must be before config.php in case config outputs anything
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
-session_start();
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -99,6 +100,9 @@ for ($i = 1; $i <= 5; $i++) {
         <td class='obj-text'>{$text}</td>
     </tr>";
 }
+
+// Pre-compute conditional blocks (can't use expressions inside heredoc)
+$noImagesHtml = $imageBlocks === '' ? '<div class="no-images">No documentation images attached.</div>' : '';
 
 $html = <<<HTML
 <!DOCTYPE html>
@@ -358,7 +362,7 @@ $html = <<<HTML
     {$imageBlocks}
   </div>
 
-  {$imageBlocks === '' ? '<div class="no-images">No documentation images attached.</div>' : ''}
+  {$noImagesHtml}
 
   <!-- Signatures -->
   <div class="sig-section">
@@ -400,6 +404,6 @@ $dompdf->render();
 $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $user['name'] ?? 'Intern');
 $filename = "Accomplishment_Report_{$safeName}_{$fromDate}.pdf";
 
-if (ob_get_length()) ob_clean();
+ob_end_clean(); // Discard any stray output before binary stream
 $dompdf->stream($filename, ['Attachment' => true]);
 exit;

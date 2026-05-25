@@ -41,20 +41,16 @@ $allText = preg_replace('/\s+/', ' ', trim($allText));
 
 // ── Helper: split into sentences ───────────────────────────────────────────
 function splitSentences(string $text): array {
-    // Split on . ! ? followed by space or end
     $sentences = preg_split('/(?<=[.!?])\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
     return array_filter(array_map('trim', $sentences));
 }
 
 // ── Helper: clean a sentence for use as an objective ──────────────────────
 function toObjective(string $sentence): string {
-    $sentence = rtrim($sentence, '.,;:');
-    // Capitalize first letter
-    return ucfirst(trim($sentence));
+    return ucfirst(trim(rtrim($sentence, '.,;:')));
 }
 
 // ── Extract action-verb clusters for objectives ────────────────────────────
-//    We look for sentences that start with or contain known action verbs.
 $ACTION_VERBS = [
     'developed','created','implemented','built','designed','coded','programmed',
     'reviewed','tested','debugged','fixed','resolved','refactored','updated','deployed',
@@ -66,11 +62,11 @@ $ACTION_VERBS = [
     'planned','organized','scheduled','managed',
 ];
 
-$sentences = array_values(splitSentences($allText));
-$objectives  = [];
+$sentences     = array_values(splitSentences($allText));
+$objectives    = [];
 $usedSentences = [];
 
-// Pass 1: sentences that start with an action verb
+// Pass 1: sentences that START with an action verb
 foreach ($sentences as $idx => $s) {
     if (count($objectives) >= 5) break;
     $lower = strtolower($s);
@@ -78,7 +74,7 @@ foreach ($sentences as $idx => $s) {
         if (str_starts_with($lower, $verb)) {
             $obj = toObjective($s);
             if (strlen($obj) > 15 && strlen($obj) < 150) {
-                $objectives[] = $obj;
+                $objectives[]       = $obj;
                 $usedSentences[$idx] = true;
                 break;
             }
@@ -86,18 +82,19 @@ foreach ($sentences as $idx => $s) {
     }
 }
 
-// Pass 2: sentences that contain an action verb anywhere (fill remaining slots)
+// Pass 2: sentences that CONTAIN an action verb anywhere
 if (count($objectives) < 5) {
     foreach ($sentences as $idx => $s) {
         if (isset($usedSentences[$idx])) continue;
         if (count($objectives) >= 5) break;
         $lower = strtolower($s);
         foreach ($ACTION_VERBS as $verb) {
-            if (str_contains($lower, ' ' . $verb . ' ') || str_contains($lower, ' ' . $verb . 'd ') || str_contains($lower, ' ' . $verb . 'ed ')) {
+            if (str_contains($lower, ' ' . $verb . ' ')
+                || str_contains($lower, ' ' . $verb . 'd ')
+                || str_contains($lower, ' ' . $verb . 'ed ')) {
                 $obj = toObjective($s);
                 if (strlen($obj) > 15 && strlen($obj) < 150) {
-                    // Convert to "To <verb>..." format if possible
-                    $objectives[] = $obj;
+                    $objectives[]       = $obj;
                     $usedSentences[$idx] = true;
                     break;
                 }
@@ -106,7 +103,7 @@ if (count($objectives) < 5) {
     }
 }
 
-// Pass 3: if still not enough, just take first unused sentences
+// Pass 3: fallback — take first unused sentences
 if (count($objectives) < 3) {
     foreach ($sentences as $idx => $s) {
         if (isset($usedSentences[$idx])) continue;
@@ -118,47 +115,45 @@ if (count($objectives) < 3) {
     }
 }
 
-// Deduplicate objectives (remove near-duplicates by first 40 chars)
+// Deduplicate by first 40 chars
 $seen = [];
-$uniqueObjectives = [];
+$unique = [];
 foreach ($objectives as $obj) {
     $key = strtolower(substr($obj, 0, 40));
     if (!isset($seen[$key])) {
         $seen[$key] = true;
-        $uniqueObjectives[] = $obj;
+        $unique[] = $obj;
     }
 }
-$objectives = array_slice($uniqueObjectives, 0, 5);
+$objectives = array_slice($unique, 0, 5);
 
 // ── Build Activities narrative ─────────────────────────────────────────────
-//    Group by date and form a chronological paragraph.
 $actParts = [];
 foreach ($rows as $row) {
-    $dateLabel = date('l, F j', strtotime($row['date'])); // e.g. Monday, May 20
-    $text = rtrim(trim($row['accomplishment']), '.') . '.';
+    $dateLabel = date('l, F j', strtotime($row['date']));
+    $text      = rtrim(trim($row['accomplishment']), '.') . '.';
     $actParts[] = "On {$dateLabel}: {$text}";
 }
 
 $activities = implode(' ', $actParts);
-// Trim if very long
 if (strlen($activities) > 1200) {
-    $activities = substr($activities, 0, 1200);
-    $lastPeriod = strrpos($activities, '.');
+    $activities  = substr($activities, 0, 1200);
+    $lastPeriod  = strrpos($activities, '.');
     if ($lastPeriod !== false) $activities = substr($activities, 0, $lastPeriod + 1);
 }
 
-// ── Build Reflections from theme detection ────────────────────────────────
+// ── Build Reflections from theme detection ─────────────────────────────────
 $themes = [
-    'technical'   => ['code','coding','develop','implement','bug','fix','debug','program','software','test','deploy','api','database','feature'],
-    'teamwork'    => ['team','collaborate','meeting','discussion','coordinate','colleague','group','standup','sprint'],
-    'learning'    => ['learn','study','research','explore','understand','read','documentation','training','seminar'],
-    'design'      => ['design','ui','ux','layout','wireframe','prototype','figma','interface','visual'],
-    'management'  => ['plan','organize','schedule','manage','report','submit','deadline','task','priority'],
+    'technical'     => ['code','coding','develop','implement','bug','fix','debug','program','software','test','deploy','api','database','feature'],
+    'teamwork'      => ['team','collaborate','meeting','discussion','coordinate','colleague','group','standup','sprint'],
+    'learning'      => ['learn','study','research','explore','understand','read','documentation','training','seminar'],
+    'design'        => ['design','ui','ux','layout','wireframe','prototype','figma','interface','visual'],
+    'management'    => ['plan','organize','schedule','manage','report','submit','deadline','task','priority'],
     'communication' => ['present','explain','brief','email','report','communicate','discuss','feedback'],
 ];
 
 $detectedThemes = [];
-$lowerAll = strtolower($allText);
+$lowerAll       = strtolower($allText);
 foreach ($themes as $theme => $keywords) {
     foreach ($keywords as $kw) {
         if (str_contains($lowerAll, $kw)) {
@@ -170,24 +165,12 @@ foreach ($themes as $theme => $keywords) {
 
 $reflectionParts = ["During this period, I gained valuable experience and made meaningful contributions to my assigned tasks."];
 
-if (isset($detectedThemes['technical'])) {
-    $reflectionParts[] = "Working on technical tasks deepened my understanding of software development practices and improved my problem-solving capabilities.";
-}
-if (isset($detectedThemes['teamwork'])) {
-    $reflectionParts[] = "Collaborating with the team enhanced my communication skills and gave me insights into how professional teams operate in a real-world setting.";
-}
-if (isset($detectedThemes['learning'])) {
-    $reflectionParts[] = "The research and learning activities I engaged in expanded my knowledge base and gave me a stronger foundation for future tasks.";
-}
-if (isset($detectedThemes['design'])) {
-    $reflectionParts[] = "Working on design-related tasks helped me appreciate the importance of user experience and visual clarity in software products.";
-}
-if (isset($detectedThemes['management'])) {
-    $reflectionParts[] = "Planning and managing tasks taught me the value of prioritization and meeting deadlines in a professional environment.";
-}
-if (isset($detectedThemes['communication'])) {
-    $reflectionParts[] = "Presenting and communicating progress helped me become more confident in expressing ideas clearly and professionally.";
-}
+if (isset($detectedThemes['technical']))     $reflectionParts[] = "Working on technical tasks deepened my understanding of software development practices and improved my problem-solving capabilities.";
+if (isset($detectedThemes['teamwork']))      $reflectionParts[] = "Collaborating with the team enhanced my communication skills and gave me insights into how professional teams operate in a real-world setting.";
+if (isset($detectedThemes['learning']))      $reflectionParts[] = "The research and learning activities I engaged in expanded my knowledge base and gave me a stronger foundation for future tasks.";
+if (isset($detectedThemes['design']))        $reflectionParts[] = "Working on design-related tasks helped me appreciate the importance of user experience and visual clarity in software products.";
+if (isset($detectedThemes['management']))    $reflectionParts[] = "Planning and managing tasks taught me the value of prioritization and meeting deadlines in a professional environment.";
+if (isset($detectedThemes['communication'])) $reflectionParts[] = "Presenting and communicating progress helped me become more confident in expressing ideas clearly and professionally.";
 
 $reflectionParts[] = "Overall, this training period was a rewarding experience that bridged the gap between academic learning and industry practice.";
 
