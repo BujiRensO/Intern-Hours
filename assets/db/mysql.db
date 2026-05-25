@@ -90,9 +90,8 @@ CREATE TABLE IF NOT EXISTS absences (
 CREATE TABLE IF NOT EXISTS accomplishment (
   accomplishment_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
-  date_from DATE NOT NULL,
-  date_to DATE NOT NULL,
-  accomplishment TEXT,
+  date DATE NOT NULL,
+  accomplishment VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
   CONSTRAINT fk_accomplishment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

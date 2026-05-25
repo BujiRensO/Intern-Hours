@@ -630,6 +630,11 @@ function quickClockStamp(field) {
         renderCalendar();
         updateQuickClockWidget();
         loadHours(); // Reload total hours metrics
+        
+        // Prompt for accomplishment if stamping afternoon out
+        if (field === 'afternoon_out' && todayLogs[field] !== "") {
+            promptForAccomplishment(todayStr);
+        }
       } else {
         alert(data.error || "Error clocking time");
       }
@@ -756,6 +761,10 @@ function saveHours() {
         updateQuickClockWidget();
         closeModal();
         loadHours();
+
+        if (ao !== "") {
+            promptForAccomplishment(selectedDate);
+        }
       } else {
         alert(data.error || "Error saving check-in");
       }
@@ -763,6 +772,67 @@ function saveHours() {
     .catch((error) => {
       console.error("Error:", error);
       alert("Error saving check-in");
+    });
+}
+
+// ==========================================
+// Daily Accomplishment Feature
+// ==========================================
+
+function promptForAccomplishment(dateStr) {
+    fetch(apiBasePath + "api/accomplishments.php?date=" + dateStr)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && !data.accomplishment) {
+                openAccomplishmentModal(dateStr);
+            }
+        })
+        .catch(err => console.error("Error fetching accomplishment:", err));
+}
+
+function openAccomplishmentModal(dateStr) {
+    document.getElementById("accomplishment-modal-date").value = dateStr;
+    document.getElementById("accomplishment-text").value = "";
+    document.getElementById("accomplishment-modal").classList.add("active");
+    // Small timeout to allow transition before focus
+    setTimeout(() => {
+        document.getElementById("accomplishment-text").focus();
+    }, 100);
+}
+
+function closeAccomplishmentModal() {
+    document.getElementById("accomplishment-modal").classList.remove("active");
+}
+
+function saveAccomplishment() {
+    const dateStr = document.getElementById("accomplishment-modal-date").value;
+    const text = document.getElementById("accomplishment-text").value;
+    
+    if (text.trim() === '') {
+        alert("Please enter an accomplishment, or click Skip.");
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append("date", dateStr);
+    formData.append("accomplishment", text);
+
+    fetch(apiBasePath + "api/accomplishments.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            closeAccomplishmentModal();
+            // Optional: alert toast here
+        } else {
+            alert("Error: " + (data.error || "Failed to save accomplishment"));
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Error saving accomplishment");
     });
 }
 

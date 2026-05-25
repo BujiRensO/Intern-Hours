@@ -546,6 +546,12 @@ $base_url = "../";
                 </div>
             </div>
 
+            <!-- Accomplishment Field for Log Modal -->
+            <div class="form-group" style="margin-top: 15px; margin-bottom: 15px;" id="modal-accomplishment-group">
+                <label>Daily Accomplishment </label>
+                <textarea id="modal-accomplishment" rows="2" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical;" placeholder="Summarize your tasks and accomplishments today..."></textarea>
+            </div>
+
             <!-- Live Calculated Duration Preview -->
             <div class="live-duration-display">
                 Calculated Duty: <span id="modal-duration-preview">0.00</span> hrs
@@ -577,6 +583,24 @@ $base_url = "../";
                 <button class="btn-save" id="absence-submit-btn" onclick="saveAbsence()">Submit Request</button>
                 <button class="btn-delete" id="absence-delete-btn" style="display: none;" onclick="deleteAbsence()">Cancel Request</button>
                 <button class="btn-cancel" onclick="closeAbsenceModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accomplishment Modal -->
+    <div class="modal" id="accomplishment-modal">
+        <div class="modal-content">
+            <div class="modal-header">Daily Accomplishment</div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Date</label>
+                <input type="text" id="accomplishment-modal-date" readonly style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; font-weight: 600; color: #475569;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>What did you accomplish today?</label>
+                <textarea id="accomplishment-text" rows="4" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical;" placeholder="Summarize your tasks and accomplishments today..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-save" id="accomplishment-submit-btn" onclick="saveAccomplishment()">Save Accomplishment</button>
             </div>
         </div>
     </div>
