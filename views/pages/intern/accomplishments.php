@@ -18,7 +18,8 @@ $accomplishments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt2 = $pdo->prepare("SELECT SUM(hours) as total FROM hours_log WHERE user_id = ? AND date BETWEEN ? AND ?");
 $stmt2->execute([$user_id, $from, $to]);
-$monthHours = floatval($stmt2->fetch()['total'] ?? 0);
+$row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+$monthHours = floatval($row2['total'] ?? 0);
 
 $base_url = '../';
 ?>
