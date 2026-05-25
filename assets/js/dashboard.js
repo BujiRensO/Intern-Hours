@@ -137,7 +137,62 @@ function loadAllHours() {
     .catch((error) => console.error("Error loading all hours:", error));
 }
 
+function getDailyDutyHours() {
+    if (typeof dutyFrom === 'undefined' || typeof dutyTo === 'undefined' || !dutyFrom || !dutyTo) return 8;
+    const fromParts = dutyFrom.split(':').map(Number);
+    const toParts = dutyTo.split(':').map(Number);
+    if (fromParts.length !== 2 || toParts.length !== 2) return 8;
+    
+    let hours = (toParts[0] - fromParts[0]) + (toParts[1] - fromParts[1]) / 60;
+    
+    // Deduct lunch break only if the toggle is enabled
+    if (typeof hasLunchBreak !== 'undefined' && hasLunchBreak) {
+        hours -= 1;
+    }
+    
+    return hours > 0 ? hours : 8;
+}
+
+// Calculate OT based on actual clock-in/out times vs the duty window
+function getOvertimeFromCheckIn(logs) {
+    if (!logs || typeof dutyFrom === 'undefined' || typeof dutyTo === 'undefined' || !dutyFrom || !dutyTo) {
+        return 0;
+    }
+    
+    const toMins = (timeStr) => {
+        if (!timeStr) return null;
+        // timeStr may be HH:MM or HH:MM:SS
+        const parts = timeStr.split(':').map(Number);
+        return parts[0] * 60 + parts[1];
+    };
+    
+    const dutyFromMins = toMins(dutyFrom);
+    const dutyToMins = toMins(dutyTo);
+    
+    const morningIn  = toMins(logs.morning_in);
+    const morningOut = toMins(logs.morning_out);
+    const afternoonIn  = toMins(logs.afternoon_in);
+    const afternoonOut = toMins(logs.afternoon_out);
+    
+    let otMins = 0;
+    
+    // OT before duty start: earliest clock-in before dutyFrom
+    const firstIn = (morningIn !== null) ? morningIn : afternoonIn;
+    if (firstIn !== null && firstIn < dutyFromMins) {
+        otMins += dutyFromMins - firstIn;
+    }
+    
+    // OT after duty end: latest clock-out after dutyTo
+    const lastOut = (afternoonOut !== null) ? afternoonOut : morningOut;
+    if (lastOut !== null && lastOut > dutyToMins) {
+        otMins += lastOut - dutyToMins;
+    }
+    
+    return otMins / 60;
+}
+
 function renderCalendar() {
+  const dailyDutyHours = getDailyDutyHours();
   const firstDay = new Date(currentYear, currentMonth - 1, 1);
   const lastDay = new Date(currentYear, currentMonth, 0);
   const daysInMonth = lastDay.getDate();
@@ -292,10 +347,17 @@ function renderCalendar() {
       });
     }
 
+    // Compute time-window OT for this day
+    const dayLogs = checkInsData[fullDate];
+    const otHours = getOvertimeFromCheckIn(dayLogs);
+    const otHtml = otHours > 0
+        ? `<span class="ot-tag" title="Overtime: ${otHours.toFixed(1)} hrs beyond duty window">+${otHours.toFixed(1)} OT</span>`
+        : '';
+
     cell.innerHTML = `
             <div class="day-cell-inner">
               <div class="day-cell-date">${day}</div>
-              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${parseFloat(hoursData[fullDate]) > 8 ? `<span class="ot-tag" title="Overtime: ${parseFloat(hoursData[fullDate] - 8).toFixed(1)} hrs">+${parseFloat(hoursData[fullDate] - 8).toFixed(1)} OT</span>` : ""}</div>` : ""}
+              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${otHtml}</div>` : ""}
               ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
@@ -630,6 +692,11 @@ function quickClockStamp(field) {
         renderCalendar();
         updateQuickClockWidget();
         loadHours(); // Reload total hours metrics
+        
+        // Prompt for accomplishment if stamping afternoon out
+        if (field === 'afternoon_out' && todayLogs[field] !== "") {
+            promptForAccomplishment(todayStr);
+        }
       } else {
         alert(data.error || "Error clocking time");
       }
@@ -686,6 +753,7 @@ function openLogModal(dateStr) {
   document.getElementById("modal-afternoon-in").value = "";
   document.getElementById("modal-afternoon-out").value = "";
   document.getElementById("modal-duration-preview").textContent = "0.00";
+  document.getElementById("modal-accomplishment").value = "";
 
   // Check if check-in log exists for this date
   const logs = checkInsData[dateStr];
@@ -699,6 +767,16 @@ function openLogModal(dateStr) {
   }
 
   calculateModalDuration();
+
+  // Fetch accomplishment data for the modal
+  fetch(apiBasePath + "api/accomplishments.php?date=" + dateStr)
+      .then(res => res.json())
+      .then(data => {
+          if (data.success && data.accomplishment) {
+              document.getElementById("modal-accomplishment").value = data.accomplishment;
+          }
+      })
+      .catch(err => console.error("Error fetching accomplishment:", err));
 
   const hasLogs =
     logs &&
@@ -722,6 +800,12 @@ function saveHours() {
   const mo = document.getElementById("modal-morning-out").value;
   const ai = document.getElementById("modal-afternoon-in").value;
   const ao = document.getElementById("modal-afternoon-out").value;
+  const accomp = document.getElementById("modal-accomplishment").value;
+
+  if (ao !== "" && accomp.trim() === "") {
+      alert("Please enter your Daily Accomplishment before saving.");
+      return;
+  }
 
   const formData = new FormData();
   formData.append("date", selectedDate);
@@ -754,8 +838,19 @@ function saveHours() {
 
         renderCalendar();
         updateQuickClockWidget();
+        const savedDate = selectedDate; // capture before closeModal() clears it
         closeModal();
         loadHours();
+
+        if (accomp.trim() !== "") {
+            const accData = new FormData();
+            accData.append("date", savedDate);
+            accData.append("accomplishment", accomp);
+            fetch(apiBasePath + "api/accomplishments.php", {
+                method: "POST",
+                body: accData
+            }).catch(e => console.error(e));
+        }
       } else {
         alert(data.error || "Error saving check-in");
       }
@@ -763,6 +858,67 @@ function saveHours() {
     .catch((error) => {
       console.error("Error:", error);
       alert("Error saving check-in");
+    });
+}
+
+// ==========================================
+// Daily Accomplishment Feature
+// ==========================================
+
+function promptForAccomplishment(dateStr) {
+    fetch(apiBasePath + "api/accomplishments.php?date=" + dateStr)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && !data.accomplishment) {
+                openAccomplishmentModal(dateStr);
+            }
+        })
+        .catch(err => console.error("Error fetching accomplishment:", err));
+}
+
+function openAccomplishmentModal(dateStr) {
+    document.getElementById("accomplishment-modal-date").value = dateStr;
+    document.getElementById("accomplishment-text").value = "";
+    document.getElementById("accomplishment-modal").classList.add("active");
+    // Small timeout to allow transition before focus
+    setTimeout(() => {
+        document.getElementById("accomplishment-text").focus();
+    }, 100);
+}
+
+function closeAccomplishmentModal() {
+    document.getElementById("accomplishment-modal").classList.remove("active");
+}
+
+function saveAccomplishment() {
+    const dateStr = document.getElementById("accomplishment-modal-date").value;
+    const text = document.getElementById("accomplishment-text").value;
+    
+    if (text.trim() === '') {
+        alert("Please enter an accomplishment, or click Skip.");
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append("date", dateStr);
+    formData.append("accomplishment", text);
+
+    fetch(apiBasePath + "api/accomplishments.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            closeAccomplishmentModal();
+            // Optional: alert toast here
+        } else {
+            alert("Error: " + (data.error || "Failed to save accomplishment"));
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Error saving accomplishment");
     });
 }
 
@@ -834,7 +990,9 @@ function updateCalendarData() {
   loadCheckIns();
 }
 
+
 function updateStats() {
+  const dailyDutyHours = getDailyDutyHours();
   const monthTotal = Object.values(monthHoursData).reduce(
     (sum, val) => sum + parseFloat(val),
     0,
@@ -842,11 +1000,11 @@ function updateStats() {
   const monthTotalEl = document.getElementById("month-total");
   if (monthTotalEl) monthTotalEl.textContent = monthTotal.toFixed(1);
 
-  // Overtime Hours (daily hours > 8)
+  // Overtime Hours (daily hours > dailyDutyHours)
   const overtimeTotal = Object.values(monthHoursData).reduce(
     (sum, val) => {
       const h = parseFloat(val);
-      return sum + (h > 8 ? h - 8 : 0);
+      return sum + (h > dailyDutyHours ? h - dailyDutyHours : 0);
     },
     0,
   );
@@ -1325,6 +1483,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const hourGoal = document.getElementById("modal_hour_goal").value;
       const startingDate = document.getElementById("modal_starting_date").value;
+      const dutyFromVal = document.getElementById("modal_duty_from").value;
+      const dutyToVal = document.getElementById("modal_duty_to").value;
       const checkedBoxes = Array.from(
         document.querySelectorAll('input[name="modal_duty_days[]"]:checked'),
       );
@@ -1351,6 +1511,12 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("hour_goal", hourGoal);
       formData.append("starting_date", startingDate);
       formData.append("duty_days", dutyDays);
+      formData.append("duty_from", dutyFromVal);
+      formData.append("duty_to", dutyToVal);
+      const lunchBreakCheckbox = document.getElementById("modal_has_lunch_break");
+      if (lunchBreakCheckbox && lunchBreakCheckbox.checked) {
+        formData.append("has_lunch_break", "1");
+      }
 
       fetch("../api/burnout_update.php", {
         method: "POST",

@@ -1,7 +1,5 @@
 .env
 
-context
-
 node_modules
 
 vendor

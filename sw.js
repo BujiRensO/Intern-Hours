@@ -46,14 +46,18 @@ self.addEventListener("fetch", (e) => {
           .then((networkResponse) => {
             if (networkResponse.status === 200) {
               caches.open(CACHE_NAME).then((cache) => {
-                cache.put(e.request, networkResponse);
+                cache.put(e.request, networkResponse.clone());
               });
             }
           })
           .catch(() => {});
         return cachedResponse;
       }
-      return fetch(e.request);
+      // Not in cache — fetch from network, gracefully handle offline/missing
+      return fetch(e.request).catch(() => {
+        // Return empty 503 response rather than an unhandled rejection
+        return new Response('', { status: 503, statusText: 'Service Unavailable' });
+      });
     }),
   );
 });

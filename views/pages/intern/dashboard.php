@@ -9,11 +9,14 @@ $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
 // Fetch burnout settings
-$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days FROM burnout_counter WHERE user_id = ?");
+$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days, duty_from, duty_to, has_lunch_break FROM burnout_counter WHERE user_id = ?");
 $burnout_stmt->execute([$user_id]);
 $burnout = $burnout_stmt->fetch();
 $hour_goal = $burnout ? (int)$burnout['hour_goal'] : 480;
 $starting_date = $burnout ? date('Y-m-d', strtotime($burnout['starting_date'])) : date('Y-m-d');
+$duty_from = $burnout && $burnout['duty_from'] ? date('H:i', strtotime($burnout['duty_from'])) : '08:00';
+$duty_to = $burnout && $burnout['duty_to'] ? date('H:i', strtotime($burnout['duty_to'])) : '17:00';
+$has_lunch_break = $burnout ? (int)$burnout['has_lunch_break'] : 1;
 $duty_days = $burnout ? $burnout['duty_days'] : 'Monday,Tuesday,Wednesday,Thursday,Friday';
 
 // Format display schedule nicely (e.g. "Mon, Tue, Wed, Thu, Fri")
@@ -546,6 +549,12 @@ $base_url = "../";
                 </div>
             </div>
 
+            <!-- Accomplishment Field for Log Modal -->
+            <div class="form-group" style="margin-top: 15px; margin-bottom: 15px;" id="modal-accomplishment-group">
+                <label>Daily Accomplishment </label>
+                <textarea id="modal-accomplishment" rows="2" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical;" placeholder="Summarize your tasks and accomplishments today..."></textarea>
+            </div>
+
             <!-- Live Calculated Duration Preview -->
             <div class="live-duration-display">
                 Calculated Duty: <span id="modal-duration-preview">0.00</span> hrs
@@ -581,6 +590,24 @@ $base_url = "../";
         </div>
     </div>
 
+    <!-- Accomplishment Modal -->
+    <div class="modal" id="accomplishment-modal">
+        <div class="modal-content">
+            <div class="modal-header">Daily Accomplishment</div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Date</label>
+                <input type="text" id="accomplishment-modal-date" readonly style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; font-weight: 600; color: #475569;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>What did you accomplish today?</label>
+                <textarea id="accomplishment-text" rows="4" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical;" placeholder="Summarize your tasks and accomplishments today..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-save" id="accomplishment-submit-btn" onclick="saveAccomplishment()">Save Accomplishment</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Adjust Goal Settings Modal Overlay -->
     <div id="goal-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
         <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-8 max-w-md w-full shadow-2xl transform scale-95 transition-all duration-300 relative">
@@ -605,6 +632,29 @@ $base_url = "../";
                 <div>
                     <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2" for="modal_starting_date">Start Date</label>
                     <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="date" id="modal_starting_date" required value="<?php echo $starting_date; ?>">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2" for="modal_duty_from">Duty Hours From</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="time" id="modal_duty_from" required value="<?php echo $duty_from; ?>">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2" for="modal_duty_to">Duty Hours To</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="time" id="modal_duty_to" required value="<?php echo $duty_to; ?>">
+                    </div>
+                </div>
+
+                <!-- Lunch Break Toggle -->
+                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+                    <div>
+                        <div class="text-sm font-bold text-gray-700 dark:text-gray-300">Lunch Break Deduction</div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Subtract 1 hour for lunch from daily duty hours</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer ml-4" for="modal_has_lunch_break">
+                        <input type="checkbox" id="modal_has_lunch_break" name="modal_has_lunch_break" class="sr-only peer" <?php echo $has_lunch_break ? 'checked' : ''; ?>>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    </label>
                 </div>
 
                 <div>
@@ -655,6 +705,9 @@ $base_url = "../";
         const hourGoal = parseInt('<?php echo $hour_goal; ?>');
         const startingDate = '<?php echo $starting_date; ?>';
         const dutyDays = '<?php echo $duty_days; ?>';
+        const dutyFrom = '<?php echo $duty_from; ?>';
+        const dutyTo = '<?php echo $duty_to; ?>';
+        const hasLunchBreak = <?php echo $has_lunch_break ? 'true' : 'false'; ?>;
     </script>
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/colleagues.js"></script>

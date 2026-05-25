@@ -195,6 +195,12 @@ function biometricClock() {
         if (typeof renderCalendar === "function") renderCalendar();
         if (typeof updateQuickClockWidget === "function")
           updateQuickClockWidget();
+          
+        if (res.slot === "afternoon_out") {
+            if (typeof promptForAccomplishment === "function") {
+                promptForAccomplishment(getTodayDateStr());
+            }
+        }
       } else {
         alert("❌ Verification failed: " + res.error);
       }

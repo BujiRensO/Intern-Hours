@@ -90,9 +90,8 @@ CREATE TABLE IF NOT EXISTS absences (
 CREATE TABLE IF NOT EXISTS accomplishment (
   accomplishment_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
-  date_from DATE NOT NULL,
-  date_to DATE NOT NULL,
-  accomplishment TEXT,
+  date DATE NOT NULL,
+  accomplishment VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
   CONSTRAINT fk_accomplishment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -112,6 +111,9 @@ CREATE TABLE IF NOT EXISTS burnout_counter (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   hour_goal INT NOT NULL DEFAULT 0,
+  duty_from	time,	
+  duty_to	time,
+  has_lunch_break TINYINT(1) NOT NULL DEFAULT 1,
   starting_date DATETIME NOT NULL,
   duty_days VARCHAR(255) DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
@@ -138,4 +140,16 @@ CREATE TABLE IF NOT EXISTS attendance_logs (
   gps_longitude DECIMAL(11, 8) DEFAULT NULL,
   server_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
   FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS accomplishment_report_logs (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  from_date DATE NOT NULL,
+  to_date DATE NOT NULL,
+  objectives JSON DEFAULT NULL,
+  activities TEXT DEFAULT NULL,
+  reflections TEXT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
