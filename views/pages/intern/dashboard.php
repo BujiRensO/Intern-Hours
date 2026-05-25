@@ -9,13 +9,14 @@ $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
 // Fetch burnout settings
-$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days, duty_from, duty_to FROM burnout_counter WHERE user_id = ?");
+$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days, duty_from, duty_to, has_lunch_break FROM burnout_counter WHERE user_id = ?");
 $burnout_stmt->execute([$user_id]);
 $burnout = $burnout_stmt->fetch();
 $hour_goal = $burnout ? (int)$burnout['hour_goal'] : 480;
 $starting_date = $burnout ? date('Y-m-d', strtotime($burnout['starting_date'])) : date('Y-m-d');
 $duty_from = $burnout && $burnout['duty_from'] ? date('H:i', strtotime($burnout['duty_from'])) : '08:00';
 $duty_to = $burnout && $burnout['duty_to'] ? date('H:i', strtotime($burnout['duty_to'])) : '17:00';
+$has_lunch_break = $burnout ? (int)$burnout['has_lunch_break'] : 1;
 $duty_days = $burnout ? $burnout['duty_days'] : 'Monday,Tuesday,Wednesday,Thursday,Friday';
 
 // Format display schedule nicely (e.g. "Mon, Tue, Wed, Thu, Fri")
@@ -644,6 +645,18 @@ $base_url = "../";
                     </div>
                 </div>
 
+                <!-- Lunch Break Toggle -->
+                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+                    <div>
+                        <div class="text-sm font-bold text-gray-700 dark:text-gray-300">Lunch Break Deduction</div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Subtract 1 hour for lunch from daily duty hours</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer ml-4" for="modal_has_lunch_break">
+                        <input type="checkbox" id="modal_has_lunch_break" name="modal_has_lunch_break" class="sr-only peer" <?php echo $has_lunch_break ? 'checked' : ''; ?>>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Duty Days Schedule</label>
                     <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
@@ -694,6 +707,7 @@ $base_url = "../";
         const dutyDays = '<?php echo $duty_days; ?>';
         const dutyFrom = '<?php echo $duty_from; ?>';
         const dutyTo = '<?php echo $duty_to; ?>';
+        const hasLunchBreak = <?php echo $has_lunch_break ? 'true' : 'false'; ?>;
     </script>
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/colleagues.js"></script>

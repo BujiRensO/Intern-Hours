@@ -145,12 +145,50 @@ function getDailyDutyHours() {
     
     let hours = (toParts[0] - fromParts[0]) + (toParts[1] - fromParts[1]) / 60;
     
-    // Auto deduct 1 hour lunch break if total span is 9 hours or more (common for 8-to-5 schedules)
-    if (hours >= 9) {
+    // Deduct lunch break only if the toggle is enabled
+    if (typeof hasLunchBreak !== 'undefined' && hasLunchBreak) {
         hours -= 1;
     }
     
     return hours > 0 ? hours : 8;
+}
+
+// Calculate OT based on actual clock-in/out times vs the duty window
+function getOvertimeFromCheckIn(logs) {
+    if (!logs || typeof dutyFrom === 'undefined' || typeof dutyTo === 'undefined' || !dutyFrom || !dutyTo) {
+        return 0;
+    }
+    
+    const toMins = (timeStr) => {
+        if (!timeStr) return null;
+        // timeStr may be HH:MM or HH:MM:SS
+        const parts = timeStr.split(':').map(Number);
+        return parts[0] * 60 + parts[1];
+    };
+    
+    const dutyFromMins = toMins(dutyFrom);
+    const dutyToMins = toMins(dutyTo);
+    
+    const morningIn  = toMins(logs.morning_in);
+    const morningOut = toMins(logs.morning_out);
+    const afternoonIn  = toMins(logs.afternoon_in);
+    const afternoonOut = toMins(logs.afternoon_out);
+    
+    let otMins = 0;
+    
+    // OT before duty start: earliest clock-in before dutyFrom
+    const firstIn = (morningIn !== null) ? morningIn : afternoonIn;
+    if (firstIn !== null && firstIn < dutyFromMins) {
+        otMins += dutyFromMins - firstIn;
+    }
+    
+    // OT after duty end: latest clock-out after dutyTo
+    const lastOut = (afternoonOut !== null) ? afternoonOut : morningOut;
+    if (lastOut !== null && lastOut > dutyToMins) {
+        otMins += lastOut - dutyToMins;
+    }
+    
+    return otMins / 60;
 }
 
 function renderCalendar() {
@@ -309,10 +347,17 @@ function renderCalendar() {
       });
     }
 
+    // Compute time-window OT for this day
+    const dayLogs = checkInsData[fullDate];
+    const otHours = getOvertimeFromCheckIn(dayLogs);
+    const otHtml = otHours > 0
+        ? `<span class="ot-tag" title="Overtime: ${otHours.toFixed(1)} hrs beyond duty window">+${otHours.toFixed(1)} OT</span>`
+        : '';
+
     cell.innerHTML = `
             <div class="day-cell-inner">
               <div class="day-cell-date">${day}</div>
-              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${parseFloat(hoursData[fullDate]) > dailyDutyHours ? `<span class="ot-tag" title="Overtime: ${parseFloat(hoursData[fullDate] - dailyDutyHours).toFixed(1)} hrs">+${parseFloat(hoursData[fullDate] - dailyDutyHours).toFixed(1)} OT</span>` : ""}</div>` : ""}
+              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${otHtml}</div>` : ""}
               ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
@@ -1467,6 +1512,10 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("duty_days", dutyDays);
       formData.append("duty_from", dutyFromVal);
       formData.append("duty_to", dutyToVal);
+      const lunchBreakCheckbox = document.getElementById("modal_has_lunch_break");
+      if (lunchBreakCheckbox && lunchBreakCheckbox.checked) {
+        formData.append("has_lunch_break", "1");
+      }
 
       fetch("../api/burnout_update.php", {
         method: "POST",

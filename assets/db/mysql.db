@@ -113,11 +113,11 @@ CREATE TABLE IF NOT EXISTS burnout_counter (
   hour_goal INT NOT NULL DEFAULT 0,
   duty_from	time,	
   duty_to	time,
+  has_lunch_break TINYINT(1) NOT NULL DEFAULT 1,
   starting_date DATETIME NOT NULL,
   duty_days VARCHAR(255) DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  lunch_break	enum('No', 'Yes') DEFAULT 'No',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

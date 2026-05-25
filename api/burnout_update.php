@@ -15,6 +15,7 @@ $starting_date = isset($_POST['starting_date']) ? trim($_POST['starting_date']) 
 $duty_days = isset($_POST['duty_days']) ? trim($_POST['duty_days']) : '';
 $duty_from = isset($_POST['duty_from']) ? trim($_POST['duty_from']) : '08:00';
 $duty_to = isset($_POST['duty_to']) ? trim($_POST['duty_to']) : '17:00';
+$has_lunch_break = isset($_POST['has_lunch_break']) ? 1 : 0;
 
 // Validation
 if ($hour_goal <= 0) {
@@ -49,11 +50,11 @@ try {
     $exists = $check_stmt->fetch();
 
     if ($exists) {
-        $stmt = $pdo->prepare("UPDATE burnout_counter SET hour_goal = ?, starting_date = ?, duty_days = ?, duty_from = ?, duty_to = ? WHERE user_id = ?");
-        $stmt->execute([$hour_goal, $starting_date, $duty_days, $duty_from, $duty_to, $user_id]);
+        $stmt = $pdo->prepare("UPDATE burnout_counter SET hour_goal = ?, starting_date = ?, duty_days = ?, duty_from = ?, duty_to = ?, has_lunch_break = ? WHERE user_id = ?");
+        $stmt->execute([$hour_goal, $starting_date, $duty_days, $duty_from, $duty_to, $has_lunch_break, $user_id]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO burnout_counter (user_id, hour_goal, starting_date, duty_days, duty_from, duty_to) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$user_id, $hour_goal, $starting_date, $duty_days, $duty_from, $duty_to]);
+        $stmt = $pdo->prepare("INSERT INTO burnout_counter (user_id, hour_goal, starting_date, duty_days, duty_from, duty_to, has_lunch_break) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$user_id, $hour_goal, $starting_date, $duty_days, $duty_from, $duty_to, $has_lunch_break]);
     }
 
     echo json_encode(['success' => true, 'message' => 'Internship settings updated successfully.']);
