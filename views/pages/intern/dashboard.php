@@ -9,11 +9,13 @@ $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
 // Fetch burnout settings
-$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days FROM burnout_counter WHERE user_id = ?");
+$burnout_stmt = $pdo->prepare("SELECT hour_goal, starting_date, duty_days, duty_from, duty_to FROM burnout_counter WHERE user_id = ?");
 $burnout_stmt->execute([$user_id]);
 $burnout = $burnout_stmt->fetch();
 $hour_goal = $burnout ? (int)$burnout['hour_goal'] : 480;
 $starting_date = $burnout ? date('Y-m-d', strtotime($burnout['starting_date'])) : date('Y-m-d');
+$duty_from = $burnout && $burnout['duty_from'] ? date('H:i', strtotime($burnout['duty_from'])) : '08:00';
+$duty_to = $burnout && $burnout['duty_to'] ? date('H:i', strtotime($burnout['duty_to'])) : '17:00';
 $duty_days = $burnout ? $burnout['duty_days'] : 'Monday,Tuesday,Wednesday,Thursday,Friday';
 
 // Format display schedule nicely (e.g. "Mon, Tue, Wed, Thu, Fri")
@@ -631,6 +633,17 @@ $base_url = "../";
                     <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="date" id="modal_starting_date" required value="<?php echo $starting_date; ?>">
                 </div>
 
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2" for="modal_duty_from">Duty Hours From</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="time" id="modal_duty_from" required value="<?php echo $duty_from; ?>">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2" for="modal_duty_to">Duty Hours To</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" type="time" id="modal_duty_to" required value="<?php echo $duty_to; ?>">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Duty Days Schedule</label>
                     <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
@@ -679,6 +692,8 @@ $base_url = "../";
         const hourGoal = parseInt('<?php echo $hour_goal; ?>');
         const startingDate = '<?php echo $starting_date; ?>';
         const dutyDays = '<?php echo $duty_days; ?>';
+        const dutyFrom = '<?php echo $duty_from; ?>';
+        const dutyTo = '<?php echo $duty_to; ?>';
     </script>
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/colleagues.js"></script>

@@ -137,7 +137,24 @@ function loadAllHours() {
     .catch((error) => console.error("Error loading all hours:", error));
 }
 
+function getDailyDutyHours() {
+    if (typeof dutyFrom === 'undefined' || typeof dutyTo === 'undefined' || !dutyFrom || !dutyTo) return 8;
+    const fromParts = dutyFrom.split(':').map(Number);
+    const toParts = dutyTo.split(':').map(Number);
+    if (fromParts.length !== 2 || toParts.length !== 2) return 8;
+    
+    let hours = (toParts[0] - fromParts[0]) + (toParts[1] - fromParts[1]) / 60;
+    
+    // Auto deduct 1 hour lunch break if total span is 9 hours or more (common for 8-to-5 schedules)
+    if (hours >= 9) {
+        hours -= 1;
+    }
+    
+    return hours > 0 ? hours : 8;
+}
+
 function renderCalendar() {
+  const dailyDutyHours = getDailyDutyHours();
   const firstDay = new Date(currentYear, currentMonth - 1, 1);
   const lastDay = new Date(currentYear, currentMonth, 0);
   const daysInMonth = lastDay.getDate();
@@ -295,7 +312,7 @@ function renderCalendar() {
     cell.innerHTML = `
             <div class="day-cell-inner">
               <div class="day-cell-date">${day}</div>
-              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${parseFloat(hoursData[fullDate]) > 8 ? `<span class="ot-tag" title="Overtime: ${parseFloat(hoursData[fullDate] - 8).toFixed(1)} hrs">+${parseFloat(hoursData[fullDate] - 8).toFixed(1)} OT</span>` : ""}</div>` : ""}
+              ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${parseFloat(hoursData[fullDate]) > dailyDutyHours ? `<span class="ot-tag" title="Overtime: ${parseFloat(hoursData[fullDate] - dailyDutyHours).toFixed(1)} hrs">+${parseFloat(hoursData[fullDate] - dailyDutyHours).toFixed(1)} OT</span>` : ""}</div>` : ""}
               ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
@@ -927,7 +944,9 @@ function updateCalendarData() {
   loadCheckIns();
 }
 
+
 function updateStats() {
+  const dailyDutyHours = getDailyDutyHours();
   const monthTotal = Object.values(monthHoursData).reduce(
     (sum, val) => sum + parseFloat(val),
     0,
@@ -935,11 +954,11 @@ function updateStats() {
   const monthTotalEl = document.getElementById("month-total");
   if (monthTotalEl) monthTotalEl.textContent = monthTotal.toFixed(1);
 
-  // Overtime Hours (daily hours > 8)
+  // Overtime Hours (daily hours > dailyDutyHours)
   const overtimeTotal = Object.values(monthHoursData).reduce(
     (sum, val) => {
       const h = parseFloat(val);
-      return sum + (h > 8 ? h - 8 : 0);
+      return sum + (h > dailyDutyHours ? h - dailyDutyHours : 0);
     },
     0,
   );
@@ -1418,6 +1437,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const hourGoal = document.getElementById("modal_hour_goal").value;
       const startingDate = document.getElementById("modal_starting_date").value;
+      const dutyFromVal = document.getElementById("modal_duty_from").value;
+      const dutyToVal = document.getElementById("modal_duty_to").value;
       const checkedBoxes = Array.from(
         document.querySelectorAll('input[name="modal_duty_days[]"]:checked'),
       );
@@ -1444,6 +1465,8 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("hour_goal", hourGoal);
       formData.append("starting_date", startingDate);
       formData.append("duty_days", dutyDays);
+      formData.append("duty_from", dutyFromVal);
+      formData.append("duty_to", dutyToVal);
 
       fetch("../api/burnout_update.php", {
         method: "POST",
