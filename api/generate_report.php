@@ -70,10 +70,14 @@ try {
     $sheet->setCellValue('D13', $officeName . ' | ' . $orgName);
     $sheet->setCellValue('D14', $dateFmt);
 
-    // ── Fill objectives (rows 17–21, col C) ───────────────────────────────
+    // ── Fill objectives (rows 17–21, col B because B:H are merged) ───────────
     for ($i = 1; $i <= 5; $i++) {
         $val = trim($_POST["obj_$i"] ?? '');
-        $sheet->setCellValue('C' . (16 + $i), $val);
+        if ($val !== '') {
+            $sheet->setCellValue('B' . (16 + $i), "$i. " . $val);
+        } else {
+            $sheet->setCellValue('B' . (16 + $i), "$i.");
+        }
     }
 
     // ── Fill activities & reflections (row 24) ─────────────────────────────
@@ -84,8 +88,14 @@ try {
     $sheet->getStyle('B24')->getAlignment()->setWrapText(true);
     $sheet->getStyle('E24')->getAlignment()->setWrapText(true);
 
-    // ── Embed uploaded images into K8:Q38 ──────────────────────────────────
-    if (!empty($_FILES['images']['name'][0])) {
+    // ── Embed uploaded images into L8 onwards ───────────────────────────────
+    $hasImages = false;
+    if (!empty($_FILES['images']['name'][0]) && is_uploaded_file($_FILES['images']['tmp_name'][0])) {
+        $hasImages = true;
+    }
+
+    if ($hasImages) {
+        $sheet->setCellValue('L8', ''); // Clear placeholder
         $startRow = 8;
         foreach ($_FILES['images']['tmp_name'] as $idx => $tmpName) {
             if (!is_uploaded_file($tmpName)) continue;
@@ -96,7 +106,7 @@ try {
             $drawing->setName('Doc Image ' . ($idx + 1));
             $drawing->setDescription('Uploaded documentation image');
             $drawing->setPath($tmpName);
-            $drawing->setCoordinates('K' . $startRow);
+            $drawing->setCoordinates('L' . $startRow);
             $drawing->setHeight(170);
             $drawing->setOffsetX(5);
             $drawing->setOffsetY(5);
@@ -104,6 +114,8 @@ try {
 
             $startRow += 9; // advance ~9 rows per image
         }
+    } else {
+        $sheet->setCellValue('L8', 'No images');
     }
 
     // ── Log the generated report ──────────────────────────────────────────
@@ -124,14 +136,14 @@ try {
         ]);
     } catch (Throwable $e) { /* non-fatal */ }
 
-    // ── Render the filled XLSX as PDF (respects your A4 setup & print area) -
+    // ── Export the filled XLSX ─────────────────────────────────────────────
     $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $internName);
-    $filename = "Accomplishment_Report_{$safeName}_{$fromDate}.pdf";
+    $filename = "Accomplishment_Report_{$safeName}_{$fromDate}.xlsx";
 
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf($spreadsheet);
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
     ob_end_clean();
-    header('Content-Type: application/pdf');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header("Content-Disposition: attachment; filename=\"{$filename}\"");
     header('Cache-Control: max-age=0');
 

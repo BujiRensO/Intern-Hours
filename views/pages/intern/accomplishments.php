@@ -463,7 +463,7 @@ $base_url = '../';
                     <button class="report-btn" style="background:#64748b;flex:1;" onclick="goToStep(1)">← Back</button>
                     <button class="report-btn" id="generate-btn" style="flex:2;" onclick="generateReport()">
                         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        Download PDF Report
+                        Generate Excel Report
                     </button>
                 </div>
                 
@@ -724,19 +724,19 @@ function generateReport() {
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = `Accomplishment_Report_${from}_to_${to}.pdf`;
+            a.download = `Accomplishment_Report_${from}_to_${to}.xlsx`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
             
             btn.disabled = false;
-            btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Download PDF Report';
+            btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Generate Excel Report';
             status.textContent = '✅ Download started! Check your downloads folder.';
             setTimeout(() => { status.style.display = 'none'; }, 4000);
         })
         .catch(err => {
             btn.disabled = false;
-            btn.innerHTML = 'Download PDF Report';
+            btn.innerHTML = 'Generate Excel Report';
             status.textContent = '❌ Generation failed.';
             console.error(err);
         });
