@@ -838,12 +838,13 @@ function saveHours() {
 
         renderCalendar();
         updateQuickClockWidget();
+        const savedDate = selectedDate; // capture before closeModal() clears it
         closeModal();
         loadHours();
 
         if (accomp.trim() !== "") {
             const accData = new FormData();
-            accData.append("date", selectedDate);
+            accData.append("date", savedDate);
             accData.append("accomplishment", accomp);
             fetch(apiBasePath + "api/accomplishments.php", {
                 method: "POST",

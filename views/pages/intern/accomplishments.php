@@ -393,7 +393,7 @@ $base_url = '../';
             <div class="acc-card-header" style="justify-content: space-between;">
                 <div class="acc-card-title">📊 Accomplishment Report Builder</div>
                 <button class="preset-btn" style="background:#2563eb;color:#fff;border:none;" onclick="autoFillWithAI()" id="btn-ai-autofill">
-                    ✨ Auto-fill with AI
+                    ✦ Auto-fill from Logs
                 </button>
             </div>
             
@@ -642,7 +642,7 @@ function autoFillWithAI() {
     if (!from || !to) { alert('Please select a date range first.'); return; }
 
     const btn = document.getElementById('btn-ai-autofill');
-    btn.innerHTML = '⏳ Generating...';
+    btn.innerHTML = '⏳ Summarizing...';
     btn.disabled = true;
 
     const fd = new FormData();
@@ -667,9 +667,9 @@ function autoFillWithAI() {
             }
         })
         .catch(err => {
-            btn.innerHTML = '✨ Auto-fill with AI';
+            btn.innerHTML = '✦ Auto-fill from Logs';
             btn.disabled = false;
-            alert('Failed to connect to AI service.');
+            alert('Failed to connect to summarizer.');
         });
 }
 

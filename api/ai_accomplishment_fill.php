@@ -1,127 +1,204 @@
 <?php
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(0);
-
-require_once __DIR__ . '/../config.php';
-
+/**
+ * API: Smart PHP Rule-Based Accomplishment Auto-fill
+ * No external API or key required. Works entirely from logged accomplishment data.
+ */
 session_start();
+require_once '../config.php';
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id  = $_SESSION['user_id'];
 $fromDate = $_POST['from_date'] ?? '';
-$toDate = $_POST['to_date'] ?? '';
+$toDate   = $_POST['to_date']   ?? '';
 
 if (empty($fromDate) || empty($toDate)) {
-    echo json_encode(['success' => false, 'error' => 'Missing date range']);
+    echo json_encode(['success' => false, 'error' => 'Missing date range.']);
     exit;
 }
 
-// Fetch accomplishments
-$stmt = $pdo->prepare("
-    SELECT date, accomplishment
-    FROM accomplishment
-    WHERE user_id = ? AND date BETWEEN ? AND ?
-    ORDER BY date ASC
-");
+// ── Fetch logged accomplishments ───────────────────────────────────────────
+$stmt = $pdo->prepare(
+    "SELECT date, accomplishment FROM accomplishment
+     WHERE user_id = ? AND date BETWEEN ? AND ?
+     ORDER BY date ASC"
+);
 $stmt->execute([$user_id, $fromDate, $toDate]);
-$accomplishments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (empty($accomplishments)) {
-    echo json_encode(['success' => false, 'error' => 'No accomplishments found in the selected date range. Please log some first.']);
+if (empty($rows)) {
+    echo json_encode(['success' => false, 'error' => 'No accomplishments logged in this date range.']);
     exit;
 }
 
-// Fetch total hours
-$stmt = $pdo->prepare("
-    SELECT SUM(hours) as total_hours
-    FROM hours_log
-    WHERE user_id = ? AND date BETWEEN ? AND ?
-");
-$stmt->execute([$user_id, $fromDate, $toDate]);
-$totalHours = floatval($stmt->fetch()['total_hours'] ?? 0);
+// ── Combine all text ───────────────────────────────────────────────────────
+$allText = implode(' ', array_column($rows, 'accomplishment'));
+$allText = preg_replace('/\s+/', ' ', trim($allText));
 
-$geminiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY') ?? '';
-
-if (empty($geminiKey)) {
-    echo json_encode(['success' => false, 'error' => 'GEMINI_API_KEY is not configured in .env']);
-    exit;
+// ── Helper: split into sentences ───────────────────────────────────────────
+function splitSentences(string $text): array {
+    // Split on . ! ? followed by space or end
+    $sentences = preg_split('/(?<=[.!?])\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+    return array_filter(array_map('trim', $sentences));
 }
 
-// Prepare the text of accomplishments
-$bulletList = '';
-foreach ($accomplishments as $a) {
-    $bulletList .= '- ' . date('M d', strtotime($a['date'])) . ': ' . $a['accomplishment'] . "\n";
+// ── Helper: clean a sentence for use as an objective ──────────────────────
+function toObjective(string $sentence): string {
+    $sentence = rtrim($sentence, '.,;:');
+    // Capitalize first letter
+    return ucfirst(trim($sentence));
 }
 
-$prompt = "You are an assistant helping an intern write their weekly/monthly OJT progress report.
-Based on the following raw daily accomplishments, generate three sections:
-1. 'objectives': An array of up to 5 concise learning or operational objectives achieved during this period (e.g. 'Familiarize with the company UI framework').
-2. 'activities': A professional cohesive paragraph summarizing the daily activities performed. Keep it concise but comprehensive.
-3. 'reflections': A thoughtful paragraph on the skills learned, challenges overcome, and overall personal/professional growth during this period.
+// ── Extract action-verb clusters for objectives ────────────────────────────
+//    We look for sentences that start with or contain known action verbs.
+$ACTION_VERBS = [
+    'developed','created','implemented','built','designed','coded','programmed',
+    'reviewed','tested','debugged','fixed','resolved','refactored','updated','deployed',
+    'attended','participated','presented','discussed','collaborated','coordinated',
+    'prepared','documented','wrote','drafted','edited','submitted','completed',
+    'analyzed','researched','studied','learned','explored','investigated',
+    'configured','set up','installed','integrated','migrated',
+    'trained','mentored','assisted','supported','helped',
+    'planned','organized','scheduled','managed',
+];
 
-Raw Accomplishments (Total Hours: {$totalHours}):
-{$bulletList}
+$sentences = array_values(splitSentences($allText));
+$objectives  = [];
+$usedSentences = [];
 
-Respond strictly with valid JSON only, using this exact schema, and NO markdown formatting (no ```json):
-{
-  \"objectives\": [\"string\", \"string\"],
-  \"activities\": \"string\",
-  \"reflections\": \"string\"
-}";
-
-$payload = json_encode([
-    'contents' => [
-        [
-            'parts' => [
-                ['text' => $prompt]
-            ]
-        ]
-    ],
-    'generationConfig' => [
-        'responseMimeType' => 'application/json',
-        'temperature' => 0.7
-    ]
-]);
-
-$ch = curl_init("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}");
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST           => true,
-    CURLOPT_POSTFIELDS     => $payload,
-    CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-    CURLOPT_TIMEOUT        => 30,
-]);
-
-$response = curl_exec($ch);
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-if ($httpcode !== 200 || !$response) {
-    echo json_encode(['success' => false, 'error' => 'Failed to reach AI service (HTTP ' . $httpcode . ')']);
-    exit;
+// Pass 1: sentences that start with an action verb
+foreach ($sentences as $idx => $s) {
+    if (count($objectives) >= 5) break;
+    $lower = strtolower($s);
+    foreach ($ACTION_VERBS as $verb) {
+        if (str_starts_with($lower, $verb)) {
+            $obj = toObjective($s);
+            if (strlen($obj) > 15 && strlen($obj) < 150) {
+                $objectives[] = $obj;
+                $usedSentences[$idx] = true;
+                break;
+            }
+        }
+    }
 }
 
-$decoded = json_decode($response, true);
-$aiText = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? '';
-
-$aiJson = json_decode($aiText, true);
-
-if (!$aiJson) {
-    echo json_encode(['success' => false, 'error' => 'AI returned an invalid format. Try again.']);
-    exit;
+// Pass 2: sentences that contain an action verb anywhere (fill remaining slots)
+if (count($objectives) < 5) {
+    foreach ($sentences as $idx => $s) {
+        if (isset($usedSentences[$idx])) continue;
+        if (count($objectives) >= 5) break;
+        $lower = strtolower($s);
+        foreach ($ACTION_VERBS as $verb) {
+            if (str_contains($lower, ' ' . $verb . ' ') || str_contains($lower, ' ' . $verb . 'd ') || str_contains($lower, ' ' . $verb . 'ed ')) {
+                $obj = toObjective($s);
+                if (strlen($obj) > 15 && strlen($obj) < 150) {
+                    // Convert to "To <verb>..." format if possible
+                    $objectives[] = $obj;
+                    $usedSentences[$idx] = true;
+                    break;
+                }
+            }
+        }
+    }
 }
 
+// Pass 3: if still not enough, just take first unused sentences
+if (count($objectives) < 3) {
+    foreach ($sentences as $idx => $s) {
+        if (isset($usedSentences[$idx])) continue;
+        if (count($objectives) >= 5) break;
+        $obj = toObjective($s);
+        if (strlen($obj) > 15 && strlen($obj) < 150) {
+            $objectives[] = $obj;
+        }
+    }
+}
+
+// Deduplicate objectives (remove near-duplicates by first 40 chars)
+$seen = [];
+$uniqueObjectives = [];
+foreach ($objectives as $obj) {
+    $key = strtolower(substr($obj, 0, 40));
+    if (!isset($seen[$key])) {
+        $seen[$key] = true;
+        $uniqueObjectives[] = $obj;
+    }
+}
+$objectives = array_slice($uniqueObjectives, 0, 5);
+
+// ── Build Activities narrative ─────────────────────────────────────────────
+//    Group by date and form a chronological paragraph.
+$actParts = [];
+foreach ($rows as $row) {
+    $dateLabel = date('l, F j', strtotime($row['date'])); // e.g. Monday, May 20
+    $text = rtrim(trim($row['accomplishment']), '.') . '.';
+    $actParts[] = "On {$dateLabel}: {$text}";
+}
+
+$activities = implode(' ', $actParts);
+// Trim if very long
+if (strlen($activities) > 1200) {
+    $activities = substr($activities, 0, 1200);
+    $lastPeriod = strrpos($activities, '.');
+    if ($lastPeriod !== false) $activities = substr($activities, 0, $lastPeriod + 1);
+}
+
+// ── Build Reflections from theme detection ────────────────────────────────
+$themes = [
+    'technical'   => ['code','coding','develop','implement','bug','fix','debug','program','software','test','deploy','api','database','feature'],
+    'teamwork'    => ['team','collaborate','meeting','discussion','coordinate','colleague','group','standup','sprint'],
+    'learning'    => ['learn','study','research','explore','understand','read','documentation','training','seminar'],
+    'design'      => ['design','ui','ux','layout','wireframe','prototype','figma','interface','visual'],
+    'management'  => ['plan','organize','schedule','manage','report','submit','deadline','task','priority'],
+    'communication' => ['present','explain','brief','email','report','communicate','discuss','feedback'],
+];
+
+$detectedThemes = [];
+$lowerAll = strtolower($allText);
+foreach ($themes as $theme => $keywords) {
+    foreach ($keywords as $kw) {
+        if (str_contains($lowerAll, $kw)) {
+            $detectedThemes[$theme] = true;
+            break;
+        }
+    }
+}
+
+$reflectionParts = ["During this period, I gained valuable experience and made meaningful contributions to my assigned tasks."];
+
+if (isset($detectedThemes['technical'])) {
+    $reflectionParts[] = "Working on technical tasks deepened my understanding of software development practices and improved my problem-solving capabilities.";
+}
+if (isset($detectedThemes['teamwork'])) {
+    $reflectionParts[] = "Collaborating with the team enhanced my communication skills and gave me insights into how professional teams operate in a real-world setting.";
+}
+if (isset($detectedThemes['learning'])) {
+    $reflectionParts[] = "The research and learning activities I engaged in expanded my knowledge base and gave me a stronger foundation for future tasks.";
+}
+if (isset($detectedThemes['design'])) {
+    $reflectionParts[] = "Working on design-related tasks helped me appreciate the importance of user experience and visual clarity in software products.";
+}
+if (isset($detectedThemes['management'])) {
+    $reflectionParts[] = "Planning and managing tasks taught me the value of prioritization and meeting deadlines in a professional environment.";
+}
+if (isset($detectedThemes['communication'])) {
+    $reflectionParts[] = "Presenting and communicating progress helped me become more confident in expressing ideas clearly and professionally.";
+}
+
+$reflectionParts[] = "Overall, this training period was a rewarding experience that bridged the gap between academic learning and industry practice.";
+
+$reflections = implode(' ', $reflectionParts);
+
+// ── Respond ────────────────────────────────────────────────────────────────
 echo json_encode([
     'success' => true,
     'data' => [
-        'objectives' => $aiJson['objectives'] ?? [],
-        'activities' => $aiJson['activities'] ?? '',
-        'reflections' => $aiJson['reflections'] ?? ''
+        'objectives'  => $objectives,
+        'activities'  => $activities,
+        'reflections' => $reflections,
     ]
 ]);
