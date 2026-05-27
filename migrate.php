@@ -111,7 +111,62 @@ foreach ($queries as $query) {
     }
 }
 
-// 5. Final Report
+// 5. Dynamic schema sync (Add missing columns to existing tables)
+echo "\n🔍 Checking for missing columns in existing tables...\n";
+$alterCount = 0;
+$alterFailCount = 0;
+
+preg_match_all('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([a-zA-Z0-9_]+)\s*\((.+)\)\s*ENGINE\s*=/isU', $sqlContent, $matches, PREG_SET_ORDER);
+
+foreach ($matches as $match) {
+    $tableName = $match[1];
+    $body = $match[2];
+    
+    // Fetch existing columns in this table
+    try {
+        $existingColumns = [];
+        $descStmt = $pdo->query("DESCRIBE `$tableName`");
+        while ($row = $descStmt->fetch(PDO::FETCH_ASSOC)) {
+            $existingColumns[] = strtolower($row['Field']);
+        }
+    } catch (PDOException $e) {
+        // Table probably wasn't created, skip
+        continue;
+    }
+    
+    // Split lines inside parenthesis by comma, but be careful of commas inside things like DECIMAL(5,2) or ENUM('Intern','Admin')
+    $lines = preg_split('/,(?=(?:[^\'"]*\'[^\'"]*\')*[^\'"]*$)(?=(?:[^\(\)]*\([^\(\)]*\))*[^\(\)]*$)/', $body);
+    
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (empty($line)) continue;
+        
+        // Ignore constraints, primary keys, foreign keys
+        if (preg_match('/^(CONSTRAINT|PRIMARY\s+KEY|FOREIGN\s+KEY|UNIQUE|KEY|INDEX)/i', $line)) {
+            continue;
+        }
+        
+        // Extract column name and definition
+        if (preg_match('/^`?([a-zA-Z0-9_]+)`?\s+(.+)$/s', $line, $colMatch)) {
+            $colName = $colMatch[1];
+            $colDef = trim($colMatch[2]);
+            
+            if (!in_array(strtolower($colName), $existingColumns)) {
+                echo "   ➕ Missing column detected: `$tableName`.`$colName`...\n";
+                try {
+                    $pdo->exec("ALTER TABLE `$tableName` ADD COLUMN `$colName` $colDef");
+                    echo "      ✅ Added column successfully!\n";
+                    $alterCount++;
+                } catch (PDOException $e) {
+                    echo "      ❌ Failed to add column: " . $e->getMessage() . "\n";
+                    $alterFailCount++;
+                }
+            }
+        }
+    }
+}
+
+// 6. Final Report
 echo "\n=========================================\n";
 echo "🏁 Migration Completed!\n";
 echo "=========================================\n";
@@ -119,8 +174,14 @@ echo "📂 Target Database: $dbname\n";
 echo "✅ Successful Queries: $successCount\n";
 if ($failCount > 0) {
     echo "❌ Failed Queries: $failCount\n";
-    echo "⚠️  Note: Some failures are normal if tables or constraints already exist.\n";
+}
+echo "➕ Added Columns: $alterCount\n";
+if ($alterFailCount > 0) {
+    echo "❌ Failed Column Additions: $alterFailCount\n";
+}
+if ($failCount == 0 && $alterFailCount == 0) {
+    echo "🎉 Database schema is completely up-to-date and synced!\n";
 } else {
-    echo "🎉 Database schema is completely up-to-date!\n";
+    echo "⚠️  Note: Some failures are normal if tables or constraints already exist.\n";
 }
 echo "=========================================\n";
