@@ -100,11 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $stmt = $pdo->prepare("
                 INSERT INTO absences (user_id, date, reason, status) 
-                VALUES (?, ?, ?, 'Pending')
-                ON DUPLICATE KEY UPDATE reason = VALUES(reason), status = 'Pending'
+                VALUES (?, ?, ?, 'Approved')
+                ON DUPLICATE KEY UPDATE reason = VALUES(reason), status = 'Approved'
             ");
             $stmt->execute([$user_id, $date, $reason]);
-            echo json_encode(['success' => true, 'message' => 'Absence request submitted']);
+            echo json_encode(['success' => true, 'message' => 'Absence marked successfully']);
         } catch (Exception $e) {
             echo json_encode(['error' => $e->getMessage(), 'success' => false]);
         }
