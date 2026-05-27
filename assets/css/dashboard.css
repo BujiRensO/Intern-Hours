@@ -317,9 +317,9 @@
 }
 
 .absence-badge.approved {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #c8e6c9;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
 }
 
 .absence-badge.rejected {
