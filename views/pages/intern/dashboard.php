@@ -425,6 +425,14 @@ $base_url = "../";
             </div>
 
             <div class="stat-card">
+                <div class="stat-label">Absences (Month)</div>
+                <div class="stat-value" style="color: #ef4444;">
+                    <span id="month-absences">0</span>
+                    <span class="stat-unit">days</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
                 <div class="stat-label">Today's Hours</div>
                 <div class="stat-value">
                     <span id="today-hours">0</span>

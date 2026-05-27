@@ -104,6 +104,13 @@ require_once '../../components/header.php';
                 </div>
             </div>
             <div class="stat-card">
+                <div class="stat-label">Absences (Month)</div>
+                <div class="stat-value" style="color: #ef4444;">
+                    <span id="month-absences">0</span>
+                    <span class="stat-unit">days</span>
+                </div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-label" id="filtered-label">Filtered Total</div>
                 <div class="stat-value">
                     <span id="filtered-total">0</span>

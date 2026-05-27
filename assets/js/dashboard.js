@@ -997,6 +997,13 @@ function updateCalendarData() {
 
 
 function updateStats() {
+  // Absences (Month)
+  const absencesCount = Object.values(absencesData).filter(
+    (abs) => abs.status === 'Approved'
+  ).length;
+  const absencesEl = document.getElementById("month-absences");
+  if (absencesEl) absencesEl.textContent = absencesCount;
+
   const dailyDutyHours = getDailyDutyHours();
   const monthTotal = Object.values(monthHoursData).reduce(
     (sum, val) => sum + parseFloat(val),
