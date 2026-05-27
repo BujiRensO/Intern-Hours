@@ -462,7 +462,12 @@ function openAbsenceModal(dateStr) {
   } else {
     statusDisplay.style.display = "none";
     deleteBtn.style.display = "none";
-    submitBtn.textContent = "Submit Request";
+    const todayStr = getTodayDateStr();
+    if (dateStr > todayStr) {
+      submitBtn.textContent = "Submit Request";
+    } else {
+      submitBtn.textContent = "Mark Absent";
+    }
   }
 
   document.getElementById("absence-modal").classList.add("active");
