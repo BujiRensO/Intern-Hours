@@ -358,7 +358,7 @@ function renderCalendar() {
             <div class="day-cell-inner">
               <div class="day-cell-date">${day}</div>
               ${hoursData[fullDate] ? `<div class="day-cell-hours">${hoursData[fullDate]}h ${otHtml}</div>` : ""}
-              ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">${absencesData[fullDate].status}</div>` : ""}
+              ${absencesData[fullDate] ? `<div class="absence-badge ${absencesData[fullDate].status.toLowerCase()}">Absent</div>` : ""}
               ${holiday ? `<div class="holiday-badge" title="${holiday}">${holiday}</div>` : ""}
               ${birthdayBadgesHtml}
             </div>
